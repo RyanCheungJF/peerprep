@@ -17,3 +17,5 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 export async function createUser(params) {
   return new UserModel(params)
 }
+
+export const findUser = async (query) => UserModel.findOne(query)
