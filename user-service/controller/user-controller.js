@@ -3,13 +3,15 @@ import {
   ormFindUserByUsername as _findUserByUsername,
 } from '../model/user-orm.js'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 import 'dotenv/config'
 
 export async function createUser(req, res) {
   try {
     const { username, password } = req.body
     if (username && password) {
-      const resp = await _createUser(username, password)
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const resp = await _createUser(username, hashedPassword)
       console.log(resp)
       if (resp.err) {
         return res.status(400).json({ message: 'Could not create a new user!' })
@@ -45,7 +47,7 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({ message: 'ERROR: Could not log user in' })
   }
 
-  if (user && password === user.password) {
+  if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign({ username, password }, process.env.TOKEN_SECRET, {
       expiresIn: '7 days',
     })
