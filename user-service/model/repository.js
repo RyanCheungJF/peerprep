@@ -19,3 +19,5 @@ export async function createUser(params) {
 }
 
 export const findUser = async (query) => UserModel.findOne(query)
+
+export const checkIfUserExists = async (query) => UserModel.exists(query)
