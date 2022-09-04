@@ -1,16 +1,9 @@
 import { useState } from 'react'
-import Cookies from 'js-cookie'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from './UserAuth'
-import { URL_USER_LOGIN_SVC } from '../configs'
-import {
-  STATUS_CODE_SUCCESS,
-  STATUS_CODE_UNAUTHORIZED,
-  COOKIES_AUTH_TOKEN,
-  JWT_EXPIRY,
-} from '../constants'
+import { STATUS_CODE_SUCCESS, STATUS_CODE_UNAUTHORIZED } from '../constants'
+import { loginUser } from '../api/userService'
 
 const LoginPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -21,9 +14,8 @@ const LoginPage = () => {
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
     try {
-      const res = await axios.post(URL_USER_LOGIN_SVC, { username, password })
+      const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
-        Cookies.set(COOKIES_AUTH_TOKEN, res.data.token, { expires: JWT_EXPIRY })
         setSuccessDialog('Logged in successfully!')
         setIsLoginSuccess(true)
       }
