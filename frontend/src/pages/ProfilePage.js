@@ -1,6 +1,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { changeUserPassword } from '../api/userService'
 
 const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('')
@@ -9,16 +10,21 @@ const ProfilePage = () => {
   // hardcoded value for now, for those doing cookies/ jwt/ context
   // need to read from there
   // to test, check atlas to see if there are changes to the hash
-  const username = 'mergetest'
+  const uuid = '6311b4362716d8f9d80288bb'
 
-  const handleChangePassword = async (password) => {
+  const handleChangePassword = async () => {
     if (!newPassword) {
       // will add in some ui component in the future to reflect
       // but for now can just check with console.log
       console.log('Password cannot be empty!')
       return
     }
-    
+    try {
+      const res = await changeUserPassword(uuid, newPassword)
+      console.log('success ', res)
+    } catch (err) {
+      console.log('error: ', err)
+    }
   }
 
   return (
@@ -55,7 +61,7 @@ const ProfilePage = () => {
         <Button
           sx={{ margin: '2px' }}
           variant={'outlined'}
-          onClick={() => console.log('hi')}
+          onClick={handleChangePassword}
         >
           {'Change Password'}
         </Button>

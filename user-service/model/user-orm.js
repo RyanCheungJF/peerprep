@@ -2,10 +2,11 @@ import {
   createUser,
   findUser,
   checkIfUserExists,
+  updateUserPassword,
 } from './repository.js'
 
 // need to separate orm functions from repository to decouple business logic from persistence
-export async function ormCreateUser(username, password) {
+export const ormCreateUser = async (username, password) => {
   try {
     const newUser = await createUser({ username, password })
     newUser.save()
@@ -31,6 +32,16 @@ export const ormCheckIfUserExists = async (username) => {
     return userIsFound ? false : true
   } catch (err) {
     console.log('ERROR: Could not check if user exists')
+    return { err }
+  }
+}
+
+export const ormUpdateUserPassword = async (username, newPassword) => {
+  try {
+    const t = await updateUserPassword(username, { password: newPassword })
+    return t ? false : true
+  } catch (err) {
+    console.log(`ERROR: Could not update password for ${username}`)
     return { err }
   }
 }

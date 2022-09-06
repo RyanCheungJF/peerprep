@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { URL_USER_LOGIN_SVC } from '../utils/configs'
+import { URL_USER_SVC, URL_USER_LOGIN_SVC } from '../utils/configs'
 import {
   STATUS_CODE_SUCCESS,
   COOKIES_AUTH_TOKEN,
@@ -17,7 +17,8 @@ export const loginUser = async (username, password) => {
 
 // include signup user
 
-export const changeUserPassword = async(username, newPassword) => {
-  const res = await axios.put(URL_USER_LOGIN_SVC, { username, newPassword })
+export const changeUserPassword = async (username, newPassword) => {
+  const res = await axios.put(URL_USER_SVC, { username, newPassword })
+  console.log(res)
   return res
 }

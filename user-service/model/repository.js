@@ -18,6 +18,14 @@ export const createUser = async (params) => {
   return new UserModel(params)
 }
 
-export const findUser = async (query) => UserModel.findOne(query)
+export const findUser = async (query) => {
+  UserModel.findOne(query)
+}
 
-export const checkIfUserExists = async (query) => UserModel.exists(query)
+export const checkIfUserExists = async (query) => {
+  UserModel.exists(query)
+}
+
+export const updateUserPassword = async (id, query) => {
+  UserModel.findByIdAndUpdate(id, query)
+}
