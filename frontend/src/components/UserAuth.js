@@ -10,10 +10,13 @@ import {
   Typography,
 } from '@mui/material'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const UserAuth = ({
   pageTitle,
   ctaText,
+  toggleText,
+  toggleDestination,
   handleAuth,
   isDialogOpen,
   closeDialog,
@@ -24,10 +27,21 @@ const UserAuth = ({
 }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
   return (
-    <Box display={'flex'} flexDirection={'column'} width={'30%'}>
-      <Typography variant={'h3'} marginBottom={'2rem'}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '30%',
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
         {pageTitle}
       </Typography>
       <TextField
@@ -46,8 +60,23 @@ const UserAuth = ({
         onChange={(e) => setPassword(e.target.value)}
         sx={{ marginBottom: '2rem' }}
       />
-      <Box display={'flex'} flexDirection={'row'} justifyContent={'flex-end'}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
         <Button
+          sx={{ marginRight: '2px' }}
+          variant={'outlined'}
+          onClick={() => navigate(toggleDestination)}
+        >
+          {toggleText}
+        </Button>
+        <Button
+          sx={{ marginLeft: '2px' }}
           variant={'outlined'}
           onClick={() => handleAuth(username, password)}
         >

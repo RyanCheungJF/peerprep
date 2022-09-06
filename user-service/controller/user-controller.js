@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
 
-export async function createUser(req, res) {
+export const createUser = async (req, res) => {
   try {
     const { username, password } = req.body
     if (username && password) {
