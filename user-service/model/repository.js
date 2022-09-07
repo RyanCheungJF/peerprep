@@ -19,13 +19,13 @@ export const createUser = async (params) => {
 }
 
 export const findUser = async (query) => {
-  UserModel.findOne(query)
+  return UserModel.findOne(query)
 }
 
 export const checkIfUserExists = async (query) => {
-  UserModel.exists(query)
+  return UserModel.exists(query)
 }
 
 export const updateUserPassword = async (id, query) => {
-  UserModel.findByIdAndUpdate(id, query)
+  return UserModel.findByIdAndUpdate(id, query)
 }

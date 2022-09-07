@@ -38,8 +38,7 @@ export const ormCheckIfUserExists = async (username) => {
 
 export const ormUpdateUserPassword = async (username, newPassword) => {
   try {
-    const t = await updateUserPassword(username, { password: newPassword })
-    return t ? false : true
+    return await updateUserPassword(username, { password: newPassword })
   } catch (err) {
     console.log(`ERROR: Could not update password for ${username}`)
     return { err }
