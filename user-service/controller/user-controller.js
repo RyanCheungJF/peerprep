@@ -2,7 +2,9 @@ import {
   ormCreateUser as _createUser,
   ormFindUserByUsername as _findUserByUsername,
   ormCheckIfUserExists as _checkIfUserExists,
+  ormInvalidateJWT as _invalidateJWT,
 } from '../model/user-orm.js'
+import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
@@ -51,10 +53,21 @@ export const loginUser = async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign({ username, password }, process.env.TOKEN_SECRET, {
-      expiresIn: '7 days',
+      expiresIn: JWT_EXPIRY,
     })
     return res.status(200).json({ userId: user._id, token })
   }
 
   return res.status(401).send('Invalid login credentials')
+}
+
+export const logoutUser = async (req, res) => {
+  const { token } = req.body
+
+  const invalidationResult = await _invalidateJWT(token)
+  if (invalidationResult) {
+    return res.status(200).send('User logged out - token invalidated.')
+  } else {
+    return res.status(500).send('Failed to invalidate user token')
+  }
 }
