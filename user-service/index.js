@@ -10,6 +10,7 @@ import {
   createUser,
   loginUser,
   logoutUser,
+  deleteUser,
 } from './controller/user-controller.js'
 
 const router = express.Router()
@@ -17,6 +18,7 @@ const router = express.Router()
 // Controller will contain all the User-defined Routes
 router.get('/', (_, res) => res.send('Hello World from user-service'))
 router.post('/', createUser)
+router.delete('/', deleteUser)
 router.post('/login', loginUser)
 router.post('/logout', logoutUser)
 

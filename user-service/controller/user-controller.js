@@ -1,5 +1,6 @@
 import {
   ormCreateUser as _createUser,
+  ormDeleteUser as _deleteUser,
   ormFindUserByUsername as _findUserByUsername,
   ormCheckIfUserExists as _checkIfUserExists,
   ormInvalidateJWT as _invalidateJWT,
@@ -35,6 +36,33 @@ export async function createUser(req, res) {
       .status(500)
       .json({ message: 'Database failure when creating new user!' })
   }
+}
+
+export const deleteUser = async (req, res) => {
+  // 09/09/22: Revisit when we start protecting routes sicne we'd probably pass tokens in via headers.
+  const { username, token } = req.body
+  if (!username || !token) {
+    return res
+      .status(400)
+      .json({ message: 'Username and/or auth token are missing!' })
+  }
+
+  const invalidationResult = await _invalidateJWT(token)
+  if (!invalidationResult) {
+    return res
+      .status(500)
+      .json({ message: 'Failed to invalidate user token. User not deleted.' })
+  }
+
+  if (await _deleteUser(username)) {
+    return res
+      .status(200)
+      .json({ message: `Deleted user ${username} successfully` })
+  }
+
+  return res.status(500).json({
+    message: 'Failed to delete user. User token has been invalidated anyway.',
+  })
 }
 
 export const loginUser = async (req, res) => {
