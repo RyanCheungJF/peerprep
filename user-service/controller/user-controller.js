@@ -94,8 +94,10 @@ export const logoutUser = async (req, res) => {
 
   const invalidationResult = await _invalidateJWT(token)
   if (invalidationResult) {
-    return res.status(200).send('User logged out - token invalidated.')
+    return res
+      .status(200)
+      .json({ messsage: 'User logged out - token invalidated.' })
   } else {
-    return res.status(500).send('Failed to invalidate user token')
+    return res.status(500).json({ message: 'Failed to invalidate user token' })
   }
 }
