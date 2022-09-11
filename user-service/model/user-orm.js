@@ -1,4 +1,9 @@
-import { createUser, findUser, checkIfUserExists } from './repository.js'
+import {
+  createUser,
+  deleteUser,
+  findUser,
+  checkIfUserExists,
+} from './repository.js'
 import {
   addJWT as addJWTToRedis,
   checkJWTExists as checkJWTExistsRedis,
@@ -12,6 +17,15 @@ export async function ormCreateUser(username, password) {
     return true
   } catch (err) {
     console.log('ERROR: Could not create new user')
+    return { err }
+  }
+}
+
+export const ormDeleteUser = async (username) => {
+  try {
+    return await deleteUser({ username })
+  } catch (err) {
+    console.log('ERROR: Could not delete user')
     return { err }
   }
 }
