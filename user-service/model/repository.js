@@ -18,6 +18,8 @@ export async function createUser(params) {
   return new UserModel(params)
 }
 
+export const deleteUser = async (query) => UserModel.deleteOne(query)
+
 export const findUser = async (query) => UserModel.findOne(query)
 
 export const checkIfUserExists = async (query) => UserModel.exists(query)
