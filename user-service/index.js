@@ -9,6 +9,8 @@ app.options('*', cors())
 import {
   createUser,
   loginUser,
+  logoutUser,
+  deleteUser,
   updateUserPassword,
 } from './controller/user-controller.js'
 
@@ -18,7 +20,9 @@ const router = express.Router()
 router.get('/', (_, res) => res.send('Hello World from user-service'))
 router.post('/', createUser)
 router.put('/', updateUserPassword)
+router.delete('/', deleteUser)
 router.post('/login', loginUser)
+router.post('/logout', logoutUser)
 
 app.use('/api/user', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

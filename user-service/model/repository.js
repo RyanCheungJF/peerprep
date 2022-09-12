@@ -26,6 +26,10 @@ export const checkIfUserExists = async (query) => {
   return UserModel.exists(query)
 }
 
+export const deleteUser = async (query) => {
+  return UserModel.deleteOne(query)
+}
+
 export const updateUserPassword = async (id, query) => {
   return UserModel.findByIdAndUpdate(id, query)
 }
