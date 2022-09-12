@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import SignupPage from './components/SignupPage'
 import LoginPage from './components/LoginPage'
+import HomePage from './components/HomePage'
 import { Box } from '@mui/material'
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             ></Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/home" element={<HomePage />} />
           </Routes>
         </Router>
       </Box>
