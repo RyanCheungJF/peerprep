@@ -17,9 +17,9 @@ const LoginPage = () => {
 
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
-    checkFormFields(username, password)
+    checkFormFields(username, password, setErrorDialog)
     try {
-      const res = await loginUser(username, password, setErrorDialog)
+      const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
         setSuccessDialog('Logged in successfully!')
         setIsLoginSuccess(true)
