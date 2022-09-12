@@ -94,7 +94,7 @@ export const updateUserPassword = async (req, res) => {
         .json({ message: 'Username and/or Password are missing!' })
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10)
-    if (!(await _updateUserPassword(username, hashedPassword).err)) {
+    if (await _updateUserPassword(username, hashedPassword).err) {
       return res
         .status(400)
         .json({ message: `Could not update password for ${username}` })
