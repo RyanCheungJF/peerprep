@@ -1,8 +1,11 @@
 import {
   ormCreateUser as _createUser,
+  ormDeleteUser as _deleteUser,
   ormFindUserByUsername as _findUserByUsername,
   ormCheckIfUserExists as _checkIfUserExists,
+  ormInvalidateJWT as _invalidateJWT,
 } from '../model/user-orm.js'
+import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
@@ -35,6 +38,33 @@ export async function createUser(req, res) {
   }
 }
 
+export const deleteUser = async (req, res) => {
+  // 09/09/22: Revisit when we start protecting routes sicne we'd probably pass tokens in via headers.
+  const { username, token } = req.body
+  if (!username || !token) {
+    return res
+      .status(400)
+      .json({ message: 'Username and/or auth token are missing!' })
+  }
+
+  const invalidationResult = await _invalidateJWT(token)
+  if (!invalidationResult) {
+    return res
+      .status(500)
+      .json({ message: 'Failed to invalidate user token. User not deleted.' })
+  }
+
+  if (await _deleteUser(username)) {
+    return res
+      .status(200)
+      .json({ message: `Deleted user ${username} successfully` })
+  }
+
+  return res.status(500).json({
+    message: 'Failed to delete user. User token has been invalidated anyway.',
+  })
+}
+
 export const loginUser = async (req, res) => {
   const { username, password } = req.body
 
@@ -51,10 +81,23 @@ export const loginUser = async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign({ username, password }, process.env.TOKEN_SECRET, {
-      expiresIn: '7 days',
+      expiresIn: JWT_EXPIRY,
     })
     return res.status(200).json({ userId: user._id, token })
   }
 
   return res.status(401).send('Invalid login credentials')
+}
+
+export const logoutUser = async (req, res) => {
+  const { token } = req.body
+
+  const invalidationResult = await _invalidateJWT(token)
+  if (invalidationResult) {
+    return res
+      .status(200)
+      .json({ messsage: 'User logged out - token invalidated.' })
+  } else {
+    return res.status(500).json({ message: 'Failed to invalidate user token' })
+  }
 }
