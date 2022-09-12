@@ -2,9 +2,10 @@ import { useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Button } from '@mui/material'
-import UserAuth from './UserAuth'
-import { URL_USER_SVC } from '../configs'
-import { STATUS_CODE_CONFLICT, STATUS_CODE_CREATED } from '../constants'
+import UserAuth from '../components/UserAuth'
+import { STATUS_CODE_CONFLICT, STATUS_CODE_CREATED } from '../utils/constants'
+import { URL_USER_SVC } from '../utils/configs'
+import { checkFormFields } from '../utils/main'
 
 const SignupPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -14,6 +15,7 @@ const SignupPage = () => {
 
   const handleSignup = async (username, password) => {
     setIsSignupSuccess(false)
+    checkFormFields(username, password, setErrorDialog)
     const res = await axios
       .post(URL_USER_SVC, { username, password })
       .catch((err) => {
@@ -53,6 +55,8 @@ const SignupPage = () => {
     <UserAuth
       pageTitle="Sign up"
       ctaText="Sign up"
+      toggleText="Log in instead!"
+      toggleDestination="/login"
       handleAuth={handleSignup}
       isDialogOpen={isDialogOpen}
       closeDialog={closeDialog}
