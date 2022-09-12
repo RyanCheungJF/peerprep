@@ -6,10 +6,12 @@ const HomePage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
+  const navigate = useNavigate();
 
   const handleFindMatch = (difficulty) => {
     if (difficulty === "Easy" || difficulty === "Medium" || difficulty === "Hard") {
       console.log('Difficulty Level Selected: ' + difficulty)
+      navigate('/matching')
     } else {
       setErrorDialog('Please select a difficulty level.')
     }
