@@ -1,29 +1,23 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
-import SignupPage from './components/SignupPage'
-import LoginPage from './components/LoginPage'
-import HomePage from './components/HomePage'
-import MatchingPage from './components/MatchingPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
+import SignupPage from './pages/SignupPage'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
+import ProfilePage from './pages/ProfilePage'
+import MatchingPage from './pages/MatchingPage'
 import { Box } from '@mui/material'
 
-function App() {
+const App = () => {
   return (
     <div className="App">
       <Box display={'flex'} flexDirection={'column'} padding={'4rem'}>
         <Router>
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={<Navigate replace to="/signup" />}
-            ></Route>
+            <Route exact path="/" element={<LandingPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/home" element={<HomePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/matching" element={<MatchingPage />} />
           </Routes>
         </Router>

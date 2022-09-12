@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@mui/material'
-import UserAuth from './UserAuth'
-import { STATUS_CODE_SUCCESS, STATUS_CODE_UNAUTHORIZED } from '../constants'
+import UserAuth from '../components/UserAuth'
+import {
+  STATUS_CODE_SUCCESS,
+  STATUS_CODE_UNAUTHORIZED,
+} from '../utils/constants'
+import { checkFormFields } from '../utils/main'
 import { loginUser } from '../api/userService'
 
 const LoginPage = () => {
@@ -13,6 +17,7 @@ const LoginPage = () => {
 
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
+    checkFormFields(username, password, setErrorDialog)
     try {
       const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
@@ -42,9 +47,6 @@ const LoginPage = () => {
     setDialogMsg(msg)
   }
 
-  /**
-   * TODO: just a placeholder link right now
-   */
   const redirectButton = (
     <Button component={Link} to="/home">
       Go To Home
@@ -55,6 +57,8 @@ const LoginPage = () => {
     <UserAuth
       pageTitle="Log in"
       ctaText="Log in"
+      toggleText="Create an account!"
+      toggleDestination="/signup"
       handleAuth={handleLogin}
       isDialogOpen={isDialogOpen}
       closeDialog={closeDialog}
