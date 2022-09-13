@@ -20,11 +20,7 @@ export const loginUser = async (username, password) => {
 }
 
 export const logoutUser = async () => {
-  const token = Cookies.get(COOKIES_AUTH_TOKEN)
-  if (!token) {
-    throw new Error('JWT not found in cookies.')
-  }
-
+  const token = getJWT()
   const res = await axios.post(URL_USER_LOGOUT_SVC, { token })
   if (res?.status === STATUS_CODE_SUCCESS) {
     Cookies.remove(COOKIES_AUTH_TOKEN)
@@ -33,9 +29,26 @@ export const logoutUser = async () => {
 }
 
 // include signup user
+export const deleteUser = async (username) => {
+  const token = getJWT()
+  const res = await axios.delete(URL_USER_SVC, { data: { username, token } })
+  if (res?.status === STATUS_CODE_SUCCESS) {
+    Cookies.remove(COOKIES_AUTH_TOKEN)
+  }
+  return res
+}
 
 export const changeUserPassword = async (username, newPassword) => {
   const res = await axios.put(URL_USER_SVC, { username, newPassword })
   console.log(res)
   return res
+}
+
+//--------Private utils----------//
+const getJWT = () => {
+  const token = Cookies.get(COOKIES_AUTH_TOKEN)
+  if (!token) {
+    throw new Error('JWT not found in cookies.')
+  }
+  return token
 }
