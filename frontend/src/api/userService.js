@@ -28,7 +28,9 @@ export const logoutUser = async () => {
   return res
 }
 
-// include signup user
+export const signupUser = async (username, password) =>
+  await axios.post(URL_USER_SVC, { username, password })
+
 export const deleteUser = async (username) => {
   const token = getJWT()
   const res = await axios.delete(URL_USER_SVC, { data: { username, token } })
