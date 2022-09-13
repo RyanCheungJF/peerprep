@@ -8,6 +8,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import { logoutUser } from '../api/userService'
+import { loginUrl } from '../utils/routeConstants'
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -25,7 +26,7 @@ const NavBar = () => {
     try {
       await logoutUser()
       handleClose()
-      navigate('./login', { replace: true })
+      navigate(loginUrl, { replace: true })
     } catch (err) {
       console.error(`Failed to log user out: ${err}`)
     }
