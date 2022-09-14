@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Divider, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SelectDifficulty from '../components/SelectDifficulty'
@@ -38,9 +38,12 @@ const HomePage = () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      {' '}
       <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
-        {'Home!'}
+        {'Home Page'}
+      </Typography>
+      <Divider sx={{ marginBottom: '2rem' }} variant="middle" />
+      <Typography sx={{ marginBottom: '2rem' }} variant={'h5'}>
+        {'Account Management'}
       </Typography>
       <Box
         sx={{
@@ -50,23 +53,26 @@ const HomePage = () => {
         }}
       >
         <Button
-          sx={{ marginRight: '2px' }}
+          sx={{ marginBottom: '2rem', marginRight: '2px' }}
           variant={'outlined'}
           onClick={() => navigate('/profile')} 
         >
           {'Profile Page'}
         </Button>
-
-        <SelectDifficulty
-          pageTitle="Select Difficulty"
-          ctaText="Find Match"
-          handleFindMatch={handleFindMatch}
-          isDialogOpen={isDialogOpen}
-          closeDialog={closeDialog}
-          dialogTitle={dialogTitle}
-          dialogMsg={dialogMsg}
-        />
       </Box>
+      <Divider sx={{ marginBottom: '2rem' }} variant="middle" />
+      <Typography sx={{ marginBottom: '2rem' }} variant={'h5'}>
+        {'Find Match'}
+      </Typography>
+      <SelectDifficulty
+        pageTitle="Select Difficulty"
+        ctaText="Find Match"
+        handleFindMatch={handleFindMatch}
+        isDialogOpen={isDialogOpen}
+        closeDialog={closeDialog}
+        dialogTitle={dialogTitle}
+        dialogMsg={dialogMsg}
+      />
     </Box>
   )
 }
