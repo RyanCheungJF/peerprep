@@ -15,7 +15,7 @@ import {
   import { useState } from 'react'
   import { useNavigate } from 'react-router-dom'
   
-  const SelectDifficulty = () => {
+  const FindMatch = () => {
     const [difficulty, setDifficulty] = useState('');
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [dialogTitle, setDialogTitle] = useState('')
@@ -78,5 +78,5 @@ import {
     )
   }
 
-  export default SelectDifficulty
+  export default FindMatch
   
