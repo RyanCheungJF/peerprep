@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Button, Divider, Typography, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SelectDifficulty from '../components/SelectDifficulty'
@@ -7,6 +7,7 @@ const HomePage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
+  const [difficulty, setDifficulty] = useState('');
   const navigate = useNavigate()
 
   const handleFindMatch = (difficulty) => {
@@ -38,41 +39,51 @@ const HomePage = () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
-        {'Home Page'}
-      </Typography>
-      <Divider sx={{ marginBottom: '2rem' }} variant="middle" />
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h5'}>
-        {'Account Management'}
-      </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Typography variant={'h3'}>
+          {'Home Page'}
+        </Typography>
+      </Box>
+      <Divider variant="middle" />
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Typography sx={{ marginBottom: '2rem' }} variant={'h6'}>
+          {'Account Management'}
+        </Typography>
         <Button
-          sx={{ marginBottom: '2rem', marginRight: '2px' }}
+          sx={{ my: '2px' }}
           variant={'outlined'}
           onClick={() => navigate('/profile')} 
         >
           {'Profile Page'}
         </Button>
       </Box>
-      <Divider sx={{ marginBottom: '2rem' }} variant="middle" />
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h5'}>
+      <Divider variant="middle" />
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Typography sx={{ marginBottom: '2rem' }} variant={'h6'}>
         {'Find Match'}
-      </Typography>
-      <SelectDifficulty
-        pageTitle="Select Difficulty"
-        ctaText="Find Match"
-        handleFindMatch={handleFindMatch}
-        isDialogOpen={isDialogOpen}
-        closeDialog={closeDialog}
-        dialogTitle={dialogTitle}
-        dialogMsg={dialogMsg}
-      />
+        </Typography>
+
+        <FormControl fullWidth sx={{ marginBottom: '2rem' }}>
+          <InputLabel>Select Difficulty</InputLabel>
+          <Select
+            value={difficulty}
+            label="Select Difficulty"
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
+            <MenuItem value="Easy">Easy</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="Hard">Hard</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Button
+          sx={{ my: '2px' }}
+          variant={'outlined'}
+          onClick={() => handleFindMatch(difficulty)}
+        >
+          {'Find Match'}
+        </Button>
+      </Box>
     </Box>
   )
 }

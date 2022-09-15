@@ -10,12 +10,10 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    Typography,
   } from '@mui/material'
   import { useState } from 'react'
   
   const SelectDifficulty = ({
-    pageTitle,
     ctaText,
     handleFindMatch,
     isDialogOpen,
@@ -27,10 +25,6 @@ import {
 
     return (
       <Box display={'flex'} flexDirection={'column'} width={'30%'}>
-        <Typography variant={'h3'} marginBottom={'2rem'}>
-          {pageTitle}
-        </Typography>
-        
         <FormControl fullWidth>
           <InputLabel>Difficulty</InputLabel>
           <Select
