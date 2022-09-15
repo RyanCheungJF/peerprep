@@ -1,7 +1,8 @@
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { changeUserPassword } from '../api/userService'
+import { changeUserPassword, deleteUser } from '../api/userService'
+import { homeUrl, baseUrl } from '../utils/routeConstants'
 
 const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState('')
@@ -24,6 +25,17 @@ const ProfilePage = () => {
       console.log('success ', res)
     } catch (err) {
       console.log('error: ', err)
+    }
+  }
+
+  // hardcoded for now also. Will read this from context next time.
+  const username = 'samtest10'
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(username)
+      navigate(baseUrl)
+    } catch (err) {
+      console.log(`Failed to delete user account: ${err}`)
     }
   }
 
@@ -68,7 +80,15 @@ const ProfilePage = () => {
         <Button
           sx={{ margin: '2px' }}
           variant={'outlined'}
-          onClick={() => navigate('/home')}
+          color={'error'}
+          onClick={handleDeleteAccount}
+        >
+          {'Delete Account'}
+        </Button>
+        <Button
+          sx={{ margin: '2px' }}
+          variant={'outlined'}
+          onClick={() => navigate(homeUrl)}
         >
           {'Back to Home'}
         </Button>
