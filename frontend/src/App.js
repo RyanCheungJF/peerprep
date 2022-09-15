@@ -4,22 +4,28 @@ import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
-import { Box } from '@mui/material'
+import NavBar from './components/NavBar'
+import {
+  baseUrl,
+  signupUrl,
+  loginUrl,
+  homeUrl,
+  profileUrl,
+} from './utils/routeConstants'
 
 const App = () => {
   return (
     <div className="App">
-      <Box display={'flex'} flexDirection={'column'} padding={'4rem'}>
-        <Router>
-          <Routes>
-            <Route exact path="/" element={<LandingPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Routes>
-        </Router>
-      </Box>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route exact path={baseUrl} element={<LandingPage />} />
+          <Route path={signupUrl} element={<SignupPage />} />
+          <Route path={loginUrl} element={<LoginPage />} />
+          <Route path={homeUrl} element={<HomePage />} />
+          <Route path={profileUrl} element={<ProfilePage />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
