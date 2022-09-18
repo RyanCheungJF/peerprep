@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
+  AUTH_REDIRECT,
   STATUS_CODE_SUCCESS,
   STATUS_CODE_UNAUTHORIZED,
 } from '../utils/constants'
+import { homeUrl } from '../utils/routeConstants'
 import { checkFormFields } from '../utils/main'
 import { loginUser } from '../api/userService'
 
@@ -47,11 +49,14 @@ const LoginPage = () => {
     setDialogMsg(msg)
   }
 
-  const redirectButton = (
-    <Button component={Link} to="/home">
-      Go To Home
-    </Button>
-  )
+  const redirectButton = () => {
+    const redirectUrl = window.localStorage.getItem(AUTH_REDIRECT) ?? homeUrl
+    return (
+      <Button component={Link} to={redirectUrl} replace={true}>
+        Close
+      </Button>
+    )
+  }
 
   return (
     <UserAuth

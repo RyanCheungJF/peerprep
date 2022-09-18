@@ -46,8 +46,7 @@ export const changeUserPassword = async (username, newPassword) => {
   return res
 }
 
-//--------Private utils----------//
-const getJWT = () => {
+export const getJWT = () => {
   const token = Cookies.get(COOKIES_AUTH_TOKEN)
   if (!token) {
     throw new Error('JWT not found in cookies.')
