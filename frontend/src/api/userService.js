@@ -53,3 +53,7 @@ export const getJWT = () => {
   }
   return token
 }
+
+export const isUserLoggedIn = () => {
+  return !!Cookies.get(COOKIES_AUTH_TOKEN)
+}

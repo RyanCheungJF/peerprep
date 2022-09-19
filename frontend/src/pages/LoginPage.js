@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
@@ -9,13 +9,17 @@ import {
 } from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
 import { checkFormFields } from '../utils/main'
-import { loginUser } from '../api/userService'
+import { loginUser, isUserLoggedIn } from '../api/userService'
 
 const LoginPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+
+  if (isUserLoggedIn()) {
+    return <Navigate to={homeUrl} replace={true} />
+  }
 
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
