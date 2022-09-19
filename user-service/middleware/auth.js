@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { checkJWTExists } from '../model/redis_repository.js'
+import { checkJWTExists } from '../model/redis-repository.js'
 
 const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers['authorization']
