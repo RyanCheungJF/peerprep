@@ -50,7 +50,7 @@ const SignupPage = () => {
     setDialogMsg(msg)
   }
 
-  const redirectButton = (
+  const redirectButton = () => (
     <Button component={Link} to="/login">
       Log in
     </Button>
