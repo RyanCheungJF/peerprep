@@ -39,15 +39,12 @@ export const createUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-  // 09/09/22: Revisit when we start protecting routes sicne we'd probably pass tokens in via headers.
-  const { username, token } = req.body
-  if (!username || !token) {
-    return res
-      .status(400)
-      .json({ message: 'Username and/or auth token are missing!' })
+  const { username } = req.body
+  if (!username) {
+    return res.status(400).json({ message: 'Username missing!' })
   }
 
-  const invalidationResult = await _invalidateJWT(token)
+  const invalidationResult = await _invalidateJWT(req.token)
   if (!invalidationResult) {
     return res
       .status(500)
@@ -112,9 +109,7 @@ export const updateUserPassword = async (req, res) => {
 }
 
 export const logoutUser = async (req, res) => {
-  const { token } = req.body
-
-  const invalidationResult = await _invalidateJWT(token)
+  const invalidationResult = await _invalidateJWT(req.token)
   if (invalidationResult) {
     return res
       .status(200)

@@ -7,3 +7,6 @@ export const STATUS_CODE_CONFLICT = 409
 //------- AUTH CONSTANTS --------//
 export const COOKIES_AUTH_TOKEN = 'access_token'
 export const JWT_EXPIRY = 7
+
+//------- LOCAL STORAGE KEYS -------//
+export const AUTH_REDIRECT = 'auth_redirect'
