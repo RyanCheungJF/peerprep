@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import NavBar from './components/NavBar'
+import PrivateRoute from './components/PrivateRoute'
 import {
   baseUrl,
   signupUrl,
@@ -22,8 +23,22 @@ const App = () => {
           <Route exact path={baseUrl} element={<LandingPage />} />
           <Route path={signupUrl} element={<SignupPage />} />
           <Route path={loginUrl} element={<LoginPage />} />
-          <Route path={homeUrl} element={<HomePage />} />
-          <Route path={profileUrl} element={<ProfilePage />} />
+          <Route
+            path={homeUrl}
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={profileUrl}
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
     </div>

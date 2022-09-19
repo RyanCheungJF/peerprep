@@ -91,7 +91,7 @@ const UserAuth = ({
         </DialogContent>
         <DialogActions>
           {isAuthSuccess ? (
-            redirectButton
+            redirectButton()
           ) : (
             <Button onClick={closeDialog}>Done</Button>
           )}

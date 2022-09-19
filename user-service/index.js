@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import authenticateToken from './middleware/auth.js'
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
@@ -19,10 +20,10 @@ const router = express.Router()
 // Controller will contain all the User-defined Routes
 router.get('/', (_, res) => res.send('Hello World from user-service'))
 router.post('/', createUser)
-router.put('/', updateUserPassword)
-router.delete('/', deleteUser)
+router.put('/', authenticateToken, updateUserPassword)
+router.delete('/', authenticateToken, deleteUser)
 router.post('/login', loginUser)
-router.post('/logout', logoutUser)
+router.post('/logout', authenticateToken, logoutUser)
 
 app.use('/api/user', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

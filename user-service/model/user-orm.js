@@ -3,12 +3,12 @@ import {
   deleteUser,
   findUser,
   checkIfUserExists,
-  updateUserPassword
+  updateUserPassword,
 } from './repository.js'
 import {
   addJWT as addJWTToRedis,
   checkJWTExists as checkJWTExistsRedis,
-} from './redis_repository.js'
+} from './redis-repository.js'
 
 // need to separate orm functions from repository to decouple business logic from persistence
 export const ormCreateUser = async (username, password) => {

@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
-import { signupUser } from '../api/userService'
+import { signupUser, isUserLoggedIn } from '../api/userService'
 import { STATUS_CODE_CONFLICT, STATUS_CODE_CREATED } from '../utils/constants'
+import { homeUrl } from '../utils/routeConstants'
 import { checkFormFields } from '../utils/main'
 
 const SignupPage = () => {
@@ -11,6 +12,10 @@ const SignupPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isSignupSuccess, setIsSignupSuccess] = useState(false)
+
+  if (isUserLoggedIn()) {
+    return <Navigate to={homeUrl} replace={true} />
+  }
 
   const handleSignup = async (username, password) => {
     setIsSignupSuccess(false)
@@ -45,7 +50,7 @@ const SignupPage = () => {
     setDialogMsg(msg)
   }
 
-  const redirectButton = (
+  const redirectButton = () => (
     <Button component={Link} to="/login">
       Log in
     </Button>

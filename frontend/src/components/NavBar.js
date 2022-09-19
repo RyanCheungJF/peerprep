@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-import { logoutUser } from '../api/userService'
+import { logoutUser, isUserLoggedIn } from '../api/userService'
 import { loginUrl } from '../utils/routeConstants'
 
 const NavBar = () => {
@@ -32,36 +32,44 @@ const NavBar = () => {
     }
   }
 
+  const _renderAccountIcon = () => {
+    if (!isUserLoggedIn()) {
+      return null
+    }
+
+    return (
+      <>
+        <IconButton size="large" onClick={handleMenu} color="inherit">
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={!!anchorEl}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleLogout}>Log out</MenuItem>
+        </Menu>
+      </>
+    )
+  }
+
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           PeerPrep
         </Typography>
-        <div>
-          <IconButton size="large" onClick={handleMenu} color="inherit">
-            <AccountCircle />
-          </IconButton>
-          {/* TODO: Only show the 'account' icon when user is logged in.
-              To be done when we add auth checks to private pages.*/}
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={!!anchorEl}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
-          </Menu>
-        </div>
+        {_renderAccountIcon()}
       </Toolbar>
     </AppBar>
   )
