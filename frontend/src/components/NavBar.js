@@ -8,7 +8,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import { logoutUser, isUserLoggedIn } from '../api/userService'
-import { loginUrl } from '../utils/routeConstants'
+import { loginUrl, profileUrl } from '../utils/routeConstants'
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -20,6 +20,11 @@ const NavBar = () => {
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const handleProfile = () => {
+    handleClose();
+    navigate(profileUrl)
   }
 
   const handleLogout = async () => {
@@ -57,6 +62,7 @@ const NavBar = () => {
           open={!!anchorEl}
           onClose={handleClose}
         >
+          <MenuItem onClick={handleProfile}>Profile</MenuItem>
           <MenuItem onClick={handleLogout}>Log out</MenuItem>
         </Menu>
       </>
