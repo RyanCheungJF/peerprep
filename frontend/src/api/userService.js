@@ -69,5 +69,6 @@ export const getJWT = () => {
 }
 
 export const isUserLoggedIn = () => {
+  // double !! converts an object to boolean
   return !!Cookies.get(COOKIES_AUTH_TOKEN)
 }
