@@ -1,8 +1,14 @@
 import { Box, Button, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
+import { isUserLoggedIn } from '../api/userService'
+import { homeUrl } from '../utils/routeConstants'
 
 const LandingPage = () => {
   const navigate = useNavigate()
+
+  if (isUserLoggedIn()) {
+    return <Navigate to={homeUrl} replace={true} />
+  }
 
   return (
     <Box
