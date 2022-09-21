@@ -1,23 +1,24 @@
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle
-  } from '@mui/material'
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
+import { UserContext } from '../contexts/UserContext'
 import { deleteUser } from '../api/userService'
 import { baseUrl } from '../utils/routeConstants'
-  
+
 const DeleteAccountDialog = ({ isDialogOpen, handleNo }) => {
   const navigate = useNavigate()
+  const user = useContext(UserContext)
 
-  // Hardcoded for now also. Will read this from context next time.
-  const username = 'samtest10'
   const handleDeleteAccount = async () => {
     try {
-      await deleteUser(username)
+      await deleteUser(user.username)
       navigate(baseUrl)
     } catch (err) {
       console.log(`Failed to delete user account: ${err}`)

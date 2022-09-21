@@ -3,6 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import { UserContext } from '../contexts/UserContext'
 import { isUserLoggedIn, getUser } from '../api/userService'
 import { loginUrl } from '../utils/routeConstants'
 import { AUTH_REDIRECT, COOKIES_AUTH_TOKEN } from '../utils/constants'
@@ -16,6 +17,7 @@ const PrivateRouteViewState = {
 
 const PrivateRoute = ({ children }) => {
   const [viewState, setViewState] = useState(PrivateRouteViewState.loading)
+  const [user, setUser] = useState({})
   const location = useLocation()
 
   useEffect(() => {
@@ -29,6 +31,7 @@ const PrivateRoute = ({ children }) => {
 
       try {
         const response = await getUser()
+        setUser(response.data)
         setViewState(PrivateRouteViewState.authed)
       } catch (err) {
         // JWT possibly expired or invalid
@@ -66,7 +69,9 @@ const PrivateRoute = ({ children }) => {
       return _renderRedirect()
 
     case PrivateRouteViewState.authed:
-      return children
+      return (
+        <UserContext.Provider value={user}>{children}</UserContext.Provider>
+      )
 
     default:
       return null
