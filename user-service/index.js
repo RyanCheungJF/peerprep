@@ -8,6 +8,7 @@ app.use(express.json())
 app.use(cors()) // config cors so that front-end can use
 app.options('*', cors())
 import {
+  getUser,
   createUser,
   loginUser,
   logoutUser,
@@ -18,7 +19,7 @@ import {
 const router = express.Router()
 
 // Controller will contain all the User-defined Routes
-router.get('/', (_, res) => res.send('Hello World from user-service'))
+router.get('/', authenticateToken, getUser)
 router.post('/', createUser)
 router.put('/', authenticateToken, updateUserPassword)
 router.delete('/', authenticateToken, deleteUser)

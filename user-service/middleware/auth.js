@@ -13,10 +13,11 @@ const authenticateToken = async (req, res, next) => {
     return res.sendStatus(403)
   }
 
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, _) => {
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) {
       return res.sendStatus(403)
     } else {
+      req.userId = user.userId
       req.token = token
       next()
     }

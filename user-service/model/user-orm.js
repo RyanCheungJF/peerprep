@@ -31,6 +31,15 @@ export const ormDeleteUser = async (username) => {
   }
 }
 
+export const ormFindUserById = async (id, projection) => {
+  try {
+    return await findUser({ _id: id }, projection)
+  } catch (err) {
+    console.log('ERROR: Could not query for user')
+    return { err }
+  }
+}
+
 export const ormFindUserByUsername = async (username) => {
   try {
     return await findUser({ username })
