@@ -5,6 +5,7 @@ import UserAuth from '../components/UserAuth'
 import {
   AUTH_REDIRECT,
   STATUS_CODE_SUCCESS,
+  STATUS_CODE_BAD_REQUEST,
   STATUS_CODE_UNAUTHORIZED,
 } from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
@@ -33,6 +34,8 @@ const LoginPage = () => {
     } catch (err) {
       if (err.response.status === STATUS_CODE_UNAUTHORIZED) {
         setErrorDialog('Wrong username/password.')
+      } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
+        setErrorDialog('Username and/or Password are missing!')
       } else {
         setErrorDialog('Please try again later')
       }
