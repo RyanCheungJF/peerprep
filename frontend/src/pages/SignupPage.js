@@ -1,10 +1,14 @@
 import { useState } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
-import { STATUS_CODE_CONFLICT, STATUS_CODE_CREATED } from '../utils/constants'
-import { URL_USER_SVC } from '../utils/configs'
+import { signupUser, isUserLoggedIn } from '../api/userService'
+import {
+  STATUS_CODE_CONFLICT,
+  STATUS_CODE_BAD_REQUEST,
+  STATUS_CODE_CREATED,
+} from '../utils/constants'
+import { homeUrl } from '../utils/routeConstants'
 import { checkFormFields } from '../utils/main'
 
 const SignupPage = () => {
@@ -13,21 +17,28 @@ const SignupPage = () => {
   const [dialogMsg, setDialogMsg] = useState('')
   const [isSignupSuccess, setIsSignupSuccess] = useState(false)
 
+  if (isUserLoggedIn()) {
+    return <Navigate to={homeUrl} replace={true} />
+  }
+
   const handleSignup = async (username, password) => {
     setIsSignupSuccess(false)
     checkFormFields(username, password, setErrorDialog)
-    const res = await axios
-      .post(URL_USER_SVC, { username, password })
-      .catch((err) => {
-        if (err.response.status === STATUS_CODE_CONFLICT) {
-          setErrorDialog('This username already exists')
-        } else {
-          setErrorDialog('Please try again later')
-        }
-      })
-    if (res && res.status === STATUS_CODE_CREATED) {
-      setSuccessDialog('Account successfully created')
-      setIsSignupSuccess(true)
+
+    try {
+      const res = await signupUser(username, password)
+      if (res && res.status === STATUS_CODE_CREATED) {
+        setSuccessDialog('Account successfully created')
+        setIsSignupSuccess(true)
+      }
+    } catch (err) {
+      if (err.response.status === STATUS_CODE_CONFLICT) {
+        setErrorDialog('This username already exists')
+      } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
+        setErrorDialog('Username and/or Password are missing!')
+      } else {
+        setErrorDialog('Please try again later')
+      }
     }
   }
 
@@ -45,7 +56,7 @@ const SignupPage = () => {
     setDialogMsg(msg)
   }
 
-  const redirectButton = (
+  const redirectButton = () => (
     <Button component={Link} to="/login">
       Log in
     </Button>

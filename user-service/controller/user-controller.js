@@ -5,11 +5,23 @@ import {
   ormCheckIfUserExists as _checkIfUserExists,
   ormUpdateUserPassword as _updateUserPassword,
   ormInvalidateJWT as _invalidateJWT,
+  ormFindUserById as _findUserById,
 } from '../model/user-orm.js'
 import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
+
+export const getUser = async (req, res) => {
+  const { userId } = req
+
+  const user = await _findUserById(userId, { password: 0 })
+  if (user.err) {
+    return res.status(500).json({ message: 'Error retrieving user.' })
+  }
+
+  return res.status(200).json(user)
+}
 
 export const createUser = async (req, res) => {
   try {
@@ -39,15 +51,12 @@ export const createUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-  // 09/09/22: Revisit when we start protecting routes sicne we'd probably pass tokens in via headers.
-  const { username, token } = req.body
-  if (!username || !token) {
-    return res
-      .status(400)
-      .json({ message: 'Username and/or auth token are missing!' })
+  const { username } = req.body
+  if (!username) {
+    return res.status(400).json({ message: 'Username missing!' })
   }
 
-  const invalidationResult = await _invalidateJWT(token)
+  const invalidationResult = await _invalidateJWT(req.token)
   if (!invalidationResult) {
     return res
       .status(500)
@@ -77,9 +86,13 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({ message: 'ERROR: Could not log user in' })
   }
   if (user && (await bcrypt.compare(password, user.password))) {
-    const token = jwt.sign({ username, password }, process.env.TOKEN_SECRET, {
-      expiresIn: JWT_EXPIRY,
-    })
+    const token = jwt.sign(
+      { userId: user._id.toString(), password },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: JWT_EXPIRY,
+      }
+    )
     return res.status(200).json({ userId: user._id, token })
   }
   return res.status(401).send('Invalid login credentials')
@@ -112,9 +125,7 @@ export const updateUserPassword = async (req, res) => {
 }
 
 export const logoutUser = async (req, res) => {
-  const { token } = req.body
-
-  const invalidationResult = await _invalidateJWT(token)
+  const invalidationResult = await _invalidateJWT(req.token)
   if (invalidationResult) {
     return res
       .status(200)

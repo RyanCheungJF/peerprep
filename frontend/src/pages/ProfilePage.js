@@ -1,31 +1,24 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { changeUserPassword } from '../api/userService'
+import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { homeUrl } from '../utils/routeConstants'
+import ChangePasswordDialog from '../components/ChangePasswordDialog'
+import DeleteAccountDialog from '../components/DeleteAccountDialog'
 
 const ProfilePage = () => {
-  const [newPassword, setNewPassword] = useState('')
+  // Change Password Dialog
+  const [changePasswordDialogOpen, setChangePasswordDialogOpen] = useState(false)
+  const handleChangePasswordCloseDialog = () => setChangePasswordDialogOpen(false)
+  const handleChangePasswordOpenDialog = () => setChangePasswordDialogOpen(true)
+
+  // Delete Account Dialog
+  const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
+  const handleDeleteAccountCloseDialog = () => setDeleteAccountDialogOpen(false)
+  const handleDeleteAccountOpenDialog = () => setDeleteAccountDialogOpen(true)
+
   const navigate = useNavigate()
-
-  // hardcoded value for now, for those doing cookies/ jwt/ context
-  // need to read from there
-  // to test, check atlas to see if there are changes to the hash
-  const uuid = '6311b4362716d8f9d80288bb'
-
-  const handleChangePassword = async () => {
-    if (!newPassword) {
-      // will add in some ui component in the future to reflect
-      // but for now can just check with console.log
-      console.log('Password cannot be empty!')
-      return
-    }
-    try {
-      const res = await changeUserPassword(uuid, newPassword)
-      console.log('success ', res)
-    } catch (err) {
-      console.log('error: ', err)
-    }
-  }
 
   return (
     <Box
@@ -39,38 +32,62 @@ const ProfilePage = () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      {' '}
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
-        {'Profile lmao'}
-      </Typography>
-      <TextField
-        label="New Password"
-        variant="standard"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        sx={{ marginBottom: '1rem' }}
-        autoFocus
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Typography variant={'h3'}>
+          Profile Page
+        </Typography>
+      </Box>
+
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Divider>
+          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Personal Information" color="primary" />
+        </Divider>
+        <Typography sx={{ mt:5 }} variant={'h6'}>
+          Coming Soon!
+        </Typography>
+      </Box>
+
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Divider>
+          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Account Management" color="primary" />
+        </Divider>
+        <Stack direction="row" spacing={2} sx={{ mt:5 }}>
+          <Chip
+            icon={<EditIcon />}
+            label="Change Password"
+            color="info"
+            variant="outlined"
+            style={{ fontSize: "1rem" }}
+            onClick={handleChangePasswordOpenDialog}
+            />
+          <Chip
+            icon={<DeleteIcon />}
+            label="Delete Account"
+            color="error"
+            variant="outlined"
+            style={{ fontSize: "1rem" }}
+            onClick={handleDeleteAccountOpenDialog}
+          />
+        </Stack>
+      </Box>
+
+      <ChangePasswordDialog
+        isDialogOpen={changePasswordDialogOpen}
+        handleCloseDialog={handleChangePasswordCloseDialog}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
+
+      <DeleteAccountDialog
+        isDialogOpen={deleteAccountDialogOpen}
+        handleNo={handleDeleteAccountCloseDialog}
+      />
+
+      <Box sx={{ my: 3, mx: 2 }}>
         <Button
           sx={{ margin: '2px' }}
           variant={'outlined'}
-          onClick={handleChangePassword}
+          onClick={() => navigate(homeUrl)}
         >
-          {'Change Password'}
-        </Button>
-        <Button
-          sx={{ margin: '2px' }}
-          variant={'outlined'}
-          onClick={() => navigate('/home')}
-        >
-          {'Back to Home'}
+          Back to Home
         </Button>
       </Box>
     </Box>
