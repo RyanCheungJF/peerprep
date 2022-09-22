@@ -11,6 +11,12 @@ import {
   JWT_EXPIRY,
 } from '../utils/constants'
 
+export const getUser = async () => {
+  return axios.get(URL_USER_SVC, {
+    ...getAuthHeader(),
+  })
+}
+
 export const loginUser = async (username, password) => {
   const res = await axios.post(URL_USER_LOGIN_SVC, { username, password })
   if (res?.status === STATUS_CODE_SUCCESS) {
