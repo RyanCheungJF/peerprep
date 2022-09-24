@@ -1,7 +1,12 @@
 import { createClient } from 'redis'
 import { REDIS_JWT_KEY, JWT_EXPIRY } from '../constants.js'
+import 'dotenv/config'
 
-const client = createClient()
+const REDIS_URI = process.env.REDIS_URI || 'localhost:6379'
+console.log('(REDIS) Connecting to url:', REDIS_URI)
+const client = createClient({
+  url: `redis://default:@${REDIS_URI}`,
+})
 client.on('error', (err) => console.error('Redis client connection error', err))
 client.on('connect', () => console.log('REDIS CONNECTED'))
 await client.connect()
