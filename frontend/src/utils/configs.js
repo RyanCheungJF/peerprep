@@ -1,5 +1,6 @@
 //------- CONNECTION OR SETUP CONFIGS --------//
-const URI_USER_SVC = process.env.URI_USER_SVC || 'http://localhost:8000'
+const URI_USER_SVC =
+  process.env.REACT_APP_URI_USER_SVC || 'http://localhost:8000'
 
 const PREFIX_USER_SVC = '/api/user'
 
