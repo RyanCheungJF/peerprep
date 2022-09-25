@@ -10,6 +10,11 @@ services:
     ports:
       - 8000:8000
     environment:
+      # env variables read in from env file
+      - ENV
+      - DB_CLOUD_URI
+      - TOKEN_SECRET
+      # not read in from env file
       - REDIS_URI=redis
     depends_on:
       - redis
