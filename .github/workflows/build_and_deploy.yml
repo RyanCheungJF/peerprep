@@ -70,7 +70,5 @@ jobs:
             docker compose down
             # Pull latest images
             docker compose pull
-            # Get droplet's current IP address and store as ENV variable for docker compose to use
-            export IP=$(curl ifconfig.me)
             # Restart docker compose stack with latest images
             docker compose up -d
