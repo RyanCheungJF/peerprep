@@ -16,7 +16,7 @@ export const getUser = async (req, res) => {
   const { userId } = req
 
   const user = await _findUserById(userId, { password: 0 })
-  if (user.err) {
+  if (!user || user.err) {
     return res.status(500).json({ message: 'Error retrieving user.' })
   }
 
