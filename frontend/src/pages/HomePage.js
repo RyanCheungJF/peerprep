@@ -15,13 +15,15 @@ const HomePage = () => {
       }}
     >
       <Box sx={{ my: 3, mx: 2 }}>
-        <Typography variant={'h3'}>
-          Home Page
-        </Typography>
+        <Typography variant={'h3'}>Home Page</Typography>
       </Box>
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
-          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Find Match" color="primary" />
+          <Chip
+            sx={{ p: 2, fontSize: '1.1rem' }}
+            label="Find Match"
+            color="primary"
+          />
         </Divider>
         <FindMatch />
       </Box>

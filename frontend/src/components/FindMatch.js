@@ -1,24 +1,33 @@
+import { useState } from 'react'
 import {
   Box,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
-  Select
+  Select,
 } from '@mui/material'
-import { useState } from 'react'
-import AlertDialog from './AlertDialog';
-import FindingMatchDialog from './FindingMatchDialog';
+import AlertDialog from './AlertDialog'
+import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
-  const [difficultyLevel, setDifficultyLevel] = useState('');
-  const [timer, setTimer] = useState('');
+  const [difficultyLevel, setDifficultyLevel] = useState('')
+  const [timer, setTimer] = useState('')
   const timeOutSeconds = 30
 
   // Select Difficulty Level Error Dialog
-  const [selectDifficultyLevelErrorDialogOpen, setSelectDifficultyLevelErrorDialogOpen] = useState(false)
-  const handleSelectDifficultyLevelErrorCloseDialog = () => setSelectDifficultyLevelErrorDialogOpen(false)
-  const handleSelectDifficultyLevelErrorOpenDialog = () => setSelectDifficultyLevelErrorDialogOpen(true)
+  const [
+    selectDifficultyLevelErrorDialogOpen,
+    setSelectDifficultyLevelErrorDialogOpen,
+  ] = useState(false)
+  const handleSelectDifficultyLevelErrorCloseDialog = () =>
+    setSelectDifficultyLevelErrorDialogOpen(false)
+  const handleSelectDifficultyLevelErrorOpenDialog = () =>
+    setSelectDifficultyLevelErrorDialogOpen(true)
+  const selectDifficultyLevelErrorDialogTitle = 'Unable to Find Match'
+  const selectDifficultyLevelErrorDialogMsg =
+    'Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you.'
+  const selectDifficultyLevelErrorDialogButtonText = 'OK'
 
   // Finding Match Dialog
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
@@ -26,7 +35,11 @@ const FindMatch = () => {
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
 
   const handleFindMatch = (difficultyLevel) => {
-    if (difficultyLevel === "Easy" || difficultyLevel === "Medium" || difficultyLevel === "Hard") {
+    if (
+      difficultyLevel === 'Easy' ||
+      difficultyLevel === 'Medium' ||
+      difficultyLevel === 'Hard'
+    ) {
       console.log('Difficulty Level Selected: ' + difficultyLevel)
       handleFindingMatchOpenDialog()
       setTimer(timeOutSeconds)
@@ -37,7 +50,7 @@ const FindMatch = () => {
 
   return (
     <Box sx={{ my: 3 }}>
-      <FormControl fullWidth sx={{ mb:3 }}>
+      <FormControl fullWidth sx={{ mb: 3 }}>
         <InputLabel>Select Difficulty Level</InputLabel>
         <Select
           value={difficultyLevel}
@@ -58,15 +71,15 @@ const FindMatch = () => {
       </Button>
 
       <AlertDialog
-        isDialogOpen={selectDifficultyLevelErrorDialogOpen}
+        dialogOpen={selectDifficultyLevelErrorDialogOpen}
         handleCloseDialog={handleSelectDifficultyLevelErrorCloseDialog}
-        dialogTitle={'Unable to Find Match'}
-        dialogMsg={'Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you.'}
-        dialogButtonText={'OK'}
+        dialogTitle={selectDifficultyLevelErrorDialogTitle}
+        dialogMsg={selectDifficultyLevelErrorDialogMsg}
+        dialogButtonText={selectDifficultyLevelErrorDialogButtonText}
       />
 
       <FindingMatchDialog
-        isDialogOpen={findingMatchDialogOpen}
+        dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
         difficultyLevel={difficultyLevel}
         timer={timer}
@@ -78,4 +91,3 @@ const FindMatch = () => {
 }
 
 export default FindMatch
-  

@@ -6,17 +6,17 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText, 
+  DialogContentText,
   DialogTitle,
 } from '@mui/material'
-  
+
 const FindingMatchDialog = ({
-  isDialogOpen,
+  dialogOpen,
   handleCloseDialog,
   difficultyLevel, // difficulty level to use for matching service
   timer,
   setTimer,
-  timeOutSeconds
+  timeOutSeconds,
 }) => {
   useEffect(() => {
     if (timer >= 0) {
@@ -36,7 +36,7 @@ const FindingMatchDialog = ({
   }
 
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog open={dialogOpen}>
       {timer >= 0 && (
         <>
           <DialogTitle>Finding Match</DialogTitle>
@@ -44,10 +44,12 @@ const FindingMatchDialog = ({
             <DialogContentText>
               Please wait while the system finds a match for you.
             </DialogContentText>
-            <Box sx={{ display: 'flex', justifyContent: 'center', my:3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
               <CircularProgress />
             </Box>
-            <DialogContentText sx={{ display: 'flex', justifyContent: 'center'}}>
+            <DialogContentText
+              sx={{ display: 'flex', justifyContent: 'center' }}
+            >
               Time left : {timer}
             </DialogContentText>
           </DialogContent>
@@ -76,4 +78,3 @@ const FindingMatchDialog = ({
 }
 
 export default FindingMatchDialog
-  

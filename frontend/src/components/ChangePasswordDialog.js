@@ -11,7 +11,7 @@ import {
 import { UserContext } from '../contexts/UserContext'
 import { changeUserPassword } from '../api/userService'
 
-const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
+const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
   const [newPassword, setNewPassword] = useState('')
   const [newPasswordTextFieldChanged, setNewPasswordTextFieldChanged] =
     useState(false)
@@ -43,14 +43,14 @@ const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
   }
 
   return (
-    <Dialog fullWidth={true} maxWidth="sm" open={isDialogOpen}>
+    <Dialog fullWidth={true} maxWidth="sm" open={dialogOpen}>
       <DialogTitle>Change Password</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>
           Please enter your new password below and submit.
         </DialogContentText>
         {!newPassword && !newPasswordTextFieldChanged && (
-          <div>
+          <>
             <TextField
               autoFocus
               fullWidth
@@ -64,10 +64,10 @@ const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
                 setNewPassword(e.target.value)
               }}
             />
-          </div>
+          </>
         )}
         {newPassword && newPasswordTextFieldChanged && (
-          <div>
+          <>
             <TextField
               autoFocus
               fullWidth
@@ -78,10 +78,10 @@ const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
-          </div>
+          </>
         )}
         {!newPassword && newPasswordTextFieldChanged && (
-          <div>
+          <>
             <TextField
               autoFocus
               error
@@ -93,7 +93,7 @@ const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
-          </div>
+          </>
         )}
       </DialogContent>
       <DialogActions>

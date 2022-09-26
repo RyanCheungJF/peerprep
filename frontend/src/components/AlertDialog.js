@@ -4,18 +4,18 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from '@mui/material'
 
 const AlertDialog = ({
-  isDialogOpen,
+  dialogOpen,
   handleCloseDialog,
   dialogTitle,
   dialogMsg,
-  dialogButtonText
+  dialogButtonText,
 }) => {
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog open={dialogOpen}>
       <DialogTitle>{dialogTitle}</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>{dialogMsg}</DialogContentText>
