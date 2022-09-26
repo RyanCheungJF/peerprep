@@ -1,5 +1,4 @@
-import { Box, Divider, Typography } from '@mui/material'
-import AccountManagement from '../components/AccountManagement'
+import { Box, Chip, Divider, Typography } from '@mui/material'
 import FindMatch from '../components/FindMatch'
 
 const HomePage = () => {
@@ -17,13 +16,15 @@ const HomePage = () => {
     >
       <Box sx={{ my: 3, mx: 2 }}>
         <Typography variant={'h3'}>
-          {'Home'}
+          Home Page
         </Typography>
       </Box>
-      <Divider variant="middle" />
-      <AccountManagement />
-      <Divider variant="middle" />
-      <FindMatch />
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Divider>
+          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Find Match" color="primary" />
+        </Divider>
+        <FindMatch />
+      </Box>
     </Box>
   )
 }

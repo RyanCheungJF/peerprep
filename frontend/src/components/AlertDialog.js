@@ -15,9 +15,9 @@ const AlertDialog = ({
   dialogButtonText
 }) => {
   return (
-    <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-      <DialogTitle dividers>{dialogTitle}</DialogTitle>
-      <DialogContent>
+    <Dialog open={isDialogOpen}>
+      <DialogTitle>{dialogTitle}</DialogTitle>
+      <DialogContent dividers>
         <DialogContentText>{dialogMsg}</DialogContentText>
       </DialogContent>
       <DialogActions>
