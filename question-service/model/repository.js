@@ -19,6 +19,6 @@ export const createQuestion = async (params) => {
   return new QuestionModel(params)
 }
 
-export const findQuestion = async (query, projection) => {
-  return QuestionModel.findOne(query, projection)
+export const findQuestionByDifficulty = async (query) => {
+  return QuestionModel.find(query)
 }

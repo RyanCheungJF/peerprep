@@ -1,8 +1,8 @@
-import { createQuestion, findQuestion } from './repository.js'
+import { createQuestion, findQuestionByDifficulty } from './repository.js'
 
-export const ormFindByTitle = async (title) => {
+export const ormFindByDifficulty = async (difficulty) => {
   try {
-    return await findQuestion({ title })
+    return await findQuestionByDifficulty({ difficulty: difficulty })
   } catch (err) {
     console.log('ERROR: Could not retrieve question')
     return { err }
