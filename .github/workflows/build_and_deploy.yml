@@ -1,9 +1,9 @@
 name: CD
 
 on:
-  push:
-    branches: [develop, ci-cd]
   workflow_dispatch:
+  push:
+    branches: [main, ci-cd]
 
 env:
   REGISTRY: "registry.digitalocean.com/cs3219-g35-peerprep"
