@@ -18,8 +18,8 @@ export const createUser = async (params) => {
   return new UserModel(params)
 }
 
-export const findUser = async (query) => {
-  return UserModel.findOne(query)
+export const findUser = async (query, projection) => {
+  return UserModel.findOne(query, projection)
 }
 
 export const checkIfUserExists = async (query) => {

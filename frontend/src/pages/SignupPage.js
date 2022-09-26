@@ -3,7 +3,11 @@ import { Link, Navigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import { signupUser, isUserLoggedIn } from '../api/userService'
-import { STATUS_CODE_CONFLICT, STATUS_CODE_CREATED } from '../utils/constants'
+import {
+  STATUS_CODE_CONFLICT,
+  STATUS_CODE_BAD_REQUEST,
+  STATUS_CODE_CREATED,
+} from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
 import { checkFormFields } from '../utils/main'
 
@@ -30,6 +34,8 @@ const SignupPage = () => {
     } catch (err) {
       if (err.response.status === STATUS_CODE_CONFLICT) {
         setErrorDialog('This username already exists')
+      } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
+        setErrorDialog('Username and/or Password are missing!')
       } else {
         setErrorDialog('Please try again later')
       }
