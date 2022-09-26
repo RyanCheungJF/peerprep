@@ -13,26 +13,38 @@ import {
 const FindingMatchDialog = ({
   dialogOpen,
   handleCloseDialog,
-  difficultyLevel, // difficulty level to use for matching service
   timer,
   setTimer,
-  timeOutSeconds,
+  findingMatchTimeOutSeconds,
+  stopMatchingService,
+  restartMatchingService,
 }) => {
   useEffect(() => {
     if (timer >= 0) {
       const timeoutID = setTimeout(() => setTimer(timer - 1), 1000)
+      console.log(timer)
       return () => clearTimeout(timeoutID) // clear timeout when component unmounts
     }
-  }, [timer, setTimer])
+
+    if (timer < 0) {
+      console.log(timer)
+      stopMatchingService() // stop matching service when timer ends i.e. when timer < 0
+    }
+  }, [timer, setTimer, stopMatchingService])
 
   const handleCancel = () => {
+    if (timer >= 0) {
+      console.log('==> Cancel Finding Match ===')
+      stopMatchingService() // stop matching service prematurely i.e. when timer >= 0
+    }
+
+    setTimer('NA') // set timer as 'NA' so that the effect hook does not run
     handleCloseDialog()
-    // Put code to cancel the matching service process
   }
 
   const handleTryAgain = () => {
-    setTimer(timeOutSeconds)
-    // Put code to restart the matching service process
+    setTimer(findingMatchTimeOutSeconds)
+    restartMatchingService()
   }
 
   return (

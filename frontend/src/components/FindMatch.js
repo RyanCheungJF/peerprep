@@ -11,51 +11,75 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
-  const [difficultyLevel, setDifficultyLevel] = useState('')
-  const [timer, setTimer] = useState('')
-  const timeOutSeconds = 30
+  const [difficulty, setDifficulty] = useState('')
 
-  // Select Difficulty Level Error Dialog
-  const [
-    selectDifficultyLevelErrorDialogOpen,
-    setSelectDifficultyLevelErrorDialogOpen,
-  ] = useState(false)
-  const handleSelectDifficultyLevelErrorCloseDialog = () =>
-    setSelectDifficultyLevelErrorDialogOpen(false)
-  const handleSelectDifficultyLevelErrorOpenDialog = () =>
-    setSelectDifficultyLevelErrorDialogOpen(true)
-  const selectDifficultyLevelErrorDialogTitle = 'Unable to Find Match'
-  const selectDifficultyLevelErrorDialogMsg =
-    'Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you.'
-  const selectDifficultyLevelErrorDialogButtonText = 'OK'
+  // Set timer as 'NA' upon initialisation so that the
+  // effect hook in FindingMatchDialog does not run
+  const [timer, setTimer] = useState('NA')
+
+  // Define finding match time out seconds
+  const findingMatchTimeOutSeconds = 30
+
+  // Select Difficulty Error Dialog
+  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
+    useState(false)
+  const handleSelectDifficultyErrorCloseDialog = () =>
+    setSelectDifficultyErrorDialogOpen(false)
+  const handleSelectDifficultyErrorOpenDialog = () =>
+    setSelectDifficultyErrorDialogOpen(true)
+  const selectDifficultyErrorDialogTitle = 'Unable to Find Match'
+  const selectDifficultyErrorDialogMsg =
+    'Please select the difficulty level (Easy, Medium or Hard) of the questions ' +
+    'you wish to attempt so that the system can find a match for you.'
+  const selectDifficultyErrorDialogButtonText = 'OK'
 
   // Finding Match Dialog
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
 
-  const handleFindMatch = (difficultyLevel) => {
+  const handleFindMatch = (difficulty) => {
     if (
-      difficultyLevel === 'Easy' ||
-      difficultyLevel === 'Medium' ||
-      difficultyLevel === 'Hard'
+      difficulty === 'Easy' ||
+      difficulty === 'Medium' ||
+      difficulty === 'Hard'
     ) {
-      console.log('Difficulty Level Selected: ' + difficultyLevel)
+      console.log('==> Difficulty Selected: ' + difficulty)
       handleFindingMatchOpenDialog()
-      setTimer(timeOutSeconds)
+      setTimer(findingMatchTimeOutSeconds)
+      startMatchingService()
     } else {
-      handleSelectDifficultyLevelErrorOpenDialog()
+      handleSelectDifficultyErrorOpenDialog()
     }
+  }
+
+  const startMatchingService = () => {
+    console.log('=== Start Matching Service ===')
+    console.log('Difficulty: ' + difficulty)
+    // TODO: Implementation code to start the matching service with the selected difficulty
+  }
+
+  const stopMatchingService = () => {
+    console.log('=== Stop Matching Service ===')
+    // TODO: Implementation code to stop the matching service
+  }
+
+  const restartMatchingService = () => {
+    console.log('=== Restart Matching Service ===')
+    startMatchingService(difficulty)
   }
 
   return (
     <Box sx={{ my: 3 }}>
       <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Select Difficulty Level</InputLabel>
+        <InputLabel>Select Difficulty</InputLabel>
         <Select
-          value={difficultyLevel}
-          label="Select Difficulty Level"
-          onChange={(e) => setDifficultyLevel(e.target.value)}
+          value={difficulty}
+          label="Select Difficulty"
+          onChange={(e) => {
+            setDifficulty(e.target.value)
+            setTimer('NA') // set timer as 'NA' so that the effect hook in FindingMatchDialog does not run
+          }}
         >
           <MenuItem value="Easy">Easy</MenuItem>
           <MenuItem value="Medium">Medium</MenuItem>
@@ -63,28 +87,26 @@ const FindMatch = () => {
         </Select>
       </FormControl>
 
-      <Button
-        variant={'outlined'}
-        onClick={() => handleFindMatch(difficultyLevel)}
-      >
+      <Button variant={'outlined'} onClick={() => handleFindMatch(difficulty)}>
         Find Match
       </Button>
 
       <AlertDialog
-        dialogOpen={selectDifficultyLevelErrorDialogOpen}
-        handleCloseDialog={handleSelectDifficultyLevelErrorCloseDialog}
-        dialogTitle={selectDifficultyLevelErrorDialogTitle}
-        dialogMsg={selectDifficultyLevelErrorDialogMsg}
-        dialogButtonText={selectDifficultyLevelErrorDialogButtonText}
+        dialogOpen={selectDifficultyErrorDialogOpen}
+        handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
+        dialogTitle={selectDifficultyErrorDialogTitle}
+        dialogMsg={selectDifficultyErrorDialogMsg}
+        dialogButtonText={selectDifficultyErrorDialogButtonText}
       />
 
       <FindingMatchDialog
         dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
-        difficultyLevel={difficultyLevel}
         timer={timer}
         setTimer={setTimer}
-        timeOutSeconds={timeOutSeconds}
+        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        stopMatchingService={stopMatchingService}
+        restartMatchingService={restartMatchingService}
       />
     </Box>
   )
