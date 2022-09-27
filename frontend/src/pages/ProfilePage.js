@@ -1,16 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import { homeUrl } from '../utils/routeConstants'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
 import DeleteAccountDialog from '../components/DeleteAccountDialog'
 
 const ProfilePage = () => {
   // Change Password Dialog
-  const [changePasswordDialogOpen, setChangePasswordDialogOpen] = useState(false)
-  const handleChangePasswordCloseDialog = () => setChangePasswordDialogOpen(false)
+  const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
+    useState(false)
+  const handleChangePasswordCloseDialog = () =>
+    setChangePasswordDialogOpen(false)
   const handleChangePasswordOpenDialog = () => setChangePasswordDialogOpen(true)
 
   // Delete Account Dialog
@@ -33,60 +35,62 @@ const ProfilePage = () => {
       }}
     >
       <Box sx={{ my: 3, mx: 2 }}>
-        <Typography variant={'h3'}>
-          Profile Page
-        </Typography>
+        <Typography variant={'h3'}>Profile Page</Typography>
       </Box>
 
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
-          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Personal Information" color="primary" />
+          <Chip
+            sx={{ p: 2, fontSize: '1.1rem' }}
+            label="Personal Information"
+            color="primary"
+          />
         </Divider>
-        <Typography sx={{ mt:5 }} variant={'h6'}>
+        <Typography sx={{ mt: 5 }} variant={'h6'}>
           Coming Soon!
         </Typography>
       </Box>
 
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
-          <Chip sx={{ p:2 }} style={{ fontSize: "1.1rem" }} label="Account Management" color="primary" />
-        </Divider>
-        <Stack direction="row" spacing={2} sx={{ mt:5 }}>
           <Chip
+            sx={{ p: 2, fontSize: '1.1rem' }}
+            label="Account Management"
+            color="primary"
+          />
+        </Divider>
+        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+          <Chip
+            sx={{ fontSize: '1rem' }}
             icon={<EditIcon />}
             label="Change Password"
             color="info"
             variant="outlined"
-            style={{ fontSize: "1rem" }}
             onClick={handleChangePasswordOpenDialog}
-            />
+          />
           <Chip
+            sx={{ fontSize: '1rem' }}
             icon={<DeleteIcon />}
             label="Delete Account"
             color="error"
             variant="outlined"
-            style={{ fontSize: "1rem" }}
             onClick={handleDeleteAccountOpenDialog}
           />
         </Stack>
       </Box>
 
       <ChangePasswordDialog
-        isDialogOpen={changePasswordDialogOpen}
+        dialogOpen={changePasswordDialogOpen}
         handleCloseDialog={handleChangePasswordCloseDialog}
       />
 
       <DeleteAccountDialog
-        isDialogOpen={deleteAccountDialogOpen}
+        dialogOpen={deleteAccountDialogOpen}
         handleNo={handleDeleteAccountCloseDialog}
       />
 
       <Box sx={{ my: 3, mx: 2 }}>
-        <Button
-          sx={{ margin: '2px' }}
-          variant={'outlined'}
-          onClick={() => navigate(homeUrl)}
-        >
+        <Button variant={'outlined'} onClick={() => navigate(homeUrl)}>
           Back to Home
         </Button>
       </Box>

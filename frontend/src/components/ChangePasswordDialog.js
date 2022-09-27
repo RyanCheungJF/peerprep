@@ -11,7 +11,7 @@ import {
 import { UserContext } from '../contexts/UserContext'
 import { changeUserPassword } from '../api/userService'
 
-const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
+const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
   const [newPassword, setNewPassword] = useState('')
   const [newPasswordTextFieldChanged, setNewPasswordTextFieldChanged] =
     useState(false)
@@ -43,57 +43,51 @@ const ChangePasswordDialog = ({ isDialogOpen, handleCloseDialog }) => {
   }
 
   return (
-    <Dialog fullWidth={true} maxWidth="sm" open={isDialogOpen}>
+    <Dialog fullWidth={true} maxWidth="sm" open={dialogOpen}>
       <DialogTitle>Change Password</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>
           Please enter your new password below and submit.
         </DialogContentText>
         {!newPassword && !newPasswordTextFieldChanged && (
-          <div>
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => {
-                setNewPasswordTextFieldChanged(true)
-                setNewPassword(e.target.value)
-              }}
-            />
-          </div>
+          <TextField
+            autoFocus
+            fullWidth
+            margin="normal"
+            label="New Password"
+            type="password"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPasswordTextFieldChanged(true)
+              setNewPassword(e.target.value)
+            }}
+          />
         )}
         {newPassword && newPasswordTextFieldChanged && (
-          <div>
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
+          <TextField
+            autoFocus
+            fullWidth
+            margin="normal"
+            label="New Password"
+            type="password"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
         )}
         {!newPassword && newPasswordTextFieldChanged && (
-          <div>
-            <TextField
-              autoFocus
-              error
-              fullWidth
-              margin="normal"
-              label="New Password"
-              helperText="New password cannot be empty"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
+          <TextField
+            autoFocus
+            error
+            fullWidth
+            margin="normal"
+            label="New Password"
+            helperText="New password cannot be empty"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
         )}
       </DialogContent>
       <DialogActions>
