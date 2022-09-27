@@ -10,7 +10,7 @@ import { getQuestion } from './controller/question-controller.js'
 
 const router = express.Router()
 
-router.get('/:difficulty', getQuestion)
+router.get('/', getQuestion)
 
 app.use('/api/question', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

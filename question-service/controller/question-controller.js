@@ -5,7 +5,7 @@ const selectRandomQuestion = (questions) => {
 }
 
 export const getQuestion = async (req, res) => {
-  const difficulty= req.params.difficulty
+  const difficulty = req.query.difficulty
 
   const questions = await _findByDifficulty(difficulty)
   if (!questions || questions.length == 0) {
