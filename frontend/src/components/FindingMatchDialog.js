@@ -79,11 +79,7 @@ const FindingMatchDialog = ({
       )}
       <DialogActions>
         <Button onClick={handleCancel}>Cancel</Button>
-        {timer < 0 && (
-          <>
-            <Button onClick={handleTryAgain}>Try Again</Button>
-          </>
-        )}
+        {timer < 0 && <Button onClick={handleTryAgain}>Try Again</Button>}
       </DialogActions>
     </Dialog>
   )

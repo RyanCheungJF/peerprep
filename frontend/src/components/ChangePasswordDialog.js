@@ -50,50 +50,44 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
           Please enter your new password below and submit.
         </DialogContentText>
         {!newPassword && !newPasswordTextFieldChanged && (
-          <>
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => {
-                setNewPasswordTextFieldChanged(true)
-                setNewPassword(e.target.value)
-              }}
-            />
-          </>
+          <TextField
+            autoFocus
+            fullWidth
+            margin="normal"
+            label="New Password"
+            type="password"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPasswordTextFieldChanged(true)
+              setNewPassword(e.target.value)
+            }}
+          />
         )}
         {newPassword && newPasswordTextFieldChanged && (
-          <>
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </>
+          <TextField
+            autoFocus
+            fullWidth
+            margin="normal"
+            label="New Password"
+            type="password"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
         )}
         {!newPassword && newPasswordTextFieldChanged && (
-          <>
-            <TextField
-              autoFocus
-              error
-              fullWidth
-              margin="normal"
-              label="New Password"
-              helperText="New password cannot be empty"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </>
+          <TextField
+            autoFocus
+            error
+            fullWidth
+            margin="normal"
+            label="New Password"
+            helperText="New password cannot be empty"
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
         )}
       </DialogContent>
       <DialogActions>

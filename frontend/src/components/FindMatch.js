@@ -27,11 +27,6 @@ const FindMatch = () => {
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
     setSelectDifficultyErrorDialogOpen(true)
-  const selectDifficultyErrorDialogTitle = 'Unable to Find Match'
-  const selectDifficultyErrorDialogMsg =
-    'Please select the difficulty level (Easy, Medium or Hard) of the questions ' +
-    'you wish to attempt so that the system can find a match for you.'
-  const selectDifficultyErrorDialogButtonText = 'OK'
 
   // Finding Match Dialog
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
@@ -94,9 +89,9 @@ const FindMatch = () => {
       <AlertDialog
         dialogOpen={selectDifficultyErrorDialogOpen}
         handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
-        dialogTitle={selectDifficultyErrorDialogTitle}
-        dialogMsg={selectDifficultyErrorDialogMsg}
-        dialogButtonText={selectDifficultyErrorDialogButtonText}
+        dialogTitle="Unable to Find Match"
+        dialogMsg="Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you."
+        dialogButtonText="OK"
       />
 
       <FindingMatchDialog
