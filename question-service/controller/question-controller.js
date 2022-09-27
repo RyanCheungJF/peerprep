@@ -5,11 +5,11 @@ const selectRandomQuestion = (questions) => {
 }
 
 export const getQuestion = async (req, res) => {
-  const { difficulty } = req.body
+  const difficulty= req.params.difficulty
 
   const questions = await _findByDifficulty(difficulty)
-  if (!questions) {
-    return res.status(500).json({ message: 'Error retrieving question.' })
+  if (!questions || questions.length == 0) {
+    return res.status(400).json({ message: 'Error retrieving question.' })
   }
   const question = selectRandomQuestion(questions)
   return res.status(200).json(question)

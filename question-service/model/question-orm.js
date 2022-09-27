@@ -1,4 +1,4 @@
-import { createQuestion, findQuestionByDifficulty } from './repository.js'
+import { findQuestionByDifficulty } from './repository.js'
 
 export const ormFindByDifficulty = async (difficulty) => {
   try {
