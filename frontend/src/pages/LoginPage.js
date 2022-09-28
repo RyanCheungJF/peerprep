@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
@@ -17,10 +17,13 @@ const LoginPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+  const navigate = useNavigate()
 
-  if (isUserLoggedIn()) {
-    return <Navigate to={homeUrl} replace={true} />
-  }
+  useEffect(() => {
+    if (isUserLoggedIn()) {
+      navigate(homeUrl, { replace: true })
+    }
+  }, [navigate])
 
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
@@ -58,6 +61,8 @@ const LoginPage = () => {
 
   const redirectButton = () => {
     const redirectUrl = window.localStorage.getItem(AUTH_REDIRECT) ?? homeUrl
+    // reset the redirect url since it's only used this one time
+    window.localStorage.removeItem(AUTH_REDIRECT)
     return (
       <Button component={Link} to={redirectUrl} replace={true}>
         Close
