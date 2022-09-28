@@ -7,14 +7,49 @@ import {
 } from '../utils/configs'
 import {
   STATUS_CODE_SUCCESS,
+  STATUS_CODE_UNAUTHORIZED,
+  STATUS_CODE_FORBIDDEN,
   COOKIES_AUTH_TOKEN,
   JWT_EXPIRY,
+  AUTH_REDIRECT,
 } from '../utils/constants'
+import { loginUrl } from '../utils/routeConstants'
+
+// custom axios instance with request and response interceptors to handle auth
+const axiosWithAuth = axios.create()
+
+// attach user's JWT bearer token to every outgoing request
+axiosWithAuth.interceptors.request.use(
+  (config) => {
+    return {
+      ...config,
+      ...getAuthHeader(),
+    }
+  },
+  // still return the original rejected promise, if any
+  (error) => Promise.reject(error)
+)
+
+// if user is unauthorized or unauthenticated, automatically redirect user to login page
+axiosWithAuth.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error?.response?.status === STATUS_CODE_FORBIDDEN ||
+      error?.response?.status === STATUS_CODE_UNAUTHORIZED
+    ) {
+      window.localStorage.setItem(AUTH_REDIRECT, window.location.pathname)
+      Cookies.remove(COOKIES_AUTH_TOKEN)
+      window.location.replace(`${window.location.origin}${loginUrl}`)
+    }
+
+    // still return the original rejected promise - don't swallow it up and let the request silently fail...
+    return Promise.reject(error)
+  }
+)
 
 export const getUser = async () => {
-  return axios.get(URL_USER_SVC, {
-    ...getAuthHeader(),
-  })
+  return axiosWithAuth.get(URL_USER_SVC)
 }
 
 export const loginUser = async (username, password) => {
@@ -26,7 +61,7 @@ export const loginUser = async (username, password) => {
 }
 
 export const logoutUser = async () => {
-  const res = await axios.post(URL_USER_LOGOUT_SVC, {}, getAuthHeader())
+  const res = await axiosWithAuth.post(URL_USER_LOGOUT_SVC)
   if (res?.status === STATUS_CODE_SUCCESS) {
     Cookies.remove(COOKIES_AUTH_TOKEN)
   }
@@ -37,9 +72,8 @@ export const signupUser = async (username, password) =>
   await axios.post(URL_USER_SVC, { username, password })
 
 export const deleteUser = async (username) => {
-  const res = await axios.delete(URL_USER_SVC, {
+  const res = await axiosWithAuth.delete(URL_USER_SVC, {
     data: { username },
-    ...getAuthHeader(),
   })
   if (res?.status === STATUS_CODE_SUCCESS) {
     Cookies.remove(COOKIES_AUTH_TOKEN)
@@ -48,11 +82,7 @@ export const deleteUser = async (username) => {
 }
 
 export const changeUserPassword = async (username, newPassword) => {
-  const res = await axios.put(
-    URL_USER_SVC,
-    { username, newPassword },
-    getAuthHeader()
-  )
+  const res = await axiosWithAuth.put(URL_USER_SVC, { username, newPassword })
   console.log(res)
   return res
 }
