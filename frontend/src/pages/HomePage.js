@@ -1,9 +1,7 @@
-import { Box, Button, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Box, Chip, Divider, Typography } from '@mui/material'
+import FindMatch from '../components/FindMatch'
 
 const HomePage = () => {
-  const navigate = useNavigate()
-
   return (
     <Box
       sx={{
@@ -16,24 +14,18 @@ const HomePage = () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      {' '}
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
-        {'Home!'}
-      </Typography>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <Button
-          sx={{ marginRight: '2px' }}
-          variant={'outlined'}
-          onClick={() => navigate('/profile')}
-        >
-          {'Profile Page'}
-        </Button>
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Typography variant={'h3'}>Home Page</Typography>
+      </Box>
+      <Box sx={{ my: 3, mx: 2 }}>
+        <Divider>
+          <Chip
+            sx={{ p: 2, fontSize: '1.1rem' }}
+            label="Find Match"
+            color="primary"
+          />
+        </Divider>
+        <FindMatch />
       </Box>
     </Box>
   )
