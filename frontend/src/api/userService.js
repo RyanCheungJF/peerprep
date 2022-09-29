@@ -10,9 +10,9 @@ import {
   STATUS_CODE_UNAUTHORIZED,
   STATUS_CODE_FORBIDDEN,
   COOKIES_AUTH_TOKEN,
-  JWT_EXPIRY,
   AUTH_REDIRECT,
 } from '../utils/constants'
+import { getJWTExpiry } from '../utils/main'
 import { loginUrl } from '../utils/routeConstants'
 
 // custom axios instance with request and response interceptors to handle auth
@@ -55,7 +55,7 @@ export const getUser = async () => {
 export const loginUser = async (username, password) => {
   const res = await axios.post(URL_USER_LOGIN_SVC, { username, password })
   if (res?.status === STATUS_CODE_SUCCESS) {
-    Cookies.set(COOKIES_AUTH_TOKEN, res.data.token, { expires: JWT_EXPIRY })
+    Cookies.set(COOKIES_AUTH_TOKEN, res.data.token, { expires: getJWTExpiry() })
   }
   return res
 }
