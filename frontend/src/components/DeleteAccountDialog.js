@@ -12,7 +12,7 @@ import { UserContext } from '../contexts/UserContext'
 import { deleteUser } from '../api/userService'
 import { baseUrl } from '../utils/routeConstants'
 
-const DeleteAccountDialog = ({ isDialogOpen, handleNo }) => {
+const DeleteAccountDialog = ({ dialogOpen, handleNo }) => {
   const navigate = useNavigate()
   const user = useContext(UserContext)
 
@@ -26,7 +26,7 @@ const DeleteAccountDialog = ({ isDialogOpen, handleNo }) => {
   }
 
   return (
-    <Dialog open={isDialogOpen}>
+    <Dialog open={dialogOpen}>
       <DialogTitle>Delete Account</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>
