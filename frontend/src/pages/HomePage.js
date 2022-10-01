@@ -6,7 +6,6 @@ import Chat from '../components/Chat'
 
 const HomePage = () => {
   const navigate = useNavigate()
-  
 
   return (
     <Box

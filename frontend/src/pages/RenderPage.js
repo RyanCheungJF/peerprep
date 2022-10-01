@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import Chat from '../components/Chat'
 
 const RenderPage = () => {
   const [question, setQuestion] = useState({})
@@ -33,6 +34,7 @@ const RenderPage = () => {
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_input'] }}></p>
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_output'] }}></p>
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}></p>
+      <Chat />
     </>
   )
 }

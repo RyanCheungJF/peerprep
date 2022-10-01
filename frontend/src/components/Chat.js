@@ -1,61 +1,91 @@
-import '../css/Chat.css'
 import { io } from 'socket.io-client'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Box,
   Button,
-  TextareaAutosize,
+  Container,
+  Divider,
+  FormControl,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
   TextField,
   Typography,
 } from '@mui/material'
+import SendIcon from '@mui/icons-material/Send'
 
-const socket = io('http://localhost:8001')
-var id ='NULL'
+//const socket = io('http://localhost:8001')
 
-socket.on('connect', () => {
-  // setId(socket.id)
-  id = socket.id
-})
+//socket.on('connect', () => {})
 
-function Chat() {
-  // const [id, setId] = useState('NULL')
-  const [msg, setMsg] = useState('')
-  // socket.on('connect', () => {
-  //   setId(socket.id)
-  // })
-  const displayMessage = (message) => {
-    const newMsg = id + ': ' + message + '\n'
-    setMsg(msg + newMsg)
-    document.getElementById('message').value = ''
-    socket.emit('room1', newMsg)
+const Chat = () => {
+  const [user, setUser] = useState('')
+  const [message, setMessage] = useState('')
+  const [chatMessages, setChatMessages] = useState(['hi', 'bye'])
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value)
   }
 
-  useEffect(() => {
-    socket.on('room1', (message) => {
-      console.log('message: ' + message)
-      const newMsg = msg + message
-      setMsg(newMsg)
-    })
-  }, [socket, msg])
+  const handleEnterKeyDown = (event) => {
+    const ENTER_KEY_CODE = 13
+    if (event.keyCode === ENTER_KEY_CODE) {
+      sendMessage()
+    }
+  }
+
+  const displayChatMessages = () => {
+    return chatMessages.map((msg, i) => (
+      <ListItem key={i}>
+        <ListItemText primary={msg} />
+      </ListItem>
+    ))
+  }
+
+  const sendMessage = () => {
+    setChatMessages([...chatMessages, message])
+  }
 
   return (
-    <div id="container">
-      <p id="header" style={{ color: 'Blue' }}>
-        your Id is: {id}
-      </p>
-      <textarea id="chatBox" type="text" value={msg} readOnly disabled />
-
-      <input id="message" type="text" />
-      <Button
-        id="sendBtn"
-        onClick={() => {
-          console.log('F K THIS SHYT')
-          displayMessage(document.getElementById('message').value)
-        }}
-        variant={'outlined'}
-      >
-        Send
-      </Button>
+    <div>
+      <Container>
+        <Paper elevation={5}>
+          <Box p={3}>
+            <Typography variant="h4" gutterBottom>
+              Happy chatting!
+            </Typography>
+            <Divider />
+            <Grid container spacing={4} alignItems="center">
+              <Grid xs={12} item>
+                <List sx={{ height: '20rem' }}>{displayChatMessages()}</List>
+              </Grid>
+              <Grid xs={9} item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={message}
+                    onChange={handleMessageChange}
+                    onKeyDown={handleEnterKeyDown}
+                    label="Type your message..."
+                    variant="outlined"
+                  />
+                </FormControl>
+              </Grid>
+              <Grid xs={1} item>
+                <IconButton
+                  onClick={sendMessage}
+                  aria-label="send"
+                  color="primary"
+                >
+                  <SendIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
     </div>
   )
 }
