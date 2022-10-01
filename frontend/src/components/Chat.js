@@ -10,13 +10,19 @@ import {
 } from '@mui/material'
 
 const socket = io('http://localhost:8001')
+var id ='NULL'
+
+socket.on('connect', () => {
+  // setId(socket.id)
+  id = socket.id
+})
 
 function Chat() {
-  const [id, setId] = useState('NULL')
+  // const [id, setId] = useState('NULL')
   const [msg, setMsg] = useState('')
-  socket.on('connect', () => {
-    setId(socket.id)
-  })
+  // socket.on('connect', () => {
+  //   setId(socket.id)
+  // })
   const displayMessage = (message) => {
     const newMsg = id + ': ' + message + '\n'
     setMsg(msg + newMsg)
@@ -38,14 +44,13 @@ function Chat() {
         your Id is: {id}
       </p>
       <textarea id="chatBox" type="text" value={msg} readOnly disabled />
-        
+
       <input id="message" type="text" />
       <Button
         id="sendBtn"
         onClick={() => {
           console.log('F K THIS SHYT')
           displayMessage(document.getElementById('message').value)
-          
         }}
         variant={'outlined'}
       >
