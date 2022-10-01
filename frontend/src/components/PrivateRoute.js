@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -20,7 +20,7 @@ const PrivateRoute = ({ children }) => {
   const [user, setUser] = useState({})
   const location = useLocation()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setViewState(PrivateRouteViewState.loading)
 
     const authCheck = async () => {
@@ -30,13 +30,13 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
+        // note that if getUser fails with 401 or 403, axios will redirect user to login too
         const response = await getUser()
         setUser(response.data)
         setViewState(PrivateRouteViewState.authed)
       } catch (err) {
         // JWT possibly expired or invalid
         console.error('Error initializaing app', err)
-        setViewState(PrivateRouteViewState.unauthed)
       }
     }
 
