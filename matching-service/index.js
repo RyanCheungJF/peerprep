@@ -4,7 +4,6 @@ import { Server } from 'socket.io'
 import {
   findMatch,
   deleteMatch,
-  viewMatch,
 } from './controller/match-controller.js'
 
 const SOCKET_PORT = 8300
@@ -16,14 +15,13 @@ const io = new Server(SOCKET_PORT, {
 
 io.on('connection', (socket) => {
   socket.on('send-message', (message, room) => {
-    if (room == '') {
-      socket.broadcast.emit('receive-message', message)
-    } else {
-      socket.to(room).emit('receive-message', message)
-    }
+    socket.to(room).emit('receive-message', message)
   })
   socket.on('join-room', (room) => {
     socket.join(room)
+  })
+  socket.on('notify-partner', (room, id) => {
+    socket.to(room).emit('found-connection', id)
   })
 })
 
@@ -36,7 +34,6 @@ const router = express.Router()
 
 router.post('/', findMatch)
 router.delete('/', deleteMatch)
-router.get('/', viewMatch)
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

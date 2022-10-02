@@ -17,16 +17,19 @@ import {
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 
-const Chat = () => {
+const Chat = ({ room }) => {
   socket.on('receive-message', (msg) => {
     setChatMessages([...chatMessages, msg])
   })
 
-  const [user, setUser] = useState('')
   const [message, setMessage] = useState('')
   const [chatMessages, setChatMessages] = useState(['hi', 'bye'])
 
   const scrollPositionRef = useRef(null)
+
+  useEffect(() => {
+    socket.emit('join-room', room, socket.id)
+  }, [])
 
   useEffect(() => {
     if (scrollPositionRef.current) {
@@ -57,7 +60,7 @@ const Chat = () => {
     if (message) {
       setChatMessages([...chatMessages, message])
       setMessage('')
-      socket.emit('send-message', message, '')
+      socket.emit('send-message', message, room)
     }
   }
 
@@ -67,7 +70,7 @@ const Chat = () => {
         <Paper elevation={5}>
           <Box p={3}>
             <Typography variant="h4" gutterBottom>
-              Happy chatting!
+              {`Room ${room} with Socket ${socket.id}`}
             </Typography>
             <Divider />
             <Grid container spacing={4} alignItems="center">

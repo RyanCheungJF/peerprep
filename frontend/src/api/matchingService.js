@@ -7,7 +7,6 @@ export const findMatch = async (uuid, socketID, difficulty) => {
     socketID,
     difficulty,
   })
-  console.log(res)
   return res
 }
 
@@ -19,6 +18,5 @@ export const deleteMatch = async (uuid, socketID, difficulty) => {
       difficulty,
     },
   })
-  console.log(res)
   return res
 }

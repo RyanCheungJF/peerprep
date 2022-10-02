@@ -20,7 +20,10 @@ export const findMatchInCache = async (difficulty, uuid, socketID) => {
   const cacheResults = await client.get(difficulty)
   const cacheData = JSON.parse(cacheResults) || []
   if (cacheData.length > 0) {
-    return cacheData[0]
+    const match = cacheData[0]
+    cacheData.splice(0, 1)
+    await client.set(difficulty, JSON.stringify(cacheData))
+    return match
   } else {
     const queue = [...cacheData, { uuid: uuid, socketID: socketID }]
     await client.set(difficulty, JSON.stringify(queue))
@@ -44,10 +47,4 @@ export const deleteMatchInCache = async (difficulty, uuid, socketID) => {
   } catch (err) {
     return false
   }
-}
-
-export const viewCache = async () => {
-  const r = await client.get('Easy')
-  console.log('Cache for ez', JSON.parse(r))
-  return true
 }

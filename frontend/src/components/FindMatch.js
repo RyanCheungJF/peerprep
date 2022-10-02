@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { socket } from '../utils/socket'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
@@ -14,6 +15,16 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
+  socket.on('found-connection', (roomID) => {
+    navigate('/test', {
+      state: {
+        room: roomID,
+      },
+    })
+  })
+
+  const navigate = useNavigate()
+
   const user = useContext(UserContext)
 
   const [difficulty, setDifficulty] = useState('')
@@ -56,7 +67,20 @@ const FindMatch = () => {
   const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    findMatch(user._id, socket.id, difficulty)
+    const res = await findMatch(user._id, socket.id, difficulty)
+
+    // gets a response
+    if (res) {
+      const data = res.data
+      const room = data.socketID
+      const roomID = 'room:' + room + socket.id
+      socket.emit('notify-partner', room, roomID)
+      navigate('/test', {
+        state: {
+          room: roomID,
+        },
+      })
+    }
   }
 
   const stopMatchingService = () => {
