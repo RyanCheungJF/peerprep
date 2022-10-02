@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { socket } from '../utils/socket'
+import { findMatch, deleteMatch } from '../api/matchingService'
+import { UserContext } from '../contexts/UserContext'
 import {
   Box,
   Button,
@@ -12,6 +14,8 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
+  const user = useContext(UserContext)
+
   const [difficulty, setDifficulty] = useState('')
 
   // Set timer as 'NA' upon initialisation so that the
@@ -49,15 +53,15 @@ const FindMatch = () => {
     }
   }
 
-  const startMatchingService = () => {
+  const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    socket.emit('find-match', difficulty, socket.id)
+    findMatch(user._id, socket.id, difficulty)
   }
 
   const stopMatchingService = () => {
     console.log('=== Stop Matching Service ===')
-    // TODO: Implementation code to stop the matching service
+    deleteMatch(user._id, socket.id, difficulty)
   }
 
   const restartMatchingService = () => {

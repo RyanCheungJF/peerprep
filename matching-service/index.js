@@ -1,7 +1,11 @@
 import express from 'express'
 import cors from 'cors'
 import { Server } from 'socket.io'
-
+import {
+  findMatch,
+  deleteMatch,
+  viewMatch,
+} from './controller/match-controller.js'
 
 const SOCKET_PORT = 8300
 
@@ -18,9 +22,6 @@ io.on('connection', (socket) => {
       socket.to(room).emit('receive-message', message)
     }
   })
-  socket.on('find-match', (difficulty, socketID) => {
-    console.log(difficulty, socketID)
-  })
   socket.on('join-room', (room) => {
     socket.join(room)
   })
@@ -33,9 +34,9 @@ app.options('*', cors())
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+router.post('/', findMatch)
+router.delete('/', deleteMatch)
+router.get('/', viewMatch)
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')
