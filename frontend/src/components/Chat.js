@@ -1,5 +1,5 @@
-import { io } from 'socket.io-client'
 import { useState, useEffect, useRef } from 'react'
+import { socket } from '../utils/socket'
 import {
   Box,
   Button,
@@ -18,10 +18,6 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 
 const Chat = () => {
-  const MATCHING_URL = 'http://localhost:8300'
-
-  const socket = io(MATCHING_URL)
-
   socket.on('receive-message', (msg) => {
     setChatMessages([...chatMessages, msg])
   })
@@ -61,7 +57,7 @@ const Chat = () => {
     if (message) {
       setChatMessages([...chatMessages, message])
       setMessage('')
-      socket.emit('send-message', message)
+      socket.emit('send-message', message, '')
     }
   }
 

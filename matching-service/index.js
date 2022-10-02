@@ -1,8 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import http from 'http'
 import { Server } from 'socket.io'
-import { getRoom } from './controller/socket-room-controller.js'
+
 
 const SOCKET_PORT = 8300
 
@@ -12,8 +11,18 @@ const io = new Server(SOCKET_PORT, {
 })
 
 io.on('connection', (socket) => {
-  socket.on('send-message', (message) => {
-    socket.broadcast.emit('receive-message', message)
+  socket.on('send-message', (message, room) => {
+    if (room == '') {
+      socket.broadcast.emit('receive-message', message)
+    } else {
+      socket.to(room).emit('receive-message', message)
+    }
+  })
+  socket.on('find-match', (difficulty, socketID) => {
+    console.log(difficulty, socketID)
+  })
+  socket.on('join-room', (room) => {
+    socket.join(room)
   })
 })
 

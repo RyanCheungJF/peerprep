@@ -2,8 +2,6 @@ import { Box, Button, Chip, Divider, Typography } from '@mui/material'
 import FindMatch from '../components/FindMatch'
 import { useNavigate } from 'react-router-dom'
 
-import Chat from '../components/Chat'
-
 const HomePage = () => {
   const navigate = useNavigate()
 

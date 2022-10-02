@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { socket } from '../utils/socket'
 import {
   Box,
   Button,
@@ -51,7 +52,7 @@ const FindMatch = () => {
   const startMatchingService = () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    // TODO: Implementation code to start the matching service with the selected difficulty
+    socket.emit('find-match', difficulty, socket.id)
   }
 
   const stopMatchingService = () => {
