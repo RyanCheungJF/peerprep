@@ -4,7 +4,13 @@ import { Server } from 'socket.io'
 import {
   findMatch,
   deleteMatch,
+  findAllRooms,
+  findOneRoom,
+  createRoom,
+  updateRoom,
+  deleteRoom
 } from './controller/match-controller.js'
+import getRoomByRoomId from './middleware/getRoomByRoomId.js'
 
 const SOCKET_PORT = 8300
 
@@ -34,6 +40,11 @@ const router = express.Router()
 
 router.post('/', findMatch)
 router.delete('/', deleteMatch)
+router.get('/rooms', findAllRooms)
+router.get('/room', findOneRoom)
+router.post('/room', createRoom)
+router.patch('/room/:room_id', getRoomByRoomId ,updateRoom)
+router.delete('/room/:room_id', getRoomByRoomId, deleteRoom)
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')
