@@ -33,9 +33,9 @@ export const ormCreateRoom = async (room) => {
   }
 }
 
-export const ormuUpdateRoom = async (room) => {
+export const ormuUpdateRoom = async (room_id, body) => {
   try {
-    return await updateRoom(room)
+    return await updateRoom(room_id, body)
   } catch (err) {
     console.log('ERROR: Could not update room')
     return { err }

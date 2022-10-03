@@ -104,33 +104,11 @@ export const createRoom = async (req, res) => {
 
 export const updateRoom = async (req, res) => {
   console.log('PATCH /api/room ' + JSON.stringify(req.body))
-
-  if (req.body.room_id != null) {
-    res.room.room_id = req.body.room_id
-  }
-  if (req.body.id1 != null) {
-    res.room.id1 = req.body.id1
-  }
-  if (req.body.id2 != null) {
-    res.room.id2 = req.body.id2
-  }
-  if (req.body.id1_present != null) {
-    res.room.id1_present = req.body.id1_present
-  }
-  if (req.body.id2_present != null) {
-    res.room.id2_present = req.body.id2_present
-  }
-  if (req.body.datetime != null) {
-    res.room.datetime = req.body.datetime
-  }
-  if (req.body.difficulty != null) {
-    res.room.difficulty = req.body.difficulty
-  }
   try {
-    const room = await ormuUpdateRoom(res.room)
-    return res.status(200).json(room)
+    const room = await ormuUpdateRoom(req.params.room_id, req.body)
+    return res.status(200).json({ message: 'Room updated successfully!' })
   } catch (err) {
-    return res.status(500).json({ message: 'Error with updating room!' })
+    return res.status(400).json({ message: 'Error with updating room!' })
   }
 }
 
@@ -139,7 +117,9 @@ export const deleteRoom = async (req, res) => {
 
   try {
     const room = await ormDeleteRoom(res.room)
-    return res.status(200).json({ message: 'Room ' + room.room_id + ' deleted successfully!' })
+    return res
+      .status(200)
+      .json({ message: 'Room ' + room.room_id + ' deleted successfully!' })
   } catch (err) {
     return res.status(500).json({ message: 'Error with deleting room!' })
   }
