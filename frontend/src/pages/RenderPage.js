@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { socket } from '../utils/socket'
 import axios from 'axios'
 import Chat from '../components/Chat'
 

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { socket } from '../utils/socket'
 import {
   Box,
-  Button,
   Container,
   Divider,
   FormControl,
@@ -29,7 +28,7 @@ const Chat = ({ room }) => {
 
   useEffect(() => {
     socket.emit('join-room', room, socket.id)
-  }, [])
+  }, [room])
 
   useEffect(() => {
     if (scrollPositionRef.current) {
