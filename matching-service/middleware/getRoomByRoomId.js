@@ -4,7 +4,7 @@ async function getRoomByRoomId(req, res, next) {
   let room
   try {
     room = await findOneRoom({ room_id: req.params.room_id })
-    if (room == null) {
+    if (!room) {
       return res.status(404).json({ message: 'Cannot find room' })
     }
   } catch (err) {

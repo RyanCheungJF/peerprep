@@ -25,7 +25,6 @@ export const ormFindOneRoom = async (filter) => {
 }
 export const ormCreateRoom = async (room) => {
   try {
-    console.log("broooooo orm: " + JSON.stringify(room))
     return await createRoom(room)
   } catch (err) {
     console.log('ERROR: Could not create room')
