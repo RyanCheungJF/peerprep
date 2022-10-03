@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { socket } from '../utils/socket'
+import { findMatch, deleteMatch } from '../api/matchingService'
+import { UserContext } from '../contexts/UserContext'
 import {
   Box,
   Button,
@@ -11,6 +15,18 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
+  socket.on('found-connection', (roomID) => {
+    navigate('/test', {
+      state: {
+        room: roomID,
+      },
+    })
+  })
+
+  const navigate = useNavigate()
+
+  const user = useContext(UserContext)
+
   const [difficulty, setDifficulty] = useState('')
 
   // Set timer as 'NA' upon initialisation so that the
@@ -48,15 +64,28 @@ const FindMatch = () => {
     }
   }
 
-  const startMatchingService = () => {
+  const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    // TODO: Implementation code to start the matching service with the selected difficulty
+    const res = await findMatch(user._id, socket.id, difficulty)
+
+    // gets a response
+    if (res) {
+      const data = res.data
+      const room = data.socketID
+      const roomID = 'room:' + room + socket.id
+      socket.emit('notify-partner', room, roomID)
+      navigate('/test', {
+        state: {
+          room: roomID,
+        },
+      })
+    }
   }
 
   const stopMatchingService = () => {
     console.log('=== Stop Matching Service ===')
-    // TODO: Implementation code to stop the matching service
+    deleteMatch(user._id, socket.id, difficulty)
   }
 
   const restartMatchingService = () => {

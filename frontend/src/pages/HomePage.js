@@ -1,7 +1,10 @@
-import { Box, Chip, Divider, Typography } from '@mui/material'
+import { Box, Button, Chip, Divider, Typography } from '@mui/material'
 import FindMatch from '../components/FindMatch'
+import { useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
+  const navigate = useNavigate()
+
   return (
     <Box
       sx={{

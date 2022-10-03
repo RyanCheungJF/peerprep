@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { socket } from '../utils/socket'
 import axios from 'axios'
+import Chat from '../components/Chat'
 
 const RenderPage = () => {
+  const location = useLocation()
+
   const [question, setQuestion] = useState({})
 
   useEffect(() => {
@@ -33,6 +38,7 @@ const RenderPage = () => {
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_input'] }}></p>
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_output'] }}></p>
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}></p>
+      <Chat room={location.state.room} />
     </>
   )
 }
