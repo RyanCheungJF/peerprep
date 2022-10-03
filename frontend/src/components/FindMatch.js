@@ -1,8 +1,9 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { socket } from '../utils/socket'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
+import { createRoomSvc } from '../api/roomservice'
 import {
   Box,
   Button,
@@ -15,13 +16,29 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
-  socket.on('found-connection', (roomID) => {
-    navigate('/test', {
-      state: {
-        room: roomID,
-      },
+  useEffect(() => {
+    socket.on('found-connection', (roomID, username, difficulty) => {
+      try {
+        const room = {
+          room_id: user.username,
+          id1: user.username,
+          id2: username,
+          id1_present: true,
+          id2_present: true,
+          difficulty: difficulty.toLowerCase(),
+          datetime: new Date(),
+        }
+        const res = createRoomSvc(room)
+      } catch (err) {
+        console.log(err)
+      }
+      navigate('/test', {
+        state: {
+          room: roomID,
+        },
+      })
     })
-  })
+  }, [])
 
   const navigate = useNavigate()
 
@@ -37,8 +54,10 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -67,14 +86,14 @@ const FindMatch = () => {
   const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    const res = await findMatch(user._id, socket.id, difficulty)
+    const res = await findMatch(user._id, socket.id, difficulty, user.username)
 
     // gets a response
     if (res) {
       const data = res.data
       const room = data.socketID
       const roomID = 'room:' + room + socket.id
-      socket.emit('notify-partner', room, roomID)
+      socket.emit('notify-partner', room, roomID, user.username, difficulty)
       navigate('/test', {
         state: {
           room: roomID,

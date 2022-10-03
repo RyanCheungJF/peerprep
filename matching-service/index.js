@@ -26,8 +26,8 @@ io.on('connection', (socket) => {
   socket.on('join-room', (room) => {
     socket.join(room)
   })
-  socket.on('notify-partner', (room, id) => {
-    socket.to(room).emit('found-connection', id)
+  socket.on('notify-partner', (room, id, username, difficulty) => {
+    socket.to(room).emit('found-connection', id, username, difficulty)
   })
 })
 
