@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { socket } from '../utils/socket'
+import { collabSocket } from '../utils/socket'
 import {
   Box,
-  Button,
   Container,
   Divider,
   FormControl,
@@ -18,7 +17,7 @@ import {
 import SendIcon from '@mui/icons-material/Send'
 
 const Chat = ({ room }) => {
-  socket.on('receive-message', (msg) => {
+  collabSocket.on('receive-message', (msg) => {
     setChatMessages([...chatMessages, msg])
   })
 
@@ -28,8 +27,8 @@ const Chat = ({ room }) => {
   const scrollPositionRef = useRef(null)
 
   useEffect(() => {
-    socket.emit('join-room', room, socket.id)
-  }, [])
+    collabSocket.emit('join-room', room, collabSocket.id)
+  }, [room])
 
   useEffect(() => {
     if (scrollPositionRef.current) {
@@ -60,7 +59,7 @@ const Chat = ({ room }) => {
     if (message) {
       setChatMessages([...chatMessages, message])
       setMessage('')
-      socket.emit('send-message', message, room)
+      collabSocket.emit('send-message', message, room)
     }
   }
 
@@ -70,7 +69,7 @@ const Chat = ({ room }) => {
         <Paper elevation={5}>
           <Box p={3}>
             <Typography variant="h4" gutterBottom>
-              {`Room ${room} with Socket ${socket.id}`}
+              {`Room ${room} with Socket ${collabSocket?.id}`}
             </Typography>
             <Divider />
             <Grid container spacing={4} alignItems="center">
