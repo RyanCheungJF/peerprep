@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
-import { collabSocket } from '../utils/socket'
+import { useState, useEffect, useRef, useContext } from 'react'
 import {
   Box,
   Divider,
@@ -14,6 +13,8 @@ import {
   Typography,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
+import { collabSocket } from '../utils/socket'
+import { UserContext } from '../contexts/UserContext'
 
 const Chat = ({ room }) => {
   collabSocket.on('receive-message', (msg) => {
@@ -22,6 +23,7 @@ const Chat = ({ room }) => {
 
   const [message, setMessage] = useState('')
   const [chatMessages, setChatMessages] = useState(['hi', 'bye'])
+  const user = useContext(UserContext)
 
   const scrollPositionRef = useRef(null)
 
@@ -54,7 +56,7 @@ const Chat = ({ room }) => {
     if (message) {
       setChatMessages([...chatMessages, message])
       setMessage('')
-      collabSocket.emit('send-message', message, room)
+      collabSocket.emit('send-message', message, room, user._id)
     }
   }
 
