@@ -21,10 +21,18 @@ const App = () => {
       <Router>
         <NavBar />
         <Routes>
-          <Route exact path={'/test'} element={<RenderPage />} />
           <Route exact path={baseUrl} element={<LandingPage />} />
           <Route path={signupUrl} element={<SignupPage />} />
           <Route path={loginUrl} element={<LoginPage />} />
+          <Route
+            exact
+            path={'/test'}
+            element={
+              <PrivateRoute>
+                <RenderPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path={homeUrl}
             element={
