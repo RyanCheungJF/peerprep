@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { URL_ROOM_SVC } from '../utils/configs'
 
+export const findRoomSvc = async (filter) => {
+    const res = await axios.get(URL_ROOM_SVC, { params: filter })
+    return res
+}
+
 export const createRoomSvc = async (room) => {
   try {
-    console.log('room bro2: ' + JSON.stringify(room))
     const res = await axios.post(URL_ROOM_SVC, room)
-    console.log('res bro2: ' + JSON.stringify(res.data))
     return res
   } catch (err) {
     console.log(err)

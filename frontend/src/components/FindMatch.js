@@ -16,30 +16,6 @@ import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
 
 const FindMatch = () => {
-  useEffect(() => {
-    socket.on('found-connection', (roomID, username, difficulty) => {
-      try {
-        const room = {
-          room_id: user.username,
-          id1: user.username,
-          id2: username,
-          id1_present: true,
-          id2_present: true,
-          difficulty: difficulty.toLowerCase(),
-          datetime: new Date(),
-        }
-        const res = createRoomSvc(room)
-      } catch (err) {
-        console.log(err)
-      }
-      navigate('/test', {
-        state: {
-          room: roomID,
-        },
-      })
-    })
-  }, [])
-
   const navigate = useNavigate()
 
   const user = useContext(UserContext)
@@ -83,10 +59,34 @@ const FindMatch = () => {
     }
   }
 
+  useEffect(() => {
+    socket.on('found-connection', (username, difficulty) => {
+      try {
+        const room = {
+          room_id: username,
+          id1: username,
+          id2: user.username,
+          id1_present: true,
+          id2_present: true,
+          difficulty: difficulty.toLowerCase(),
+          datetime: new Date(),
+        }
+        createRoomSvc(room)
+      } catch (err) {
+        console.log(err)
+      }
+      navigate('/test', {
+        state: {
+          room: username,
+        },
+      })
+    })
+  }, [navigate, user.username])
+
   const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    const res = await findMatch(user._id, socket.id, difficulty, user.username)
+    const res = await findMatch(user._id, socket.id, difficulty)
 
     // gets a response
     if (res) {
@@ -96,7 +96,7 @@ const FindMatch = () => {
       socket.emit('notify-partner', room, roomID, user.username, difficulty)
       navigate('/test', {
         state: {
-          room: roomID,
+          room: user.username,
         },
       })
     }
