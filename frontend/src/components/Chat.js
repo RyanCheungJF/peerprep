@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { collabSocket } from '../utils/socket'
 import {
   Box,
-  Container,
   Divider,
   FormControl,
   Grid,
