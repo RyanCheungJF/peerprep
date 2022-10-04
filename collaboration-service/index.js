@@ -1,5 +1,8 @@
 import { Server } from 'socket.io'
 
+import { messageHandler } from './controller/chat-controller.js'
+import { sharedCodeHandler } from './controller/shared-code-controller.js'
+
 const SOCKET_PORT = 8400
 
 const io = new Server(SOCKET_PORT, {
@@ -12,13 +15,11 @@ io.on('connection', (socket) => {
     socket.join(room)
   })
 
-  socket.on('send-message', (message, room) => {
-    console.log('message sent:', message)
-    socket.to(room).emit('receive-message', message)
-  })
+  socket.on('send-message', messageHandler(socket))
+  socket.on('push-code', sharedCodeHandler(socket))
 
-  socket.on('push-code', (code, room) => {
-    console.log(`Pushing up code for room ${room}: ${code}`)
-    socket.to(room).emit('pull-code', code)
+  socket.on('disconnect', (reason) => {
+    console.log('Socket disconnected', reason)
+    // TODO: persist room data in redis to mongodb
   })
 })
