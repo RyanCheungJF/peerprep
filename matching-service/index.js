@@ -29,6 +29,9 @@ io.on('connection', (socket) => {
   socket.on('notify-partner', (room, username, difficulty) => {
     socket.to(room).emit('found-connection', username, difficulty)
   })
+  socket.on('leave-room', (room, message) => {
+    socket.to(room).emit('partner-left', message)
+  })
 })
 
 app.use(express.urlencoded({ extended: true }))

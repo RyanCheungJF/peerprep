@@ -92,8 +92,7 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      const roomID = 'room:' + room + socket.id
-      socket.emit('notify-partner', room, roomID, user.username, difficulty)
+      socket.emit('notify-partner', room, user.username, difficulty)
       navigate('/test', {
         state: {
           room: user.username,

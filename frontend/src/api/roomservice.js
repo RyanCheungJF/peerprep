@@ -16,6 +16,6 @@ export const createRoomSvc = async (room) => {
 }
 
 export const deleteRoomSvc = async (room_id) => {
-  const res = await axios.delete(URL_ROOM_SVC + '/' + room_id)
+  const res = await axios.delete(URL_ROOM_SVC + room_id)
   return res
 }
