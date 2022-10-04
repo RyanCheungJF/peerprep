@@ -28,7 +28,6 @@ export const findOneRoom = async (filter) => {
 
 // create a room
 export const createRoom = async (params) => {
-  console.log("brooooo repo: " + JSON.stringify(params))
   return new socketRoomModel(params)
 }
 
