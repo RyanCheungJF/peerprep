@@ -2,6 +2,7 @@ import { Server } from 'socket.io'
 
 import { messageHandler } from './controller/chat-controller.js'
 import { sharedCodeHandler } from './controller/shared-code-controller.js'
+import { saveRoom } from './controller/room-controller.js'
 
 const SOCKET_PORT = 8400
 
@@ -18,8 +19,8 @@ io.on('connection', (socket) => {
   socket.on('send-message', messageHandler(socket))
   socket.on('push-code', sharedCodeHandler(socket))
 
-  socket.on('disconnect', (reason) => {
-    console.log('Socket disconnected', reason)
-    // TODO: persist room data in redis to mongodb
-  })
+  // Note: we listen for the 'disconnecting' event and not 'disconnected'.
+  // The 'disconnected' event is emitted after the socket leaves all rooms,
+  // so it'll be too late to find the socket's room and persist things to the db then.
+  socket.on('disconnecting', saveRoom(socket))
 })

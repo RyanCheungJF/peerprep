@@ -22,6 +22,26 @@ export const saveSharedCode = async (code, roomId) => {
   await client.set(key, code)
 }
 
+export const getRoom = async (roomId) => {
+  return {
+    roomId,
+    chat: await getChatMsgs(roomId),
+    code: await getSharedCode(roomId),
+  }
+}
+
+const getChatMsgs = async (roomId) => {
+  const key = getChatMsgKey(roomId)
+  // get entire redis list associated with the key
+  const jsonMsgs = await client.lRange(key, 0, -1)
+  return jsonMsgs.map(JSON.parse)
+}
+
+const getSharedCode = async (roomId) => {
+  const key = getSharedCodeKey(roomId)
+  return client.get(key)
+}
+
 /* Redis key generators */
 const getChatMsgKey = (roomId) => `${roomId}:chat`
 const getSharedCodeKey = (roomId) => `${roomId}:code`
