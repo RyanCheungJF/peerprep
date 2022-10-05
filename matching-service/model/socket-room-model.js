@@ -26,8 +26,8 @@ let SocketRoomModelSchema = new Schema({
   },
   id2: {
     type: String,
-    // required: true,
-    // unique: true,
+    required: true,
+    unique: true,
   },
   datetime: {
     type: Date,
