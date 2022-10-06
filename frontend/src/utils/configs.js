@@ -4,6 +4,7 @@ const URI_USER_SVC =
 const URI_QUESTION_SVC = 'http://localhost:8100'
 const URI_MATCHING_SVC = 'http://localhost:8200'
 export const MATCHING_URL = 'http://localhost:8300'
+export const COLLAB_URL = 'http://localhost:8400'
 
 const PREFIX_USER_SVC = '/api/user'
 const PREFIX_QUESTION_SVC = '/api/question'

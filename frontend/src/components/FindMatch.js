@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { socket } from '../utils/socket'
+import { matchingSocket } from '../utils/socket'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
 import { createRoomSvc } from '../api/roomservice'
@@ -60,7 +60,7 @@ const FindMatch = () => {
   }
 
   useEffect(() => {
-    socket.on('found-connection', (username, difficulty) => {
+    matchingSocket.on('found-connection', (username, difficulty) => {
       try {
         const room = {
           room_id: username,
@@ -86,13 +86,13 @@ const FindMatch = () => {
   const startMatchingService = async () => {
     console.log('=== Start Matching Service ===')
     console.log('Difficulty: ' + difficulty)
-    const res = await findMatch(user._id, socket.id, difficulty)
+    const res = await findMatch(user._id, matchingSocket.id, difficulty)
 
     // gets a response
     if (res) {
       const data = res.data
       const room = data.socketID
-      socket.emit('notify-partner', room, user.username, difficulty)
+      matchingSocket.emit('notify-partner', room, user.username, difficulty)
       navigate('/test', {
         state: {
           room: user.username,
@@ -103,7 +103,7 @@ const FindMatch = () => {
 
   const stopMatchingService = () => {
     console.log('=== Stop Matching Service ===')
-    deleteMatch(user._id, socket.id, difficulty)
+    deleteMatch(user._id, matchingSocket.id, difficulty)
   }
 
   const restartMatchingService = () => {
