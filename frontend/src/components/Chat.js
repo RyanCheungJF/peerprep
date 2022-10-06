@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { collabSocket } from '../utils/socket'
 import {
   Box,
-  Container,
   Divider,
   FormControl,
   Grid,
@@ -27,7 +26,7 @@ const Chat = ({ room }) => {
   const scrollPositionRef = useRef(null)
 
   useEffect(() => {
-    socket.emit('join-room', room, socket.id)
+    collabSocket.emit('join-room', room, collabSocket.id)
   }, [room])
 
   useEffect(() => {
