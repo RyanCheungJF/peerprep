@@ -26,10 +26,6 @@ const Chat = ({ room }) => {
   const scrollPositionRef = useRef(null)
 
   useEffect(() => {
-    collabSocket.emit('join-room', room, collabSocket.id)
-  }, [room])
-
-  useEffect(() => {
     if (scrollPositionRef.current) {
       scrollPositionRef.current.scrollIntoView({ behaviour: 'smooth' })
     }
