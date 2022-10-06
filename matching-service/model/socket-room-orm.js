@@ -23,30 +23,13 @@ export const ormFindOneRoom = async (filter) => {
     return { err }
   }
 }
-export const ormCreateRoom = async (room, res) => {
+export const ormCreateRoom = async (room) => {
   try {
     const roomModel = await createRoom(room)
-    const newRoom = roomModel.save((err) => {
-      if (err) {
-        // console.log(err)
-        if (err.name === 'MongoServerError' && err.code === 11000) {
-          // Duplicate room_id
-          return res
-            .status(409)
-            .send({ success: false, message: 'Room already exist!' })
-        } else {
-          // Some other error
-          return res.status(422).send({ success: false, message: err })
-        }
-      } else {
-        return res
-          .status(201)
-          .send({ success: true, message: 'Room created successfully!' })
-      }
-    })
+    const test = await roomModel.save()
   } catch (err) {
     console.log('ERROR: Could not create room')
-    return { err }
+    return err
   }
 }
 

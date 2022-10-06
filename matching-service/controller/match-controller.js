@@ -78,8 +78,24 @@ export const createRoom = async (req, res) => {
   console.log('POST /api/room ' + JSON.stringify(req.body))
 
   try {
-    const response = await ormCreateRoom(req.body, res)
-    return response
+    const err = await ormCreateRoom(req.body)
+
+    if (err) {
+      // console.log(err)
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        // Duplicate room_id
+        return res
+          .status(409)
+          .send({ success: false, message: 'Room already exist!' })
+      } else {
+        // Some other error
+        return res.status(422).send({ success: false, message: err })
+      }
+    } else {
+      return res
+        .status(201)
+        .send({ success: true, message: 'Room created successfully!' })
+    }
   } catch (err) {
     return res.status(500).json({ message: 'Error with creating room!' })
   }
