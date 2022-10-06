@@ -8,7 +8,7 @@ import {
   ormFindOneRoom,
   ormCreateRoom,
   ormDeleteRoom,
-  ormuUpdateRoom,
+  ormUpdateRoom,
 } from '../model/socket-room-orm.js'
 
 export const findMatch = async (req, res) => {
@@ -78,25 +78,8 @@ export const createRoom = async (req, res) => {
   console.log('POST /api/room ' + JSON.stringify(req.body))
 
   try {
-    const room = await ormCreateRoom(req.body)
-    const newRoom = room.save((err) => {
-      if (err) {
-        // console.log(err)
-        if (err.name === 'MongoServerError' && err.code === 11000) {
-          // Duplicate room_id
-          return res
-            .status(409)
-            .send({ success: false, message: 'Room already exist!' })
-        } else {
-          // Some other error
-          return res.status(422).send({ success: false, message: err })
-        }
-      } else {
-        return res
-          .status(201)
-          .send({ success: true, message: 'Room created successfully!' })
-      }
-    })
+    const response = await ormCreateRoom(req.body, res)
+    return response
   } catch (err) {
     return res.status(500).json({ message: 'Error with creating room!' })
   }
@@ -105,7 +88,7 @@ export const createRoom = async (req, res) => {
 export const updateRoom = async (req, res) => {
   console.log('PATCH /api/room ' + JSON.stringify(req.body))
   try {
-    const room = await ormuUpdateRoom(req.params.room_id, req.body)
+    const room = await ormUpdateRoom(req.params.room_id, req.body)
     return res.status(200).json({ message: 'Room updated successfully!' })
   } catch (err) {
     return res.status(400).json({ message: 'Error with updating room!' })
