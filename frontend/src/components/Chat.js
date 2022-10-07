@@ -20,9 +20,12 @@ const Chat = ({ room }) => {
   collabSocket.on('receive-message', (msg) => {
     setChatMessages([...chatMessages, msg])
   })
+  collabSocket.on('restore-chat', (chat) => {
+    setChatMessages(chat.map((msg) => msg.content))
+  })
 
   const [message, setMessage] = useState('')
-  const [chatMessages, setChatMessages] = useState(['hi', 'bye'])
+  const [chatMessages, setChatMessages] = useState([])
   const user = useContext(UserContext)
 
   const scrollPositionRef = useRef(null)

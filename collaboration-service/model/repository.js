@@ -19,3 +19,7 @@ export const saveRoom = async (room) => {
     upsert: true,
   })
 }
+
+export const getRoom = async (roomId) => {
+  return CollaborationRoomModel.findOne({ roomId })
+}

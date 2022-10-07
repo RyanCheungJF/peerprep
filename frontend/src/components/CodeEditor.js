@@ -12,6 +12,9 @@ const CodeEditor = ({ room }) => {
   collabSocket.on('pull-code', (code) => {
     setCode(code)
   })
+  collabSocket.on('restore-code', (code) => {
+    setCode(code)
+  })
 
   useEffect(() => {
     console.log(code)
