@@ -1,4 +1,5 @@
 import { createClient } from 'redis'
+import { REDIS_EXPIRY } from '../constants.js'
 import 'dotenv/config'
 
 const REDIS_URI = process.env.REDIS_URI || 'localhost:6379'
@@ -15,11 +16,13 @@ await client.connect()
 export const saveChatMsg = async (msg, roomId) => {
   const key = getChatMsgKey(roomId)
   await client.rPush(key, JSON.stringify(msg))
+  return client.expire(key, REDIS_EXPIRY)
 }
 
 export const saveSharedCode = async (code, roomId) => {
   const key = getSharedCodeKey(roomId)
   await client.set(key, code)
+  return client.expire(key, REDIS_EXPIRY)
 }
 
 export const getRoom = async (roomId) => {
