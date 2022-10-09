@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { Button } from '@mui/material'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
-import { Button } from '@mui/material'
-import { deleteRoomSvc } from '../api/roomservice'
 import CodeEditor from '../components/CodeEditor'
+import { deleteRoomSvc } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
-// import { homeUrl } from '../utils/routeConstants'
+import { homeUrl } from '../utils/routeConstants'
 
 const RenderPage = () => {
   const location = useLocation()
-
+  const navigate = useNavigate()
   const [question, setQuestion] = useState({})
 
   useEffect(() => {
@@ -34,8 +34,6 @@ const RenderPage = () => {
     }
   }
 
-  const navigate = useNavigate()
-
   const leaveRoom = async () => {
     try {
       console.log('deleteing room with id: ' + location.state.room)
@@ -45,14 +43,14 @@ const RenderPage = () => {
     } catch (err) {
       console.log(err)
     }
-    navigate('/home')
+    navigate(homeUrl)
   }
 
   useEffect(() => {
     matchingSocket.on('partner-left', (data) => {
       console.log('data received from socket', data)
       if (data === 'partner left') {
-        navigate('/home')
+        navigate(homeUrl)
       }
     })
   }, [navigate])
@@ -79,11 +77,6 @@ const RenderPage = () => {
       </Box>
     )
   }
-
-  // if a user refreshed this page and their socket is disconnected, redirect them back to homepage
-  // if (!collabSocket.connected) {
-  //   return <Navigate to={homeUrl} replace={true} />
-  // }
 
   return (
     <Box

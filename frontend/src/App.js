@@ -4,7 +4,7 @@ import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
-import RenderPage from './pages/RenderPage'
+import CollaborationPage from './pages/CollaborationPage'
 import NavBar from './components/NavBar'
 import PrivateRoute from './components/PrivateRoute'
 import {
@@ -13,6 +13,7 @@ import {
   loginUrl,
   homeUrl,
   profileUrl,
+  collabUrl,
 } from './utils/routeConstants'
 
 const App = () => {
@@ -26,10 +27,10 @@ const App = () => {
           <Route path={loginUrl} element={<LoginPage />} />
           <Route
             exact
-            path={'/test'}
+            path={collabUrl}
             element={
               <PrivateRoute>
-                <RenderPage />
+                <CollaborationPage />
               </PrivateRoute>
             }
           />

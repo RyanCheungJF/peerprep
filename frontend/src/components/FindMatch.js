@@ -1,9 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { matchingSocket } from '../utils/socket'
-import { findMatch, deleteMatch } from '../api/matchingService'
-import { UserContext } from '../contexts/UserContext'
-import { createRoomSvc } from '../api/roomservice'
 import {
   Box,
   Button,
@@ -14,6 +10,11 @@ import {
 } from '@mui/material'
 import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
+import { matchingSocket } from '../utils/socket'
+import { collabUrl } from '../utils/routeConstants'
+import { findMatch, deleteMatch } from '../api/matchingService'
+import { UserContext } from '../contexts/UserContext'
+import { createRoomSvc } from '../api/roomservice'
 
 const FindMatch = () => {
   const navigate = useNavigate()
@@ -30,10 +31,8 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   // Select Difficulty Error Dialog
-  const [
-    selectDifficultyErrorDialogOpen,
-    setSelectDifficultyErrorDialogOpen,
-  ] = useState(false)
+  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
+    useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -75,7 +74,7 @@ const FindMatch = () => {
       } catch (err) {
         console.log(err)
       }
-      navigate('/test', {
+      navigate(collabUrl, {
         state: {
           room: username,
         },
@@ -93,7 +92,7 @@ const FindMatch = () => {
       const data = res.data
       const room = data.socketID
       matchingSocket.emit('notify-partner', room, user.username, difficulty)
-      navigate('/test', {
+      navigate(collabUrl, {
         state: {
           room: user.username,
         },
