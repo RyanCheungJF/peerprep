@@ -2,7 +2,7 @@ import { Server } from 'socket.io'
 
 import { messageHandler } from './controller/chat-controller.js'
 import { sharedCodeHandler } from './controller/shared-code-controller.js'
-import { saveRoom, getRoom } from './controller/room-controller.js'
+import { saveRoom, getRoom, deleteRoom } from './controller/room-controller.js'
 
 const SOCKET_PORT = 8400
 
@@ -16,6 +16,7 @@ io.on('connection', (socket) => {
     socket.join(roomId)
   })
   socket.on('join-room', getRoom(socket))
+  socket.on('leave-room', deleteRoom(socket))
 
   socket.on('send-message', messageHandler(socket))
   socket.on('push-code', sharedCodeHandler(socket))

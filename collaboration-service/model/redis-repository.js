@@ -45,6 +45,20 @@ const getSharedCode = async (roomId) => {
   return client.get(key)
 }
 
+export const deleteRoom = async (roomId) => {
+  return Promise.all([deleteChatMsgs(roomId), deleteSharedCode(roomId)])
+}
+
+const deleteChatMsgs = async (roomId) => {
+  const key = getChatMsgKey(roomId)
+  return client.del(key)
+}
+
+const deleteSharedCode = async (roomId) => {
+  const key = getSharedCodeKey(roomId)
+  return client.del(key)
+}
+
 /* Redis key generators */
 const getChatMsgKey = (roomId) => `${roomId}:chat`
 const getSharedCodeKey = (roomId) => `${roomId}:code`

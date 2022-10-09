@@ -1,7 +1,11 @@
-import { getRoom as _redisGetRoom } from '../model/redis-repository.js'
+import {
+  getRoom as _redisGetRoom,
+  deleteRoom as _redisDeleteRoom,
+} from '../model/redis-repository.js'
 import {
   ormSaveRoom as _saveRoom,
   ormGetRoom as _getRoom,
+  ormDeleteRoom as _deleteRoom,
 } from '../model/collaboration-room-orm.js'
 
 /**
@@ -9,7 +13,7 @@ import {
  */
 export const saveRoom = (socket) => async () => {
   const rooms = [...socket.rooms]
-  const roomId = rooms.find((r) => r.startsWith('room:'))
+  const roomId = rooms.find((r) => r.startsWith('collab-room:'))
   if (roomId) {
     const redisRoom = await _redisGetRoom(roomId)
     await _saveRoom(redisRoom)
@@ -23,7 +27,12 @@ export const saveRoom = (socket) => async () => {
 export const getRoom = (socket) => async (roomId) => {
   const room = await _getRoom(roomId)
   if (room) {
-    socket.emit('restore-chat', room.chat)
-    socket.emit('restore-code', room.code)
+    socket.emit('restore-chat', room.chat ?? [])
+    socket.emit('restore-code', room.code ?? '')
   }
+}
+
+export const deleteRoom = (_) => async (roomId) => {
+  await _redisDeleteRoom(roomId)
+  await _deleteRoom(roomId)
 }

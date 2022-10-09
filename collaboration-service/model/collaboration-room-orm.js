@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { saveRoom, getRoom } from './repository.js'
+import { saveRoom, getRoom, deleteRoom } from './repository.js'
 
 export const ormSaveRoom = async (room) => {
   try {
@@ -21,6 +21,15 @@ export const ormGetRoom = async (roomId) => {
     return await getRoom(roomId)
   } catch (err) {
     console.log('ERROR: Could not get room from MongoDB', err)
+    return { err }
+  }
+}
+
+export const ormDeleteRoom = async (roomId) => {
+  try {
+    return await deleteRoom(roomId)
+  } catch (err) {
+    console.log('ERROR: Could not delete room from MongoDB', err)
     return { err }
   }
 }

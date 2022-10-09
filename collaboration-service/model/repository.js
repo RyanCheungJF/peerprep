@@ -23,3 +23,7 @@ export const saveRoom = async (room) => {
 export const getRoom = async (roomId) => {
   return CollaborationRoomModel.findOne({ roomId })
 }
+
+export const deleteRoom = async (roomId) => {
+  return CollaborationRoomModel.deleteOne({ roomId })
+}
