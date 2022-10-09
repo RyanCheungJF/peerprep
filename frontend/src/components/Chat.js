@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { collabSocket } from '../utils/socket'
+import { getCollabRoomId } from '../utils/main'
 import { UserContext } from '../contexts/UserContext'
 
 const Chat = ({ room }) => {
@@ -59,7 +60,12 @@ const Chat = ({ room }) => {
     if (message) {
       setChatMessages([...chatMessages, message])
       setMessage('')
-      collabSocket.emit('send-message', message, room, user._id)
+      collabSocket.emit(
+        'send-message',
+        message,
+        getCollabRoomId(room),
+        user._id
+      )
     }
   }
 

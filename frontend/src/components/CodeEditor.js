@@ -5,6 +5,7 @@ import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/themes/prism.css'
 import { collabSocket } from '../utils/socket'
+import { getCollabRoomId } from '../utils/main'
 
 const CodeEditor = ({ room }) => {
   const [code, setCode] = useState('')
@@ -19,7 +20,7 @@ const CodeEditor = ({ room }) => {
   // TODO: look into throttling this.
   const handleCodeChange = (newCode) => {
     setCode(newCode)
-    collabSocket.emit('push-code', newCode, room)
+    collabSocket.emit('push-code', newCode, getCollabRoomId(room))
   }
 
   return (

@@ -8,6 +8,7 @@ import CodeEditor from '../components/CodeEditor'
 import { deleteRoomSvc } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
+import { getCollabRoomId } from '../utils/main'
 
 const RenderPage = () => {
   const location = useLocation()
@@ -19,9 +20,21 @@ const RenderPage = () => {
   }, [])
 
   useEffect(() => {
-    collabSocket.emit('join-room', location.state.room)
+    collabSocket.connect()
+    return () => {
+      collabSocket.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!location.state?.room) {
+      navigate(homeUrl, { replace: true })
+      return
+    }
+
+    collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
-  }, [location.state.room])
+  }, [location.state, navigate])
 
   const getQuestion = async () => {
     try {
@@ -36,9 +49,10 @@ const RenderPage = () => {
 
   const leaveRoom = async () => {
     try {
-      console.log('deleteing room with id: ' + location.state.room)
+      console.log('deleting room with id: ' + location.state.room)
       const res = await deleteRoomSvc(location.state.room)
       matchingSocket.emit('leave-room', location.state.room, 'partner left')
+      collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
       console.log(JSON.stringify(res.data))
     } catch (err) {
       console.log(err)
@@ -98,12 +112,12 @@ const RenderPage = () => {
         }}
       >
         {renderQuestion()}
-        <Chat room={location.state.room} />
+        <Chat room={location.state?.room} />
         <Button variant={'outlined'} onClick={() => leaveRoom()}>
           Leave Room
         </Button>
       </Box>
-      <CodeEditor room={location.state.room} />
+      <CodeEditor room={location.state?.room} />
     </Box>
   )
 }
