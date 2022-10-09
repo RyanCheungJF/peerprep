@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const RoomChatModelSchema = new mongoose.Schema({
+const ChatMsgModelSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
@@ -21,7 +21,7 @@ const CollaborationRoomModelSchema = new mongoose.Schema({
   code: {
     type: String,
   },
-  chat: [RoomChatModelSchema],
+  chat: [ChatMsgModelSchema],
 })
 
 export default mongoose.model(
