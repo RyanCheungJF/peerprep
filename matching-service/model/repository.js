@@ -1,4 +1,4 @@
-import SocketRoomModel from './socket-room-model.js'
+import socketRoomModel from '../model/socket-room-model.js'
 import 'dotenv/config'
 
 // Set up mongoose connection
@@ -13,18 +13,30 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+db.once('open', () => console.log('Connected to MongoDB'))
 db.collection('socketroommodels')
 
-export const createSocketRoom = async (params) => {
-  return new SocketRoomModel(params)
+// find all rooms
+export const findAllRooms = async (filter) => {
+  return socketRoomModel.find(filter)
 }
 
-export const findSocketRoom = async (query, projection) => {
-//   console.log(
-//     'bro query: ' + JSON.stringify(query) + ' projection: ' + projection
-//   )
-  if (JSON.stringify(query) == "{}") {
-    return query
-  }
-  return SocketRoomModel.findOne(query)
+// find one room by filter 
+export const findOneRoom = async (filter) => {
+  return socketRoomModel.findOne(filter)
+}
+
+// create a room
+export const createRoom = async (params) => {
+  return new socketRoomModel(params)
+}
+
+// delete a room
+export const deleteRoom = async (roomToBeDeleted) => {
+  return roomToBeDeleted.remove()
+}
+
+// update a room
+export const updateRoom = async (room_id, body) => {
+  return socketRoomModel.findOneAndUpdate({ room_id: room_id }, body)
 }

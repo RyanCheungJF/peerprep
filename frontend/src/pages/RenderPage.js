@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
+import { Button } from '@mui/material'
+import { deleteRoomSvc } from '../api/roomservice'
 import CodeEditor from '../components/CodeEditor'
-import { collabSocket } from '../utils/socket'
-import { homeUrl } from '../utils/routeConstants'
+import { collabSocket, matchingSocket } from '../utils/socket'
+// import { homeUrl } from '../utils/routeConstants'
 
 const RenderPage = () => {
   const location = useLocation()
@@ -17,7 +19,8 @@ const RenderPage = () => {
   }, [])
 
   useEffect(() => {
-    collabSocket.emit('join-room', location.state.room, collabSocket.id)
+    collabSocket.emit('join-room', location.state.room)
+    matchingSocket.emit('join-room', location.state.room)
   }, [location.state.room])
 
   const getQuestion = async () => {
@@ -30,6 +33,29 @@ const RenderPage = () => {
       console.log('ERROR', err)
     }
   }
+
+  const navigate = useNavigate()
+
+  const leaveRoom = async () => {
+    try {
+      console.log('deleteing room with id: ' + location.state.room)
+      const res = await deleteRoomSvc(location.state.room)
+      matchingSocket.emit('leave-room', location.state.room, 'partner left')
+      console.log(JSON.stringify(res.data))
+    } catch (err) {
+      console.log(err)
+    }
+    navigate('/home')
+  }
+
+  useEffect(() => {
+    matchingSocket.on('partner-left', (data) => {
+      console.log('data received from socket', data)
+      if (data === 'partner left') {
+        navigate('/home')
+      }
+    })
+  }, [navigate])
 
   const renderQuestion = () => {
     return (
@@ -55,9 +81,9 @@ const RenderPage = () => {
   }
 
   // if a user refreshed this page and their socket is disconnected, redirect them back to homepage
-  if (!collabSocket.connected) {
-    return <Navigate to={homeUrl} replace={true} />
-  }
+  // if (!collabSocket.connected) {
+  //   return <Navigate to={homeUrl} replace={true} />
+  // }
 
   return (
     <Box
@@ -80,6 +106,9 @@ const RenderPage = () => {
       >
         {renderQuestion()}
         <Chat room={location.state.room} />
+        <Button variant={'outlined'} onClick={() => leaveRoom()}>
+          Leave Room
+        </Button>
       </Box>
       <CodeEditor room={location.state.room} />
     </Box>

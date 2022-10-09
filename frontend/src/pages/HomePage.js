@@ -1,7 +1,37 @@
 import { Box, Chip, Divider, Typography } from '@mui/material'
 import FindMatch from '../components/FindMatch'
+import { findRoomSvc } from '../api/roomservice'
+import { UserContext } from '../contexts/UserContext'
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
+  const navigate = useNavigate()
+
+  const user = useContext(UserContext)
+
+  useEffect(() => {
+    const findExistingRoom = () => {
+      const filters = [{ id1: user.username }, { id2: user.username }]
+
+      filters.forEach(async (filter) => {
+        try {
+          const res = await findRoomSvc(filter)
+          if (res.data && JSON.stringify(res.data) !== '{}') {
+            navigate('/test', {
+              state: {
+                room: res.data.room_id,
+              },
+            })
+          }
+        } catch (err) {
+          console.log(err)
+        }
+      })
+    }
+    findExistingRoom()
+  }, [navigate, user.username])
+
   return (
     <Box
       sx={{
