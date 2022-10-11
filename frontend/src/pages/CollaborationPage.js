@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import '../index.css'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@mui/material'
 import { Box } from '@mui/material'
@@ -79,22 +80,55 @@ const CollaborationPage = () => {
 
   const renderQuestion = () => {
     return (
-      <Box sx={{ height: '50%', marginBottom: '24px', overflow: 'auto' }}>
-        <p dangerouslySetInnerHTML={{ __html: question['title'] }}></p>
+      <Box className="question-display">
+        <p
+          className="question-title"
+          dangerouslySetInnerHTML={{ __html: question['title'] }}
+        ></p>
         <br />
         <p dangerouslySetInnerHTML={{ __html: question['description'] }}></p>
         <br />
-        <p>Example 1</p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_1_input'] }}></p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_1_output'] }}></p>
+        <p className="example-title">Examples:</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Input: ' + question['ex_1_input'],
+          }}
+        ></p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Output: ' + question['ex_1_output'],
+          }}
+        ></p>
         <p
           dangerouslySetInnerHTML={{ __html: question['ex_1_explanation'] }}
         ></p>
-        <p>Example 2</p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_2_input'] }}></p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_2_output'] }}></p>
+        <br />
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Input: ' + question['ex_2_input'],
+          }}
+        ></p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Output: ' + question['ex_2_output'],
+          }}
+        ></p>
         <p
           dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}
+        ></p>
+        <br />
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Input: ' + question['ex_3_input'],
+          }}
+        ></p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Output: ' + question['ex_3_output'],
+          }}
+        ></p>
+        <p
+          dangerouslySetInnerHTML={{ __html: question['ex_3_explanation'] }}
         ></p>
       </Box>
     )
