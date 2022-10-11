@@ -30,10 +30,8 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   // Select Difficulty Error Dialog
-  const [
-    selectDifficultyErrorDialogOpen,
-    setSelectDifficultyErrorDialogOpen,
-  ] = useState(false)
+  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
+    useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -78,7 +76,7 @@ const FindMatch = () => {
       navigate('/question', {
         state: {
           room: username,
-          difficulty: difficulty
+          difficulty: difficulty.toLowerCase(),
         },
       })
     })
@@ -97,7 +95,7 @@ const FindMatch = () => {
       navigate('/question', {
         state: {
           room: user.username,
-          difficulty: difficulty
+          difficulty: difficulty,
         },
       })
     }
