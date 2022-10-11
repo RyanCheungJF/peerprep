@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { matchingSocket } from '../utils/socket'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
-import { createRoomSvc } from '../api/roomservice'
+import { createRoomService } from '../api/roomservice'
 import {
   Box,
   Button,
@@ -71,13 +71,14 @@ const FindMatch = () => {
           difficulty: difficulty.toLowerCase(),
           datetime: new Date(),
         }
-        createRoomSvc(room)
+        createRoomService(room)
       } catch (err) {
         console.log(err)
       }
-      navigate('/test', {
+      navigate('/question', {
         state: {
           room: username,
+          difficulty: difficulty
         },
       })
     })
@@ -93,9 +94,10 @@ const FindMatch = () => {
       const data = res.data
       const room = data.socketID
       matchingSocket.emit('notify-partner', room, user.username, difficulty)
-      navigate('/test', {
+      navigate('/question', {
         state: {
           room: user.username,
+          difficulty: difficulty
         },
       })
     }

@@ -7,6 +7,11 @@ let QuestionModelSchema = new Schema({
     required: true,
     unique: true,
   },
+  qnsid: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   difficulty: {
     type: String,
     required: true,

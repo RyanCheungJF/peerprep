@@ -1,6 +1,6 @@
 import { Box, Chip, Divider, Typography } from '@mui/material'
 import FindMatch from '../components/FindMatch'
-import { findRoomSvc } from '../api/roomservice'
+import { findRoomService } from '../api/roomservice'
 import { UserContext } from '../contexts/UserContext'
 import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -16,9 +16,9 @@ const HomePage = () => {
 
       filters.forEach(async (filter) => {
         try {
-          const res = await findRoomSvc(filter)
+          const res = await findRoomService(filter)
           if (res.data && JSON.stringify(res.data) !== '{}') {
-            navigate('/test', {
+            navigate('/question', {
               state: {
                 room: res.data.room_id,
               },
