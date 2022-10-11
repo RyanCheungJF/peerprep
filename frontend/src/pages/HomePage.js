@@ -4,6 +4,7 @@ import { findRoomSvc } from '../api/roomservice'
 import { UserContext } from '../contexts/UserContext'
 import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { collabUrl } from '../utils/routeConstants'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -18,7 +19,7 @@ const HomePage = () => {
         try {
           const res = await findRoomSvc(filter)
           if (res.data && JSON.stringify(res.data) !== '{}') {
-            navigate('/test', {
+            navigate(collabUrl, {
               state: {
                 room: res.data.room_id,
               },
@@ -31,6 +32,7 @@ const HomePage = () => {
     }
     findExistingRoom()
   }, [navigate, user.username])
+
   return (
     <Box
       sx={{

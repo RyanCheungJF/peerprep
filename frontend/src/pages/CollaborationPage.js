@@ -1,27 +1,59 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { Button } from '@mui/material'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
-import { Button } from '@mui/material'
-import { deleteRoomSvc } from '../api/roomservice'
 import CodeEditor from '../components/CodeEditor'
+import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
+import { deleteRoomSvc } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
-// import { homeUrl } from '../utils/routeConstants'
+import { homeUrl } from '../utils/routeConstants'
+import { getCollabRoomId } from '../utils/main'
 
-const RenderPage = () => {
+const CollaborationPage = () => {
   const location = useLocation()
-
+  const navigate = useNavigate()
   const [question, setQuestion] = useState({})
+  const [isPartnerOnline, setIsPartnerOnline] = useState(true)
 
   useEffect(() => {
     getQuestion()
   }, [])
 
   useEffect(() => {
-    collabSocket.emit('join-room', location.state.room)
+    collabSocket.connect()
+    return () => {
+      collabSocket.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!location.state?.room) {
+      navigate(homeUrl, { replace: true })
+      return
+    }
+
+    collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
-  }, [location.state.room])
+  }, [location.state, navigate])
+
+  useEffect(() => {
+    collabSocket.on('partner-disconnected', () => {
+      setIsPartnerOnline(false)
+    })
+    collabSocket.on('partner-connected', () => {
+      setIsPartnerOnline(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    matchingSocket.on('partner-left', (data) => {
+      if (data === 'partner left') {
+        navigate(homeUrl)
+      }
+    })
+  }, [navigate])
 
   const getQuestion = async () => {
     try {
@@ -34,28 +66,18 @@ const RenderPage = () => {
     }
   }
 
-  const navigate = useNavigate()
-
   const leaveRoom = async () => {
     try {
-      console.log('deleteing room with id: ' + location.state.room)
+      console.log('deleting room with id: ' + location.state.room)
       const res = await deleteRoomSvc(location.state.room)
       matchingSocket.emit('leave-room', location.state.room, 'partner left')
+      collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
       console.log(JSON.stringify(res.data))
     } catch (err) {
       console.log(err)
     }
-    navigate('/home')
+    navigate(homeUrl)
   }
-
-  useEffect(() => {
-    matchingSocket.on('partner-left', (data) => {
-      console.log('data received from socket', data)
-      if (data === 'partner left') {
-        navigate('/home')
-      }
-    })
-  }, [navigate])
 
   const renderQuestion = () => {
     return (
@@ -80,11 +102,6 @@ const RenderPage = () => {
     )
   }
 
-  // if a user refreshed this page and their socket is disconnected, redirect them back to homepage
-  // if (!collabSocket.connected) {
-  //   return <Navigate to={homeUrl} replace={true} />
-  // }
-
   return (
     <Box
       sx={{
@@ -105,14 +122,19 @@ const RenderPage = () => {
         }}
       >
         {renderQuestion()}
-        <Chat room={location.state.room} />
+        <Chat room={location.state?.room} />
         <Button variant={'outlined'} onClick={() => leaveRoom()}>
           Leave Room
         </Button>
       </Box>
-      <CodeEditor room={location.state.room} />
+      <CodeEditor room={location.state?.room} />
+
+      <PartnerOfflineDialog
+        isDialogOpen={!isPartnerOnline}
+        leaveRoom={leaveRoom}
+      />
     </Box>
   )
 }
 
-export default RenderPage
+export default CollaborationPage

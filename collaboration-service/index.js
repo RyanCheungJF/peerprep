@@ -1,5 +1,15 @@
 import { Server } from 'socket.io'
 
+import { messageHandler } from './controller/chat-controller.js'
+import { sharedCodeHandler } from './controller/shared-code-controller.js'
+import {
+  saveRoom,
+  getRoom,
+  deleteRoom,
+  broadcastConnection,
+  broadcastDisconnection,
+} from './controller/room-controller.js'
+
 const SOCKET_PORT = 8400
 
 const io = new Server(SOCKET_PORT, {
@@ -7,18 +17,24 @@ const io = new Server(SOCKET_PORT, {
 })
 
 io.on('connection', (socket) => {
-  socket.on('join-room', (room) => {
-    console.log('socket connected', room)
-    socket.join(room)
+  socket.on('join-room', (roomId) => {
+    console.log('socket joining room:', roomId)
+    socket.join(roomId)
   })
+  socket.on('join-room', getRoom(socket))
+  socket.on('join-room', broadcastConnection(socket))
 
-  socket.on('send-message', (message, room) => {
-    console.log('message sent:', message)
-    socket.to(room).emit('receive-message', message)
-  })
+  socket.on('leave-room', deleteRoom(socket))
 
-  socket.on('push-code', (code, room) => {
-    console.log(`Pushing up code for room ${room}: ${code}`)
-    socket.to(room).emit('pull-code', code)
-  })
+  socket.on('send-message', messageHandler(socket))
+  socket.on('push-code', sharedCodeHandler(socket))
+
+  // Note: we listen for the 'disconnecting' event and not 'disconnected'.
+  // The 'disconnected' event is emitted after the socket leaves all rooms,
+  // so it'll be too late to find the socket's room and persist things to the db then.
+  socket.on('disconnecting', saveRoom(socket))
+  socket.on('disconnecting', broadcastDisconnection(socket))
+
+  // Stretch goal/todo: detect SIGTERM and persist all currently open socket rooms to db before spinning down.
+  // (prevents data loss if container is spun down)
 })
