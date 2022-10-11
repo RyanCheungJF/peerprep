@@ -1,19 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-<<<<<<<< HEAD:frontend/src/pages/QuestionPage.js
-import { Box } from '@mui/material'
-import Chat from '../components/Chat'
-import { Button } from '@mui/material'
-import { findQuestion } from '../api/questionService'
-import { deleteRoomService, deleteRoomService } from '../api/roomservice'
-========
-import axios from 'axios'
 import { Button } from '@mui/material'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
->>>>>>>> develop:frontend/src/pages/CollaborationPage.js
 import CodeEditor from '../components/CodeEditor'
 import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
+import { findQuestion } from '../api/questionService'
 import { deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
@@ -74,13 +66,8 @@ const CollaborationPage = () => {
 
   const leaveRoom = async () => {
     try {
-<<<<<<<< HEAD:frontend/src/pages/QuestionPage.js
-      console.log('deleteing room with id: ' + location.state.room)
-      const res = await deleteRoomService(location.state.room)
-========
       console.log('deleting room with id: ' + location.state.room)
-      const res = await deleteRoomSvc(location.state.room)
->>>>>>>> develop:frontend/src/pages/CollaborationPage.js
+      const res = await deleteRoomService(location.state.room)
       matchingSocket.emit('leave-room', location.state.room, 'partner left')
       collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
       console.log(JSON.stringify(res.data))

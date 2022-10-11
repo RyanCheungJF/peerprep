@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Editor from 'react-simple-code-editor'
 import { highlight, languages } from 'prismjs/components/prism-core'
 import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/themes/prism.css'
 import { collabSocket } from '../utils/socket'
+import { getCollabRoomId } from '../utils/main'
 
 const CodeEditor = ({ room }) => {
   const [code, setCode] = useState('')
@@ -12,15 +13,14 @@ const CodeEditor = ({ room }) => {
   collabSocket.on('pull-code', (code) => {
     setCode(code)
   })
-
-  useEffect(() => {
-    console.log(code)
-  }, [code])
+  collabSocket.on('restore-code', (code) => {
+    setCode(code)
+  })
 
   // TODO: look into throttling this.
   const handleCodeChange = (newCode) => {
     setCode(newCode)
-    collabSocket.emit('push-code', newCode, room)
+    collabSocket.emit('push-code', newCode, getCollabRoomId(room))
   }
 
   return (
