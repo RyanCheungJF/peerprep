@@ -6,6 +6,7 @@ import { Box } from '@mui/material'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
+import Question from '../components/Question'
 import { findQuestion } from '../api/questionService'
 import { deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
@@ -78,62 +79,6 @@ const CollaborationPage = () => {
     navigate(homeUrl)
   }
 
-  const renderQuestion = () => {
-    return (
-      <Box className="question-display">
-        <p
-          className="question-title"
-          dangerouslySetInnerHTML={{ __html: question['title'] }}
-        ></p>
-        <br />
-        <p dangerouslySetInnerHTML={{ __html: question['description'] }}></p>
-        <br />
-        <p className="example-title">Examples:</p>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Input: ' + question['ex_1_input'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Output: ' + question['ex_1_output'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{ __html: question['ex_1_explanation'] }}
-        ></p>
-        <br />
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Input: ' + question['ex_2_input'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Output: ' + question['ex_2_output'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}
-        ></p>
-        <br />
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Input: ' + question['ex_3_input'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: 'Output: ' + question['ex_3_output'],
-          }}
-        ></p>
-        <p
-          dangerouslySetInnerHTML={{ __html: question['ex_3_explanation'] }}
-        ></p>
-      </Box>
-    )
-  }
-
   return (
     <Box
       sx={{
@@ -153,7 +98,7 @@ const CollaborationPage = () => {
           justifyContent: 'space-between',
         }}
       >
-        {renderQuestion()}
+        <Question question={question} />
         <Chat room={location.state?.room} />
         <Button variant={'outlined'} onClick={() => leaveRoom()}>
           Leave Room
