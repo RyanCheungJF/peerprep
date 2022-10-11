@@ -25,7 +25,6 @@ const App = () => {
           <Route exact path={baseUrl} element={<LandingPage />} />
           <Route path={signupUrl} element={<SignupPage />} />
           <Route path={loginUrl} element={<LoginPage />} />
-          <Route path={questionUrl} element={<QuestionPage />} />
           <Route
             exact
             path={collabUrl}
