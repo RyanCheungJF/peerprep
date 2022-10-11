@@ -95,7 +95,7 @@ const FindMatch = () => {
       navigate('/question', {
         state: {
           room: user.username,
-          difficulty: difficulty,
+          difficulty: difficulty.toLowerCase(),
         },
       })
     }
