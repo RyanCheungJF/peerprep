@@ -12,8 +12,7 @@ import {
  * Retrieves a room from redis and saves it to the DB for persistence
  */
 export const saveRoom = (socket) => async () => {
-  const rooms = [...socket.rooms]
-  const roomId = rooms.find((r) => r.startsWith('collab-room:'))
+  const roomId = getCollabRoomId([...socket.rooms])
   if (roomId) {
     const redisRoom = await _redisGetRoom(roomId)
     await _saveRoom(redisRoom)
@@ -36,3 +35,17 @@ export const deleteRoom = (_) => async (roomId) => {
   await _redisDeleteRoom(roomId)
   await _deleteRoom(roomId)
 }
+
+export const broadcastConnection = (socket) => async (roomId) => {
+  socket.to(roomId).emit('partner-connected')
+}
+
+export const broadcastDisconnection = (socket) => () => {
+  const roomId = getCollabRoomId([...socket.rooms])
+  if (roomId) {
+    socket.to(roomId).emit('partner-disconnected')
+  }
+}
+
+const getCollabRoomId = (rooms) =>
+  rooms.find((r) => r.startsWith('collab-room:'))

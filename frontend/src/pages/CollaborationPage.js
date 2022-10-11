@@ -5,15 +5,17 @@ import { Button } from '@mui/material'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
+import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
 import { deleteRoomSvc } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
 import { getCollabRoomId } from '../utils/main'
 
-const RenderPage = () => {
+const CollaborationPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [question, setQuestion] = useState({})
+  const [isPartnerOnline, setIsPartnerOnline] = useState(true)
 
   useEffect(() => {
     getQuestion()
@@ -35,6 +37,23 @@ const RenderPage = () => {
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
   }, [location.state, navigate])
+
+  useEffect(() => {
+    collabSocket.on('partner-disconnected', () => {
+      setIsPartnerOnline(false)
+    })
+    collabSocket.on('partner-connected', () => {
+      setIsPartnerOnline(true)
+    })
+  }, [])
+
+  useEffect(() => {
+    matchingSocket.on('partner-left', (data) => {
+      if (data === 'partner left') {
+        navigate(homeUrl)
+      }
+    })
+  }, [navigate])
 
   const getQuestion = async () => {
     try {
@@ -59,15 +78,6 @@ const RenderPage = () => {
     }
     navigate(homeUrl)
   }
-
-  useEffect(() => {
-    matchingSocket.on('partner-left', (data) => {
-      console.log('data received from socket', data)
-      if (data === 'partner left') {
-        navigate(homeUrl)
-      }
-    })
-  }, [navigate])
 
   const renderQuestion = () => {
     return (
@@ -118,8 +128,13 @@ const RenderPage = () => {
         </Button>
       </Box>
       <CodeEditor room={location.state?.room} />
+
+      <PartnerOfflineDialog
+        isDialogOpen={!isPartnerOnline}
+        leaveRoom={leaveRoom}
+      />
     </Box>
   )
 }
 
-export default RenderPage
+export default CollaborationPage
