@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import '../index.css'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@mui/material'
 import { Box } from '@mui/material'
@@ -85,26 +84,28 @@ const CollaborationPage = () => {
         display: 'flex',
         padding: '36px',
         // content height = 100vh - nav bar height - vertical padding
-        height: 'calc(100vh - 64px - 2 * 36px)',
+        height: 'calc(100vh - 64px - 2 * 16px)',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          width: '30%',
-          paddingRight: '24px',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Question question={question} />
-        <Chat room={location.state?.room} />
-        <Button variant={'outlined'} onClick={() => leaveRoom()}>
-          Leave Room
-        </Button>
+      <Box className="left-coding-container">
+        <Box className="coding-question-container">
+          <Question question={question} />
+        </Box>
+        <Box className="coding-chat-container">
+          <Chat room={location.state?.room} />
+        </Box>
+        <Box className="coding-button-container">
+          <Button
+            className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-light rounded-md w-1/5"
+            onClick={() => leaveRoom()}
+          >
+            Leave Room
+          </Button>
+        </Box>
       </Box>
-      <CodeEditor room={location.state?.room} />
+      <Box className="right-coding-container">
+        <CodeEditor room={location.state?.room} />
+      </Box>
 
       <PartnerOfflineDialog
         isDialogOpen={!isPartnerOnline}

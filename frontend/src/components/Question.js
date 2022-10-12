@@ -1,4 +1,3 @@
-import '../index.css'
 import { Box } from '@mui/material'
 
 const Question = ({ question }) => {
@@ -8,7 +7,6 @@ const Question = ({ question }) => {
         className="question-title"
         dangerouslySetInnerHTML={{ __html: question['title'] }}
       ></p>
-      <br />
       <p dangerouslySetInnerHTML={{ __html: question['description'] }}></p>
       <br />
       <p className="example-title">Examples:</p>

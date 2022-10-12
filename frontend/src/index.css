@@ -5,10 +5,10 @@
 @layer comonents {
   /* landing page */
   .landingpage-text-container {
-    @apply flex flex-col basis-3/4;
+    @apply flex flex-col basis-3/5;
   }
   .landingpage-button-container {
-    @apply flex flex-col basis-1/4 justify-center;
+    @apply flex flex-col basis-2/5 justify-center;
   }
   .landingpage-button-wrapper {
     @apply py-2;
@@ -34,17 +34,46 @@
     @apply px-2;
   }
 
+  /* coding page */
+  .left-coding-container {
+    @apply flex flex-col basis-1/2;
+  }
+  .right-coding-container {
+    @apply flex basis-1/2 justify-center;
+  }
+  .coding-question-container {
+    @apply flex basis-1/2;
+  }
+  .coding-chat-container {
+    @apply flex basis-1/2;
+  }
+  .coding-chat-div {
+    @apply pl-3 pt-2 h-full;
+  }
+  .coding-chat-title {
+    @apply pl-3 font-inter font-bold text-3xl text-gray-700;
+  }
+  .coding-button-container {
+    @apply justify-center;
+  }
+  .leave-room-button {
+    @apply font-inter bg-pink-700 hover:bg-pink-800 text-white font-light rounded-md w-1/5;
+  }
+
   /* components */
   .button {
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
   }
+  .navbar {
+    @apply font-inter grow font-bold text-3xl text-gray-900;
+  }
 
   /* question information */
   .question-display {
-    @apply mb-24 overflow-auto h-1/2;
+    @apply overflow-auto pl-6;
   }
   .question-title {
-    @apply font-bold text-lg;
+    @apply font-bold text-lg underline underline-offset-4;
   }
   .example-title {
     @apply font-semibold;

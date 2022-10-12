@@ -70,20 +70,18 @@ const Chat = ({ room }) => {
   }
 
   return (
-    <Paper elevation={5}>
-      <Box p={3}>
-        <Typography variant="h4" gutterBottom>
-          Chat
-        </Typography>
+    <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
+      <Box className="coding-chat-div">
+        <p className="coding-chat-title">Chat</p>
         <Divider />
         <Grid container spacing={4} alignItems="center">
           <Grid xs={12} item>
-            <List sx={{ maxHeight: '10rem', overflow: 'auto' }}>
+            <List sx={{ maxHeight: '15rem', overflow: 'auto' }}>
               {displayChatMessages()}
               <ListItem ref={scrollPositionRef}></ListItem>
             </List>
           </Grid>
-          <Grid xs={11} item>
+          <Grid xs={11} item sx={{ position: 'static', pb: 1 }}>
             <FormControl fullWidth>
               <TextField
                 value={message}

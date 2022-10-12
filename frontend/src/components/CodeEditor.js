@@ -30,7 +30,7 @@ const CodeEditor = ({ room }) => {
       highlight={(code) => highlight(code, languages.js)}
       padding={10}
       style={{
-        width: '70%',
+        width: '90%',
         height: '100%',
         fontFamily: '"Fira code", "Fira Mono", monospace',
         fontSize: '1.1rem',
