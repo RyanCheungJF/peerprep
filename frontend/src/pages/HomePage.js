@@ -46,7 +46,7 @@ const HomePage = () => {
       }}
     >
       <Box sx={{ my: 3, mx: 2 }}>
-        <Typography variant={'h3'}>Home Page</Typography>
+        <p className="home-header">Welcome back, {user.username}!</p>
       </Box>
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>

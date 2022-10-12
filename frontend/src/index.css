@@ -34,6 +34,11 @@
     @apply px-2;
   }
 
+  /* home page */
+  .home-header {
+    @apply font-inter font-bold text-4xl text-gray-700;
+  }
+
   /* coding page */
   .left-coding-container {
     @apply flex flex-col basis-1/2;

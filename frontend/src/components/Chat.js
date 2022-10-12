@@ -10,7 +10,6 @@ import {
   ListItemText,
   Paper,
   TextField,
-  Typography,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { collabSocket } from '../utils/socket'
