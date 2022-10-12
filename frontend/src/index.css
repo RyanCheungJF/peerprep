@@ -3,14 +3,39 @@
 @tailwind utilities;
 
 @layer comonents {
+  /* landing page */
+  .landingpage-text-container {
+    @apply flex flex-col basis-3/4;
+  }
+  .landingpage-button-container {
+    @apply flex flex-col basis-1/4 justify-center;
+  }
+  .landingpage-button-wrapper {
+    @apply py-2;
+  }
+  .landingpage-title {
+    @apply font-inter font-bold text-5xl py-4 text-gray-700 underline underline-offset-4 decoration-2 decoration-sky-500;
+  }
+  .landingpage-question {
+    @apply font-inter font-semibold py-2 text-gray-700;
+  }
+  .landingpage-description {
+    @apply font-inter font-light text-gray-700;
+  }
+
+  /* components */
+  .button {
+    @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
+  }
+
   /* question information */
   .question-display {
-    @apply mb-24 overflow-auto h-1/2
+    @apply mb-24 overflow-auto h-1/2;
   }
   .question-title {
-    @apply font-bold text-lg
+    @apply font-bold text-lg;
   }
   .example-title {
-    @apply font-semibold
+    @apply font-semibold;
   }
 }

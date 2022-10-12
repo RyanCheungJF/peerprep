@@ -1,11 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
-  important: "#root",
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  important: '#root',
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('tailwindcss-font-inter')],
 }
