@@ -64,7 +64,12 @@ const LoginPage = () => {
     // reset the redirect url since it's only used this one time
     window.localStorage.removeItem(AUTH_REDIRECT)
     return (
-      <Button component={Link} to={redirectUrl} replace={true}>
+      <Button
+        className="font-inter"
+        component={Link}
+        to={redirectUrl}
+        replace={true}
+      >
         Close
       </Button>
     )

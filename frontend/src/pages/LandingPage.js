@@ -41,9 +41,9 @@ const LandingPage = () => {
         </p>
       </Box>
       <Box className="landingpage-button-container">
-        <Box className="landingpage-button-wrapper">
+        <Box className="landingpage-button-wrapper pt-16">
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl w-1/2"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/2"
             onClick={() => navigate('/login')}
           >
             {'Log In!'}
@@ -51,7 +51,7 @@ const LandingPage = () => {
         </Box>
         <Box className="landingpage-button-wrapper">
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl w-1/2"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/2"
             onClick={() => navigate('/signup')}
           >
             {'Sign Up!'}

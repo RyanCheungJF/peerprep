@@ -23,6 +23,17 @@
     @apply font-inter font-light text-gray-700;
   }
 
+  /* login/ signup page */
+  .login-title {
+    @apply font-inter font-bold text-5xl py-4 text-gray-700;
+  }
+  .left-button-wrapper {
+    @apply px-2;
+  }
+  .right-button-wrapper {
+    @apply px-2;
+  }
+
   /* components */
   .button {
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
