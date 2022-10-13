@@ -9,6 +9,9 @@ env:
   REGISTRY: "registry.digitalocean.com/cs3219-g35-peerprep"
   IMAGE_NAME_FRONTEND: "frontend"
   IMAGE_NAME_USER_SVC: "user-service"
+  IMAGE_NAME_QUESTION_SVC: "question-service"
+  IMAGE_NAME_COLLAB_SVC: "collaboration-service"
+  IMAGE_NAME_MATCHING_SVC: "matching-service"
 
 jobs:
   build_and_push:
@@ -22,6 +25,15 @@ jobs:
 
       - name: Build user-service container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC) ./user-service
+
+      - name: Build question-service container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC) ./question-service
+
+      - name: Build collaboration-service container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC) ./collaboration-service
+
+      - name: Build matching-service container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC) ./matching-service
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
