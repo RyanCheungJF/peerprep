@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios'
 import { Button } from '@mui/material'
 import { Box } from '@mui/material'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
-import { deleteRoomSvc } from '../api/roomservice'
+import { findQuestion } from '../api/questionService'
+import { deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
 import { getCollabRoomId } from '../utils/main'
@@ -58,9 +58,7 @@ const CollaborationPage = () => {
 
   const getQuestion = async () => {
     try {
-      const res = await axios.get(
-        'http://localhost:8100/api/question?difficulty=easy'
-      )
+      const res = await findQuestion(location.state.difficulty)
       setQuestion(res.data)
     } catch (err) {
       console.log('ERROR', err)
@@ -70,7 +68,7 @@ const CollaborationPage = () => {
   const leaveRoom = async () => {
     try {
       console.log('deleting room with id: ' + location.state.room)
-      const res = await deleteRoomSvc(location.state.room)
+      const res = await deleteRoomService(location.state.room)
       matchingSocket.emit('leave-room', location.state.room, 'partner left')
       collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
       console.log(JSON.stringify(res.data))

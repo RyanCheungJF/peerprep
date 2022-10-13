@@ -14,7 +14,7 @@ import { matchingSocket } from '../utils/socket'
 import { collabUrl } from '../utils/routeConstants'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
-import { createRoomSvc } from '../api/roomservice'
+import { createRoomService } from '../api/roomservice'
 
 const FindMatch = () => {
   const navigate = useNavigate()
@@ -70,13 +70,14 @@ const FindMatch = () => {
           difficulty: difficulty.toLowerCase(),
           datetime: new Date(),
         }
-        createRoomSvc(room)
+        createRoomService(room)
       } catch (err) {
         console.log(err)
       }
       navigate(collabUrl, {
         state: {
           room: username,
+          difficulty: difficulty.toLowerCase(),
         },
       })
     })
@@ -95,6 +96,7 @@ const FindMatch = () => {
       navigate(collabUrl, {
         state: {
           room: user.username,
+          difficulty: difficulty.toLowerCase(),
         },
       })
     }
