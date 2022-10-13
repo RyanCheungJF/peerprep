@@ -8,7 +8,7 @@ import {
   findOneRoom,
   createRoom,
   updateRoom,
-  deleteRoom
+  deleteRoom,
 } from './controller/match-controller.js'
 import getRoomByRoomId from './middleware/getRoomByRoomId.js'
 
@@ -16,7 +16,7 @@ const SOCKET_PORT = 8300
 
 const app = express()
 const io = new Server(SOCKET_PORT, {
-  cors: { origin: ['*', 'http://localhost:3000'] },
+  cors: { origin: '*' },
 })
 
 io.on('connection', (socket) => {
@@ -46,7 +46,7 @@ router.delete('/', deleteMatch)
 router.get('/rooms', findAllRooms)
 router.get('/room', findOneRoom)
 router.post('/room', createRoom)
-router.patch('/room/:room_id', getRoomByRoomId ,updateRoom)
+router.patch('/room/:room_id', getRoomByRoomId, updateRoom)
 router.delete('/room/:room_id', getRoomByRoomId, deleteRoom)
 
 app.use('/api/match', router).all((_, res) => {

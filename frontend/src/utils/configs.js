@@ -1,10 +1,14 @@
 //------- CONNECTION OR SETUP CONFIGS --------//
 const URI_USER_SVC =
   process.env.REACT_APP_URI_USER_SVC || 'http://localhost:8000'
-const URI_QUESTION_SVC = 'http://localhost:8100'
-const URI_MATCHING_SVC = 'http://localhost:8200'
-export const MATCHING_URL = 'http://localhost:8300'
-export const COLLAB_URL = 'http://localhost:8400'
+const URI_QUESTION_SVC =
+  process.env.REACT_APP_URI_QUESTION_SVC || 'http://localhost:8100'
+const URI_MATCHING_SVC =
+  process.env.REACT_APP_URI_MATCHING_SVC || 'http://localhost:8200'
+export const MATCHING_URL =
+  process.env.REACT_APP_URI_MATCHING_URL || 'http://localhost:8300'
+export const COLLAB_URL =
+  process.env.REACT_APP_URI_COLLAB_URL || 'http://localhost:8400'
 
 const PREFIX_USER_SVC = '/api/user'
 const PREFIX_QUESTION_SVC = '/api/question'
