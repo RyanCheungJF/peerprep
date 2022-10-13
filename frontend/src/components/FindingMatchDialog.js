@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Button,
   Box,
@@ -13,38 +13,45 @@ import {
 const FindingMatchDialog = ({
   dialogOpen,
   handleCloseDialog,
-  timer,
-  setTimer,
   findingMatchTimeOutSeconds,
+  startMatchingService,
   stopMatchingService,
-  restartMatchingService,
 }) => {
+  const [timer, setTimer] = useState(findingMatchTimeOutSeconds)
+
   useEffect(() => {
+    if (timer === findingMatchTimeOutSeconds) {
+      startMatchingService() // start matching service when timer equals findingMatchTimeOutSeconds
+    }
+
     if (timer >= 0) {
-      const timeoutID = setTimeout(() => setTimer(timer - 1), 1000)
+      setTimeout(() => setTimer((t) => t - 1), 1000)
       console.log(timer)
-      return () => clearTimeout(timeoutID) // clear timeout when component unmounts
     }
 
     if (timer < 0) {
       console.log(timer)
       stopMatchingService() // stop matching service when timer ends i.e. when timer < 0
     }
-  }, [timer, setTimer, stopMatchingService])
+  }, [
+    timer,
+    findingMatchTimeOutSeconds,
+    startMatchingService,
+    stopMatchingService,
+  ])
 
   const handleCancel = () => {
     if (timer >= 0) {
-      console.log('==> Cancel Finding Match ===')
+      console.log('==> Cancel Finding Match')
       stopMatchingService() // stop matching service prematurely i.e. when timer >= 0
     }
 
-    setTimer('NA') // set timer as 'NA' so that the effect hook does not run
+    console.log('=== Closing Finding Match Dialog ===')
     handleCloseDialog()
   }
 
   const handleTryAgain = () => {
     setTimer(findingMatchTimeOutSeconds)
-    restartMatchingService()
   }
 
   return (
