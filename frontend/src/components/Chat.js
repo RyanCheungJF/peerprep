@@ -57,11 +57,12 @@ const Chat = ({ room }) => {
 
   const sendMessage = () => {
     if (message) {
-      setChatMessages([...chatMessages, message])
+      const messageWithUsername = user.username + ': ' + message
+      setChatMessages([...chatMessages, messageWithUsername])
       setMessage('')
       collabSocket.emit(
         'send-message',
-        message,
+        messageWithUsername,
         getCollabRoomId(room),
         user._id
       )

@@ -34,16 +34,20 @@ const Question = ({ question }) => {
       ></p>
       <p dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}></p>
       <br />
-      <p
-        dangerouslySetInnerHTML={{
-          __html: 'Input: ' + question['ex_3_input'],
-        }}
-      ></p>
-      <p
-        dangerouslySetInnerHTML={{
-          __html: 'Output: ' + question['ex_3_output'],
-        }}
-      ></p>
+      {question['ex_3_input'] && (
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Input: ' + question['ex_3_input'],
+          }}
+        ></p>
+      )}
+      {question['ex_3_output'] && (
+        <p
+          dangerouslySetInnerHTML={{
+            __html: 'Output: ' + question['ex_3_output'],
+          }}
+        ></p>
+      )}
       <p dangerouslySetInnerHTML={{ __html: question['ex_3_explanation'] }}></p>
     </Box>
   )
