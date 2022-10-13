@@ -42,8 +42,9 @@ const CollaborationPage = () => {
     collabSocket.on('partner-disconnected', () => {
       setIsPartnerOnline(false)
     })
-    collabSocket.on('partner-connected', () => {
-      setIsPartnerOnline(true)
+    collabSocket.on('partner-connected', (roomClients) => {
+      // check if user is the only one in the room or if there are more ppl
+      setIsPartnerOnline(roomClients.length > 1)
     })
   }, [])
 

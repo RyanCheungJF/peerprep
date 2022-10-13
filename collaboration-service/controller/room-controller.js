@@ -36,8 +36,16 @@ export const deleteRoom = (_) => async (roomId) => {
   await _deleteRoom(roomId)
 }
 
-export const broadcastConnection = (socket) => async (roomId) => {
-  socket.to(roomId).emit('partner-connected')
+export const broadcastConnection = (io, socket) => async (roomId) => {
+  // get a list of clients in the socket.io room
+  const allSocketIORooms = io.sockets.adapter.rooms
+  const roomClients = allSocketIORooms.get(roomId)
+  const serializableClients = [...roomClients.keys()]
+
+  socket.to(roomId).emit('partner-connected', serializableClients)
+  // Also send to the socket that's just connected because it doesn't receive the room event above.
+  // I suspect socket.io just doesn't guarantee serial execution/protect against such race conditions
+  socket.emit('partner-connected', serializableClients)
 }
 
 export const broadcastDisconnection = (socket) => () => {
