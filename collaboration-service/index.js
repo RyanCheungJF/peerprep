@@ -13,7 +13,7 @@ import {
 const SOCKET_PORT = 8400
 
 const io = new Server(SOCKET_PORT, {
-  cors: { origin: ['*', 'http://localhost:3000'] },
+  cors: { origin: '*' },
 })
 
 io.on('connection', (socket) => {
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     socket.join(roomId)
   })
   socket.on('join-room', getRoom(socket))
-  socket.on('join-room', broadcastConnection(socket))
+  socket.on('join-room', broadcastConnection(io, socket))
 
   socket.on('leave-room', deleteRoom(socket))
 
