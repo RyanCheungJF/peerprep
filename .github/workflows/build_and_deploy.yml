@@ -49,6 +49,15 @@ jobs:
       - name: Push user-service image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC)
 
+      - name: Push question-service image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC)
+
+      - name: Push collaboration-service image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC)
+
+      - name: Push matching-service image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC)
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
