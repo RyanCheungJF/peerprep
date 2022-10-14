@@ -26,7 +26,10 @@ const UserAuth = ({
   redirectButton,
 }) => {
   const [username, setUsername] = useState('')
+  const [usernameSubmittedEmpty, setUsernameSubmittedEmpty] = useState(false)
   const [password, setPassword] = useState('')
+  const [passwordSubmittedEmpty, setPasswordSubmittedEmpty] = useState(false)
+
   const navigate = useNavigate()
 
   return (
@@ -44,22 +47,51 @@ const UserAuth = ({
       <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
         {pageTitle}
       </Typography>
-      <TextField
-        label="Username"
-        variant="standard"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        sx={{ marginBottom: '1rem' }}
-        autoFocus
-      />
-      <TextField
-        label="Password"
-        variant="standard"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        sx={{ marginBottom: '2rem' }}
-      />
+      {!usernameSubmittedEmpty && (
+        <TextField
+          autoFocus
+          label="Username"
+          variant="standard"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          sx={{ marginBottom: '1rem' }}
+        />
+      )}
+      {usernameSubmittedEmpty && (
+        <TextField
+          autoFocus
+          error
+          label="Username"
+          helperText="Username cannot be empty"
+          variant="standard"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          sx={{ marginBottom: '1rem' }}
+        />
+      )}
+      {!passwordSubmittedEmpty && (
+        <TextField
+          label="Password"
+          variant="standard"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ marginBottom: '2rem' }}
+        />
+      )}
+      {passwordSubmittedEmpty && (
+        <TextField
+          error
+          label="Password"
+          helperText="Password cannot be empty"
+          variant="standard"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ marginBottom: '2rem' }}
+        />
+      )}
+
       <Box
         sx={{
           display: 'flex',
@@ -78,22 +110,37 @@ const UserAuth = ({
         <Button
           sx={{ marginLeft: '2px' }}
           variant={'outlined'}
-          onClick={() => handleAuth(username, password)}
+          onClick={() => {
+            if (!username && !password) {
+              setUsernameSubmittedEmpty(true)
+              setPasswordSubmittedEmpty(true)
+            } else if (!username) {
+              setUsernameSubmittedEmpty(true)
+              setPasswordSubmittedEmpty(false)
+            } else if (!password) {
+              setUsernameSubmittedEmpty(false)
+              setPasswordSubmittedEmpty(true)
+            } else {
+              setUsernameSubmittedEmpty(false)
+              setPasswordSubmittedEmpty(false)
+              handleAuth(username, password)
+            }
+          }}
         >
           {ctaText}
         </Button>
       </Box>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog}>
+      <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
         <DialogTitle>{dialogTitle}</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
           <DialogContentText>{dialogMsg}</DialogContentText>
         </DialogContent>
         <DialogActions>
           {isAuthSuccess ? (
             redirectButton()
           ) : (
-            <Button onClick={closeDialog}>Done</Button>
+            <Button onClick={closeDialog}>OK</Button>
           )}
         </DialogActions>
       </Dialog>
