@@ -134,10 +134,20 @@ const FindMatch = () => {
           <MenuItem value="Hard">Hard</MenuItem>
         </Select>
       </FormControl>
-
-      <Button variant={'outlined'} onClick={() => handleFindMatch(difficulty)}>
-        Find Match
-      </Button>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Button
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
+          onClick={() => handleFindMatch(difficulty)}
+        >
+          Find Match
+        </Button>
+      </Box>
 
       <AlertDialog
         dialogOpen={selectDifficultyErrorDialogOpen}

@@ -7,7 +7,6 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Typography,
 } from '@mui/material'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -44,9 +43,7 @@ const UserAuth = ({
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <Typography sx={{ marginBottom: '2rem' }} variant={'h3'}>
-        {pageTitle}
-      </Typography>
+      <p className="login-title">{pageTitle}</p>
       {!usernameSubmittedEmpty && (
         <TextField
           autoFocus
@@ -91,7 +88,6 @@ const UserAuth = ({
           sx={{ marginBottom: '2rem' }}
         />
       )}
-
       <Box
         sx={{
           display: 'flex',
@@ -100,47 +96,55 @@ const UserAuth = ({
           alignItems: 'center',
         }}
       >
-        <Button
-          sx={{ marginRight: '2px' }}
-          variant={'outlined'}
-          onClick={() => navigate(toggleDestination)}
-        >
-          {toggleText}
-        </Button>
-        <Button
-          sx={{ marginLeft: '2px' }}
-          variant={'outlined'}
-          onClick={() => {
-            if (!username && !password) {
-              setUsernameSubmittedEmpty(true)
-              setPasswordSubmittedEmpty(true)
-            } else if (!username) {
-              setUsernameSubmittedEmpty(true)
-              setPasswordSubmittedEmpty(false)
-            } else if (!password) {
-              setUsernameSubmittedEmpty(false)
-              setPasswordSubmittedEmpty(true)
-            } else {
-              setUsernameSubmittedEmpty(false)
-              setPasswordSubmittedEmpty(false)
-              handleAuth(username, password)
-            }
-          }}
-        >
-          {ctaText}
-        </Button>
+        <Box className="left-button-wrapper">
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
+            variant={'outlined'}
+            onClick={() => navigate(toggleDestination)}
+          >
+            {toggleText}
+          </Button>
+        </Box>
+        <Box>
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
+            variant={'outlined'}
+            onClick={() => {
+              if (!username && !password) {
+                setUsernameSubmittedEmpty(true)
+                setPasswordSubmittedEmpty(true)
+              } else if (!username) {
+                setUsernameSubmittedEmpty(true)
+                setPasswordSubmittedEmpty(false)
+              } else if (!password) {
+                setUsernameSubmittedEmpty(false)
+                setPasswordSubmittedEmpty(true)
+              } else {
+                setUsernameSubmittedEmpty(false)
+                setPasswordSubmittedEmpty(false)
+                handleAuth(username, password)
+              }
+            }}
+          >
+            {ctaText}
+          </Button>
+        </Box>
       </Box>
 
       <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
-        <DialogTitle>{dialogTitle}</DialogTitle>
+        <DialogTitle className="font-inter">{dialogTitle}</DialogTitle>
         <DialogContent dividers>
-          <DialogContentText>{dialogMsg}</DialogContentText>
+          <DialogContentText className="font-inter">
+            {dialogMsg}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           {isAuthSuccess ? (
             redirectButton()
           ) : (
-            <Button onClick={closeDialog}>OK</Button>
+            <Button className="font-inter" onClick={closeDialog}>
+              Done
+            </Button>
           )}
         </DialogActions>
       </Dialog>

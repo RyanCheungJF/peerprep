@@ -68,7 +68,7 @@ const SignupPage = () => {
   }
 
   const redirectButton = () => (
-    <Button component={Link} to="/login">
+    <Button className="font-inter" component={Link} to="/login">
       Log in
     </Button>
   )
