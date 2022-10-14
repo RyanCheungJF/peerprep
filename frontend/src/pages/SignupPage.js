@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
-import { signupUser, isUserLoggedIn } from '../api/userService'
 import {
   STATUS_CODE_CONFLICT,
   STATUS_CODE_BAD_REQUEST,
   STATUS_CODE_CREATED,
 } from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
-import { checkFormFields } from '../utils/main'
+import { signupUser, isUserLoggedIn } from '../api/userService'
 
 const SignupPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -49,7 +48,7 @@ const SignupPage = () => {
   const setSuccessDialog = () => {
     setIsDialogOpen(true)
     setDialogTitle('Account Created Successfully')
-    setDialogMsg('You will now be redirected to the Login page.')
+    setDialogMsg('You will now be redirected to the Log in page.')
   }
 
   const setErrorDialog = (msg) => {
@@ -60,7 +59,7 @@ const SignupPage = () => {
 
   const redirectButton = () => (
     <Button className="font-inter" component={Link} to="/login">
-      Log in
+      OK
     </Button>
   )
 
@@ -68,7 +67,7 @@ const SignupPage = () => {
     <UserAuth
       pageTitle="Sign up"
       ctaText="Sign up"
-      toggleText="Login instead!"
+      toggleText="Log in instead"
       toggleDestination="/login"
       handleAuth={handleSignup}
       isDialogOpen={isDialogOpen}

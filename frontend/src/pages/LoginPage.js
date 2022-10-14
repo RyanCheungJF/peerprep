@@ -9,7 +9,6 @@ import {
   STATUS_CODE_UNAUTHORIZED,
 } from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
-import { checkFormFields } from '../utils/main'
 import { loginUser, isUserLoggedIn } from '../api/userService'
 
 const LoginPage = () => {
@@ -55,7 +54,7 @@ const LoginPage = () => {
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
-    setDialogTitle('Unable To Login')
+    setDialogTitle('Unable To Log In')
     setDialogMsg(msg)
   }
 
@@ -70,16 +69,16 @@ const LoginPage = () => {
         to={redirectUrl}
         replace={true}
       >
-        Close
+        OK
       </Button>
     )
   }
 
   return (
     <UserAuth
-      pageTitle="Login"
-      ctaText="Login"
-      toggleText="Create an account!"
+      pageTitle="Log in"
+      ctaText="Log in"
+      toggleText="Create an account"
       toggleDestination="/signup"
       handleAuth={handleLogin}
       isDialogOpen={isDialogOpen}
