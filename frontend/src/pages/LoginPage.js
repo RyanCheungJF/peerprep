@@ -35,7 +35,7 @@ const LoginPage = () => {
       }
     } catch (err) {
       if (err.response.status === STATUS_CODE_UNAUTHORIZED) {
-        setErrorDialog('Wrong username/password.')
+        setErrorDialog('Wrong username and/or password.')
       } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
         setErrorDialog('Username and/or Password are missing.')
       } else {

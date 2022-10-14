@@ -143,7 +143,7 @@ const UserAuth = ({
             redirectButton()
           ) : (
             <Button className="font-inter" onClick={closeDialog}>
-              Done
+              OK
             </Button>
           )}
         </DialogActions>
