@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MenuItem from '@mui/material/MenuItem'
@@ -23,7 +22,7 @@ const NavBar = () => {
   }
 
   const handleProfile = () => {
-    handleClose();
+    handleClose()
     navigate(profileUrl)
   }
 
@@ -45,7 +44,7 @@ const NavBar = () => {
     return (
       <>
         <IconButton size="large" onClick={handleMenu} color="inherit">
-          <AccountCircle />
+          <AccountCircle color="primary" />
         </IconButton>
         <Menu
           id="menu-appbar"
@@ -70,11 +69,9 @@ const NavBar = () => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar sx={{ bgcolor: 'white' }} position="static" elevation={0}>
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          PeerPrep
-        </Typography>
+        <p className="navbar">PeerPrep 📖</p>
         {_renderAccountIcon()}
       </Toolbar>
     </AppBar>

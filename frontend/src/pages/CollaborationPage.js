@@ -5,6 +5,7 @@ import { Box } from '@mui/material'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
+import Question from '../components/Question'
 import { findQuestion } from '../api/questionService'
 import { deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
@@ -19,6 +20,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     getQuestion()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -78,55 +80,34 @@ const CollaborationPage = () => {
     navigate(homeUrl)
   }
 
-  const renderQuestion = () => {
-    return (
-      <Box sx={{ height: '50%', marginBottom: '24px', overflow: 'auto' }}>
-        <p dangerouslySetInnerHTML={{ __html: question['title'] }}></p>
-        <br />
-        <p dangerouslySetInnerHTML={{ __html: question['description'] }}></p>
-        <br />
-        <p>Example 1</p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_1_input'] }}></p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_1_output'] }}></p>
-        <p
-          dangerouslySetInnerHTML={{ __html: question['ex_1_explanation'] }}
-        ></p>
-        <p>Example 2</p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_2_input'] }}></p>
-        <p dangerouslySetInnerHTML={{ __html: question['ex_2_output'] }}></p>
-        <p
-          dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}
-        ></p>
-      </Box>
-    )
-  }
-
   return (
     <Box
       sx={{
         display: 'flex',
         padding: '36px',
         // content height = 100vh - nav bar height - vertical padding
-        height: 'calc(100vh - 64px - 2 * 36px)',
+        height: 'calc(100vh - 64px - 2 * 16px)',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          width: '30%',
-          paddingRight: '24px',
-          justifyContent: 'space-between',
-        }}
-      >
-        {renderQuestion()}
-        <Chat room={location.state?.room} />
-        <Button variant={'outlined'} onClick={() => leaveRoom()}>
-          Leave Room
-        </Button>
+      <Box className="left-coding-container">
+        <Box className="coding-question-container">
+          <Question question={question} />
+        </Box>
+        <Box className="coding-chat-container">
+          <Chat room={location.state?.room} />
+        </Box>
+        <Box className="coding-button-container">
+          <Button
+            className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-light rounded-md w-1/5"
+            onClick={() => leaveRoom()}
+          >
+            Leave Room
+          </Button>
+        </Box>
       </Box>
-      <CodeEditor room={location.state?.room} />
+      <Box className="right-coding-container">
+        <CodeEditor room={location.state?.room} />
+      </Box>
 
       <PartnerOfflineDialog
         isDialogOpen={!isPartnerOnline}
