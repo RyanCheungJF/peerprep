@@ -20,19 +20,27 @@ const FindingMatchDialog = ({
   const [timer, setTimer] = useState(findingMatchTimeOutSeconds)
 
   useEffect(() => {
+    let timeOutID
+
+    // Start matching service when timer equals findingMatchTimeOutSeconds
     if (timer === findingMatchTimeOutSeconds) {
-      startMatchingService() // start matching service when timer equals findingMatchTimeOutSeconds
+      startMatchingService()
     }
 
+    // Decrease timer when matching service starts
     if (timer >= 0) {
-      setTimeout(() => setTimer((t) => t - 1), 1000)
+      timeOutID = setTimeout(() => setTimer((t) => t - 1), 1000)
       console.log(timer)
     }
 
+    // Stop matching service when timer ends i.e. when timer < 0
     if (timer < 0) {
       console.log(timer)
-      stopMatchingService() // stop matching service when timer ends i.e. when timer < 0
+      stopMatchingService()
     }
+
+    // Clear timeout when component unmounts
+    return () => clearTimeout(timeOutID)
   }, [
     timer,
     findingMatchTimeOutSeconds,
