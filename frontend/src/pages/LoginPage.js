@@ -27,35 +27,44 @@ const LoginPage = () => {
 
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
+
+    // This is not utilised because setErrorDialog() in the catch replaces
+    // the message in the error dialog
     checkFormFields(username, password, setErrorDialog)
+
     try {
       const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
-        setSuccessDialog('Logged in successfully!')
+        setSuccessDialog()
         setIsLoginSuccess(true)
       }
     } catch (err) {
       if (err.response.status === STATUS_CODE_UNAUTHORIZED) {
         setErrorDialog('Wrong username/password.')
       } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
-        setErrorDialog('Username and/or Password are missing!')
+        // With the modified implementation of UserAuth,
+        // we ensure that both username and/or password are not empty
+        // before we process the authentication (login).
+
+        // Hence, we should be able to remove this else if clause.
+        setErrorDialog('Username and/or Password are missing.')
       } else {
-        setErrorDialog('Please try again later')
+        setErrorDialog('Please try again later.')
       }
     }
   }
 
   const closeDialog = () => setIsDialogOpen(false)
 
-  const setSuccessDialog = (msg) => {
+  const setSuccessDialog = () => {
     setIsDialogOpen(true)
-    setDialogTitle('Success')
-    setDialogMsg(msg)
+    setDialogTitle('Logged In Successfully')
+    setDialogMsg('You will now be redirected to the Home page.')
   }
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
-    setDialogTitle('Error')
+    setDialogTitle('Unable To Login')
     setDialogMsg(msg)
   }
 
@@ -72,8 +81,8 @@ const LoginPage = () => {
 
   return (
     <UserAuth
-      pageTitle="Log in"
-      ctaText="Log in"
+      pageTitle="Login"
+      ctaText="Login"
       toggleText="Create an account!"
       toggleDestination="/signup"
       handleAuth={handleLogin}
