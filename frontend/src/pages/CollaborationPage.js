@@ -20,6 +20,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     getQuestion()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Box, Chip, Divider, Typography } from '@mui/material'
+import { Box, Chip, Divider } from '@mui/material'
 import FindMatch from '../components/FindMatch'
 import { findRoomService } from '../api/roomservice'
 import { UserContext } from '../contexts/UserContext'
