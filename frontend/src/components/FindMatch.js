@@ -98,7 +98,7 @@ const FindMatch = () => {
   }
 
   const stopMatchingService = () => {
-    console.log('==> Stop Matching Service ===')
+    console.log('==> Stop Matching Service')
     deleteMatch(user._id, matchingSocket.id, difficulty)
   }
 
@@ -137,12 +137,13 @@ const FindMatch = () => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Button
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
+          sx={{ px: 2 }}
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl "
           onClick={() => handleFindMatch(difficulty)}
         >
           Find Match
