@@ -28,10 +28,6 @@ const LoginPage = () => {
   const handleLogin = async (username, password) => {
     setIsLoginSuccess(false)
 
-    // This is not utilised because setErrorDialog() in the catch replaces
-    // the message in the error dialog
-    checkFormFields(username, password, setErrorDialog)
-
     try {
       const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
@@ -42,11 +38,6 @@ const LoginPage = () => {
       if (err.response.status === STATUS_CODE_UNAUTHORIZED) {
         setErrorDialog('Wrong username/password.')
       } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
-        // With the modified implementation of UserAuth,
-        // we ensure that both username and/or password are not empty
-        // before we process the authentication (login).
-
-        // Hence, we should be able to remove this else if clause.
         setErrorDialog('Username and/or Password are missing.')
       } else {
         setErrorDialog('Please try again later.')
