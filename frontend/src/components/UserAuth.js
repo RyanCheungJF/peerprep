@@ -43,7 +43,7 @@ const UserAuth = ({
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <p className="login-title">{pageTitle}</p>
+      <p className="userauth-title">{pageTitle}</p>
       {!usernameSubmittedEmpty && (
         <TextField
           autoFocus
@@ -98,8 +98,8 @@ const UserAuth = ({
       >
         <Box className="left-button-wrapper">
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
-            variant={'outlined'}
+            sx={{ px: 2 }}
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
             onClick={() => navigate(toggleDestination)}
           >
             {toggleText}
@@ -107,8 +107,8 @@ const UserAuth = ({
         </Box>
         <Box>
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
-            variant={'outlined'}
+            sx={{ px: 2 }}
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
             onClick={() => {
               if (!username && !password) {
                 setUsernameSubmittedEmpty(true)
