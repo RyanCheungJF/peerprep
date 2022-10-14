@@ -27,7 +27,9 @@ const LandingPage = () => {
     >
       <Box className="landingpage-text-container">
         <p className="landingpage-title">{'PeerPrep'}</p>
-        <p className="landingpage-question">{'Studying for interviews has never been easier.'}</p>
+        <p className="landingpage-question">
+          {'Studying for interviews has never been easier.'}
+        </p>
         <p className="landingpage-description">
           {
             'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
@@ -45,7 +47,7 @@ const LandingPage = () => {
             className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/4"
             onClick={() => navigate('/login')}
           >
-            {'Log In!'}
+            {'Log In'}
           </Button>
         </Box>
         <Box className="landingpage-button-wrapper">
@@ -53,7 +55,7 @@ const LandingPage = () => {
             className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/4"
             onClick={() => navigate('/signup')}
           >
-            {'Sign Up!'}
+            {'Sign Up'}
           </Button>
         </Box>
       </Box>
