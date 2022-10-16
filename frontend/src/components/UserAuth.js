@@ -44,50 +44,26 @@ const UserAuth = ({
       }}
     >
       <p className="userauth-title">{pageTitle}</p>
-      {!usernameSubmittedEmpty && (
-        <TextField
-          autoFocus
-          label="Username"
-          variant="standard"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          sx={{ marginBottom: '1rem' }}
-        />
-      )}
-      {usernameSubmittedEmpty && (
-        <TextField
-          autoFocus
-          error
-          label="Username"
-          helperText="Username cannot be empty"
-          variant="standard"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          sx={{ marginBottom: '1rem' }}
-        />
-      )}
-      {!passwordSubmittedEmpty && (
-        <TextField
-          label="Password"
-          variant="standard"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          sx={{ marginBottom: '2rem' }}
-        />
-      )}
-      {passwordSubmittedEmpty && (
-        <TextField
-          error
-          label="Password"
-          helperText="Password cannot be empty"
-          variant="standard"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          sx={{ marginBottom: '2rem' }}
-        />
-      )}
+      <TextField
+        autoFocus
+        error={usernameSubmittedEmpty}
+        label="Username"
+        helperText={usernameSubmittedEmpty ? 'Username cannot be empty' : ''}
+        variant="standard"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        sx={{ marginBottom: '1rem' }}
+      />
+      <TextField
+        error={passwordSubmittedEmpty}
+        label="Password"
+        helperText={passwordSubmittedEmpty ? 'Password cannot be empty' : ''}
+        variant="standard"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        sx={{ marginBottom: '2rem' }}
+      />
       <Box
         sx={{
           display: 'flex',
@@ -110,18 +86,9 @@ const UserAuth = ({
             sx={{ px: 2 }}
             className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
             onClick={() => {
-              if (!username && !password) {
-                setUsernameSubmittedEmpty(true)
-                setPasswordSubmittedEmpty(true)
-              } else if (!username) {
-                setUsernameSubmittedEmpty(true)
-                setPasswordSubmittedEmpty(false)
-              } else if (!password) {
-                setUsernameSubmittedEmpty(false)
-                setPasswordSubmittedEmpty(true)
-              } else {
-                setUsernameSubmittedEmpty(false)
-                setPasswordSubmittedEmpty(false)
+              setUsernameSubmittedEmpty(username === '')
+              setPasswordSubmittedEmpty(password === '')
+              if (username && password) {
                 handleAuth(username, password)
               }
             }}
