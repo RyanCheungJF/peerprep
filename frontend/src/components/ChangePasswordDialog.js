@@ -19,13 +19,11 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
 
   const user = useContext(UserContext)
 
-  // Change Password Successful Alert
-  const [
-    changePasswordSuccessfulAlertOpen,
-    setChangePasswordSuccessfulAlertOpen,
-  ] = useState(false)
-  const handleChangePasswordSuccessfulOpenAlert = () =>
-    setChangePasswordSuccessfulAlertOpen(true)
+  // Change Password Success Alert
+  const [changePasswordSuccessAlertOpen, setChangePasswordSuccessAlertOpen] =
+    useState(false)
+  const handleChangePasswordSuccessOpenAlert = () =>
+    setChangePasswordSuccessAlertOpen(true)
 
   const handleCancel = () => {
     setNewPassword('')
@@ -47,26 +45,24 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
       setNewPassword('')
       setNewPasswordTextFieldChanged(false)
       handleCloseDialog()
-      handleChangePasswordSuccessfulOpenAlert()
+      handleChangePasswordSuccessOpenAlert()
     } catch (err) {
       console.log('error: ', err)
     }
   }
 
-  const renderChangePasswordSuccessfulAlert = () => {
-    if (!changePasswordSuccessfulAlertOpen) {
+  const renderChangePasswordSuccessAlert = () => {
+    if (!changePasswordSuccessAlertOpen) {
       return null
     }
 
     return (
-      <>
-        <SnackbarAlert
-          alertOpen={changePasswordSuccessfulAlertOpen}
-          setAlertOpen={setChangePasswordSuccessfulAlertOpen}
-          severity="success"
-          alertMsg="Your password has been changed successfully!"
-        />
-      </>
+      <SnackbarAlert
+        alertOpen={changePasswordSuccessAlertOpen}
+        setAlertOpen={setChangePasswordSuccessAlertOpen}
+        severity="success"
+        alertMsg="Your password has been changed successfully!"
+      />
     )
   }
 
@@ -78,53 +74,33 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
           <DialogContentText>
             Please enter your new password below and submit.
           </DialogContentText>
-          {!newPassword && !newPasswordTextFieldChanged && (
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => {
+          <TextField
+            autoFocus
+            error={!newPassword && newPasswordTextFieldChanged}
+            fullWidth
+            margin="normal"
+            label="New Password"
+            helperText={
+              !newPassword && newPasswordTextFieldChanged
+                ? 'New password cannot be empty'
+                : ''
+            }
+            variant="standard"
+            value={newPassword}
+            onChange={(e) => {
+              !newPassword &&
+                !newPasswordTextFieldChanged &&
                 setNewPasswordTextFieldChanged(true)
-                setNewPassword(e.target.value)
-              }}
-            />
-          )}
-          {newPassword && newPasswordTextFieldChanged && (
-            <TextField
-              autoFocus
-              fullWidth
-              margin="normal"
-              label="New Password"
-              type="password"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          )}
-          {!newPassword && newPasswordTextFieldChanged && (
-            <TextField
-              autoFocus
-              error
-              fullWidth
-              margin="normal"
-              label="New Password"
-              helperText="New password cannot be empty"
-              variant="standard"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          )}
+              setNewPassword(e.target.value)
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancel</Button>
           <Button onClick={handleChangePassword}>Submit</Button>
         </DialogActions>
       </Dialog>
-      {renderChangePasswordSuccessfulAlert()}
+      {renderChangePasswordSuccessAlert()}
     </>
   )
 }

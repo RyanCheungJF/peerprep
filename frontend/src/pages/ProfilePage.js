@@ -87,7 +87,7 @@ const ProfilePage = () => {
 
       <DeleteAccountDialog
         dialogOpen={deleteAccountDialogOpen}
-        handleNo={handleDeleteAccountCloseDialog}
+        handleCloseDialog={handleDeleteAccountCloseDialog}
       />
 
       <Box sx={{ my: 3, mx: 2 }}>

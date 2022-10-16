@@ -102,21 +102,35 @@ const FindMatch = () => {
     deleteMatch(user._id, matchingSocket.id, difficulty)
   }
 
+  const renderUnableToFindMatchAlertDialog = () => {
+    if (!selectDifficultyErrorDialogOpen) {
+      return null
+    }
+
+    return (
+      <AlertDialog
+        dialogOpen={selectDifficultyErrorDialogOpen}
+        handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
+        dialogTitle="Unable to Find Match"
+        dialogMsg="Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you."
+        dialogButtonText="OK"
+      />
+    )
+  }
+
   const renderFindingMatchDialog = () => {
     if (!findingMatchDialogOpen) {
       return null
     }
 
     return (
-      <>
-        <FindingMatchDialog
-          dialogOpen={findingMatchDialogOpen}
-          handleCloseDialog={handleFindingMatchCloseDialog}
-          findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
-          startMatchingService={startMatchingService}
-          stopMatchingService={stopMatchingService}
-        />
-      </>
+      <FindingMatchDialog
+        dialogOpen={findingMatchDialogOpen}
+        handleCloseDialog={handleFindingMatchCloseDialog}
+        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        startMatchingService={startMatchingService}
+        stopMatchingService={stopMatchingService}
+      />
     )
   }
 
@@ -143,21 +157,13 @@ const FindMatch = () => {
       >
         <Button
           sx={{ px: 2 }}
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl "
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
           onClick={() => handleFindMatch(difficulty)}
         >
           Find Match
         </Button>
       </Box>
-
-      <AlertDialog
-        dialogOpen={selectDifficultyErrorDialogOpen}
-        handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
-        dialogTitle="Unable to Find Match"
-        dialogMsg="Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you."
-        dialogButtonText="OK"
-      />
-
+      {renderUnableToFindMatchAlertDialog()}
       {renderFindingMatchDialog()}
     </Box>
   )

@@ -62,40 +62,49 @@ const FindingMatchDialog = ({
     setTimer(findingMatchTimeOutSeconds)
   }
 
+  const renderDialogDetailsFindingMatch = () => {
+    return (
+      <>
+        <DialogTitle>Finding Match</DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText>
+            Please wait while the system finds a match for you.
+          </DialogContentText>
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+            <CircularProgress />
+          </Box>
+          <DialogContentText sx={{ display: 'flex', justifyContent: 'center' }}>
+            Time left : {timer}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </DialogActions>
+      </>
+    )
+  }
+
+  const renderDialogDetailsUnableToFindMatch = () => {
+    return (
+      <>
+        <DialogTitle>Unable to Find Match</DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText>
+            The system is unable to find a match for you.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleTryAgain}>Try Again</Button>
+        </DialogActions>
+      </>
+    )
+  }
+
   return (
     <Dialog open={dialogOpen}>
-      {timer >= 0 && (
-        <>
-          <DialogTitle>Finding Match</DialogTitle>
-          <DialogContent dividers>
-            <DialogContentText>
-              Please wait while the system finds a match for you.
-            </DialogContentText>
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-              <CircularProgress />
-            </Box>
-            <DialogContentText
-              sx={{ display: 'flex', justifyContent: 'center' }}
-            >
-              Time left : {timer}
-            </DialogContentText>
-          </DialogContent>
-        </>
-      )}
-      {timer < 0 && (
-        <>
-          <DialogTitle>Unable to Find Match</DialogTitle>
-          <DialogContent dividers>
-            <DialogContentText>
-              The system is unable to find a match for you.
-            </DialogContentText>
-          </DialogContent>
-        </>
-      )}
-      <DialogActions>
-        <Button onClick={handleCancel}>Cancel</Button>
-        {timer < 0 && <Button onClick={handleTryAgain}>Try Again</Button>}
-      </DialogActions>
+      {timer >= 0 && renderDialogDetailsFindingMatch()}
+      {timer < 0 && renderDialogDetailsUnableToFindMatch()}
     </Dialog>
   )
 }
