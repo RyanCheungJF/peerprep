@@ -8,16 +8,16 @@
     @apply flex flex-col basis-3/5;
   }
   .landingpage-button-container {
-    @apply flex flex-col basis-2/5 justify-center;
+    @apply flex flex-col basis-2/5 justify-end;
   }
   .landingpage-button-wrapper {
-    @apply py-2;
+    @apply pt-2 pb-1;
   }
   .landingpage-title {
     @apply font-inter font-bold text-5xl py-4 text-gray-700 underline underline-offset-4 decoration-2 decoration-sky-500;
   }
   .landingpage-question {
-    @apply font-inter font-semibold py-2 text-gray-700;
+    @apply font-inter font-semibold py-4 text-gray-700;
   }
   .landingpage-description {
     @apply font-inter font-light text-gray-700;
