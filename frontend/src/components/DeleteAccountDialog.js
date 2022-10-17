@@ -12,14 +12,21 @@ import { UserContext } from '../contexts/UserContext'
 import { deleteUser } from '../api/userService'
 import { baseUrl } from '../utils/routeConstants'
 
-const DeleteAccountDialog = ({ dialogOpen, handleNo }) => {
+const DeleteAccountDialog = ({ dialogOpen, handleCloseDialog }) => {
   const navigate = useNavigate()
   const user = useContext(UserContext)
 
   const handleDeleteAccount = async () => {
     try {
-      await deleteUser(user.username)
-      navigate(baseUrl)
+      const res = await deleteUser(user.username)
+      console.log('success ', res)
+      handleCloseDialog()
+      navigate(baseUrl, {
+        state: {
+          deleteAccountSuccess: true,
+          deletedAccountUsername: user.username,
+        },
+      })
     } catch (err) {
       console.log(`Failed to delete user account: ${err}`)
     }
@@ -34,7 +41,7 @@ const DeleteAccountDialog = ({ dialogOpen, handleNo }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleNo}>No</Button>
+        <Button onClick={handleCloseDialog}>No</Button>
         <Button onClick={handleDeleteAccount}>Yes</Button>
       </DialogActions>
     </Dialog>

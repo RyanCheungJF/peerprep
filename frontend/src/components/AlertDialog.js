@@ -15,7 +15,7 @@ const AlertDialog = ({
   dialogButtonText,
 }) => {
   return (
-    <Dialog open={dialogOpen}>
+    <Dialog fullWidth={true} maxWidth="sm" open={dialogOpen}>
       <DialogTitle>{dialogTitle}</DialogTitle>
       <DialogContent dividers>
         <DialogContentText>{dialogMsg}</DialogContentText>

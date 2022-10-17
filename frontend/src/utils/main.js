@@ -2,18 +2,6 @@ import { JWT_EXPIRY_IN_MINS } from './constants'
 
 //------- COMMON UTILITY FUNCTIONS --------//
 
-// checks if all fields in a form are filled
-export const checkFormFields = (username, password, setter) => {
-  if (!username) {
-    setter('No username is provided!')
-    return
-  }
-  if (!password) {
-    setter('No password is provided!')
-    return
-  }
-}
-
 export const getCollabRoomId = (roomId) =>
   roomId ? `collab-room:${roomId}` : null
 

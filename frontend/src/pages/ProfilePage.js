@@ -1,13 +1,18 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { homeUrl } from '../utils/routeConstants'
+import { UserContext } from '../contexts/UserContext'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
 import DeleteAccountDialog from '../components/DeleteAccountDialog'
 
 const ProfilePage = () => {
+  const user = useContext(UserContext)
+
+  const navigate = useNavigate()
+
   // Change Password Dialog
   const [changePasswordDialogOpen, setChangePasswordDialogOpen] =
     useState(false)
@@ -19,8 +24,6 @@ const ProfilePage = () => {
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const handleDeleteAccountCloseDialog = () => setDeleteAccountDialogOpen(false)
   const handleDeleteAccountOpenDialog = () => setDeleteAccountDialogOpen(true)
-
-  const navigate = useNavigate()
 
   return (
     <Box
@@ -46,9 +49,7 @@ const ProfilePage = () => {
             color="primary"
           />
         </Divider>
-        <Typography sx={{ mt: 5 }} variant={'h6'}>
-          Coming Soon!
-        </Typography>
+        <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
       </Box>
 
       <Box sx={{ my: 3, mx: 2 }}>
@@ -86,7 +87,7 @@ const ProfilePage = () => {
 
       <DeleteAccountDialog
         dialogOpen={deleteAccountDialogOpen}
-        handleNo={handleDeleteAccountCloseDialog}
+        handleCloseDialog={handleDeleteAccountCloseDialog}
       />
 
       <Box sx={{ my: 3, mx: 2 }}>

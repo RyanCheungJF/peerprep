@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
-import { signupUser, isUserLoggedIn } from '../api/userService'
 import {
   STATUS_CODE_CONFLICT,
   STATUS_CODE_BAD_REQUEST,
   STATUS_CODE_CREATED,
 } from '../utils/constants'
 import { homeUrl } from '../utils/routeConstants'
-import { checkFormFields } from '../utils/main'
+import { signupUser, isUserLoggedIn } from '../api/userService'
 
 const SignupPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -26,42 +25,41 @@ const SignupPage = () => {
 
   const handleSignup = async (username, password) => {
     setIsSignupSuccess(false)
-    checkFormFields(username, password, setErrorDialog)
 
     try {
       const res = await signupUser(username, password)
       if (res && res.status === STATUS_CODE_CREATED) {
-        setSuccessDialog('Account successfully created')
+        setSuccessDialog()
         setIsSignupSuccess(true)
       }
     } catch (err) {
       if (err.response.status === STATUS_CODE_CONFLICT) {
-        setErrorDialog('This username already exists')
+        setErrorDialog('This username already exists.')
       } else if (err.response.status === STATUS_CODE_BAD_REQUEST) {
-        setErrorDialog('Username and/or Password are missing!')
+        setErrorDialog('Username and/or Password are missing.')
       } else {
-        setErrorDialog('Please try again later')
+        setErrorDialog('Please try again later.')
       }
     }
   }
 
   const closeDialog = () => setIsDialogOpen(false)
 
-  const setSuccessDialog = (msg) => {
+  const setSuccessDialog = () => {
     setIsDialogOpen(true)
-    setDialogTitle('Success')
-    setDialogMsg(msg)
+    setDialogTitle('Account Created Successfully')
+    setDialogMsg('You will now be redirected to the Log in page.')
   }
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
-    setDialogTitle('Error')
+    setDialogTitle('Unable To Create Account')
     setDialogMsg(msg)
   }
 
   const redirectButton = () => (
     <Button className="font-inter" component={Link} to="/login">
-      Log in
+      OK
     </Button>
   )
 
@@ -69,7 +67,7 @@ const SignupPage = () => {
     <UserAuth
       pageTitle="Sign up"
       ctaText="Sign up"
-      toggleText="Log in instead!"
+      toggleText="Log in instead"
       toggleDestination="/login"
       handleAuth={handleSignup}
       isDialogOpen={isDialogOpen}

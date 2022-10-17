@@ -25,7 +25,10 @@ const UserAuth = ({
   redirectButton,
 }) => {
   const [username, setUsername] = useState('')
+  const [usernameSubmittedEmpty, setUsernameSubmittedEmpty] = useState(false)
   const [password, setPassword] = useState('')
+  const [passwordSubmittedEmpty, setPasswordSubmittedEmpty] = useState(false)
+
   const navigate = useNavigate()
 
   return (
@@ -40,17 +43,21 @@ const UserAuth = ({
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <p className="login-title">{pageTitle}</p>
+      <p className="userauth-title">{pageTitle}</p>
       <TextField
+        autoFocus
+        error={usernameSubmittedEmpty}
         label="Username"
+        helperText={usernameSubmittedEmpty ? 'Username cannot be empty' : ''}
         variant="standard"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         sx={{ marginBottom: '1rem' }}
-        autoFocus
       />
       <TextField
+        error={passwordSubmittedEmpty}
         label="Password"
+        helperText={passwordSubmittedEmpty ? 'Password cannot be empty' : ''}
         variant="standard"
         type="password"
         value={password}
@@ -67,8 +74,8 @@ const UserAuth = ({
       >
         <Box className="left-button-wrapper">
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
-            variant={'outlined'}
+            sx={{ px: 2 }}
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
             onClick={() => navigate(toggleDestination)}
           >
             {toggleText}
@@ -76,18 +83,24 @@ const UserAuth = ({
         </Box>
         <Box>
           <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
-            variant={'outlined'}
-            onClick={() => handleAuth(username, password)}
+            sx={{ px: 2 }}
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+            onClick={() => {
+              setUsernameSubmittedEmpty(username === '')
+              setPasswordSubmittedEmpty(password === '')
+              if (username && password) {
+                handleAuth(username, password)
+              }
+            }}
           >
             {ctaText}
           </Button>
         </Box>
       </Box>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog}>
+      <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
         <DialogTitle className="font-inter">{dialogTitle}</DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
           <DialogContentText className="font-inter">
             {dialogMsg}
           </DialogContentText>
@@ -97,7 +110,7 @@ const UserAuth = ({
             redirectButton()
           ) : (
             <Button className="font-inter" onClick={closeDialog}>
-              Done
+              OK
             </Button>
           )}
         </DialogActions>

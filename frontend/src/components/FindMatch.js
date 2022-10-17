@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Box,
@@ -21,14 +21,10 @@ const FindMatch = () => {
 
   const user = useContext(UserContext)
 
-  const [difficulty, setDifficulty] = useState('')
-
-  // Set timer as 'NA' upon initialisation so that the
-  // effect hook in FindingMatchDialog does not run
-  const [timer, setTimer] = useState('NA')
-
   // Define finding match time out seconds
   const findingMatchTimeOutSeconds = 30
+
+  const [difficulty, setDifficulty] = useState('')
 
   // Select Difficulty Error Dialog
   const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
@@ -42,21 +38,6 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
-
-  const handleFindMatch = (difficulty) => {
-    if (
-      difficulty === 'Easy' ||
-      difficulty === 'Medium' ||
-      difficulty === 'Hard'
-    ) {
-      console.log('==> Difficulty Selected: ' + difficulty)
-      handleFindingMatchOpenDialog()
-      setTimer(findingMatchTimeOutSeconds)
-      startMatchingService()
-    } else {
-      handleSelectDifficultyErrorOpenDialog()
-    }
-  }
 
   useEffect(() => {
     matchingSocket.on('found-connection', (username, difficulty) => {
@@ -83,12 +64,26 @@ const FindMatch = () => {
     })
   }, [navigate, user.username])
 
+  const handleFindMatch = (difficulty) => {
+    if (
+      difficulty === 'Easy' ||
+      difficulty === 'Medium' ||
+      difficulty === 'Hard'
+    ) {
+      console.log('=== Opening Finding Match Dialog ===')
+      handleFindingMatchOpenDialog()
+    } else {
+      handleSelectDifficultyErrorOpenDialog()
+    }
+  }
+
   const startMatchingService = async () => {
-    console.log('=== Start Matching Service ===')
+    console.log('==> Start Matching Service')
     console.log('Difficulty: ' + difficulty)
+
     const res = await findMatch(user._id, matchingSocket.id, difficulty)
 
-    // gets a response
+    // Gets a response
     if (res) {
       const data = res.data
       const room = data.socketID
@@ -103,13 +98,40 @@ const FindMatch = () => {
   }
 
   const stopMatchingService = () => {
-    console.log('=== Stop Matching Service ===')
+    console.log('==> Stop Matching Service')
     deleteMatch(user._id, matchingSocket.id, difficulty)
   }
 
-  const restartMatchingService = () => {
-    console.log('=== Restart Matching Service ===')
-    startMatchingService(difficulty)
+  const renderUnableToFindMatchAlertDialog = () => {
+    if (!selectDifficultyErrorDialogOpen) {
+      return null
+    }
+
+    return (
+      <AlertDialog
+        dialogOpen={selectDifficultyErrorDialogOpen}
+        handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
+        dialogTitle="Unable to Find Match"
+        dialogMsg="Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you."
+        dialogButtonText="OK"
+      />
+    )
+  }
+
+  const renderFindingMatchDialog = () => {
+    if (!findingMatchDialogOpen) {
+      return null
+    }
+
+    return (
+      <FindingMatchDialog
+        dialogOpen={findingMatchDialogOpen}
+        handleCloseDialog={handleFindingMatchCloseDialog}
+        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        startMatchingService={startMatchingService}
+        stopMatchingService={stopMatchingService}
+      />
+    )
   }
 
   return (
@@ -119,10 +141,7 @@ const FindMatch = () => {
         <Select
           value={difficulty}
           label="Select Difficulty"
-          onChange={(e) => {
-            setDifficulty(e.target.value)
-            setTimer('NA') // set timer as 'NA' so that the effect hook in FindingMatchDialog does not run
-          }}
+          onChange={(e) => setDifficulty(e.target.value)}
         >
           <MenuItem value="Easy">Easy</MenuItem>
           <MenuItem value="Medium">Medium</MenuItem>
@@ -132,35 +151,20 @@ const FindMatch = () => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
           justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Button
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl"
+          sx={{ px: 2 }}
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
           onClick={() => handleFindMatch(difficulty)}
         >
           Find Match
         </Button>
       </Box>
-
-      <AlertDialog
-        dialogOpen={selectDifficultyErrorDialogOpen}
-        handleCloseDialog={handleSelectDifficultyErrorCloseDialog}
-        dialogTitle="Unable to Find Match"
-        dialogMsg="Please select the difficulty level (Easy, Medium or Hard) of the questions you wish to attempt so that the system can find a match for you."
-        dialogButtonText="OK"
-      />
-
-      <FindingMatchDialog
-        dialogOpen={findingMatchDialogOpen}
-        handleCloseDialog={handleFindingMatchCloseDialog}
-        timer={timer}
-        setTimer={setTimer}
-        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
-        stopMatchingService={stopMatchingService}
-        restartMatchingService={restartMatchingService}
-      />
+      {renderUnableToFindMatchAlertDialog()}
+      {renderFindingMatchDialog()}
     </Box>
   )
 }
