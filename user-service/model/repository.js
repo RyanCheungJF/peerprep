@@ -13,7 +13,24 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+db.collection('usermodels')
 
-export async function createUser(params) {
+export const createUser = async (params) => {
   return new UserModel(params)
+}
+
+export const findUser = async (query, projection) => {
+  return UserModel.findOne(query, projection)
+}
+
+export const checkIfUserExists = async (query) => {
+  return UserModel.exists(query)
+}
+
+export const deleteUser = async (query) => {
+  return UserModel.deleteOne(query)
+}
+
+export const updateUserPassword = async (id, query) => {
+  return UserModel.findByIdAndUpdate(id, query)
 }

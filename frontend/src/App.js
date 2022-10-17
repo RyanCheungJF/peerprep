@@ -1,27 +1,57 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
+import SignupPage from './pages/SignupPage'
+import LoginPage from './pages/LoginPage'
+import HomePage from './pages/HomePage'
+import ProfilePage from './pages/ProfilePage'
+import CollaborationPage from './pages/CollaborationPage'
+import NavBar from './components/NavBar'
+import PrivateRoute from './components/PrivateRoute'
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom'
-import SignupPage from './components/SignupPage'
-import { Box } from '@mui/material'
+  baseUrl,
+  signupUrl,
+  loginUrl,
+  homeUrl,
+  profileUrl,
+  collabUrl,
+} from './utils/routeConstants'
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <Box display={'flex'} flexDirection={'column'} padding={'4rem'}>
-        <Router>
-          <Routes>
-            <Route
-              exact
-              path="/"
-              element={<Navigate replace to="/signup" />}
-            ></Route>
-            <Route path="/signup" element={<SignupPage />} />
-          </Routes>
-        </Router>
-      </Box>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route exact path={baseUrl} element={<LandingPage />} />
+          <Route path={signupUrl} element={<SignupPage />} />
+          <Route path={loginUrl} element={<LoginPage />} />
+          <Route
+            exact
+            path={collabUrl}
+            element={
+              <PrivateRoute>
+                <CollaborationPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={homeUrl}
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path={profileUrl}
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
     </div>
   )
 }
