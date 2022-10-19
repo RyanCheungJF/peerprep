@@ -1,8 +1,14 @@
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
+import Rating from '@mui/material/Rating'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import CheckIcon from '@mui/icons-material/Check'
+import ArchitectureIcon from '@mui/icons-material/Architecture'
+import FormatPaintIcon from '@mui/icons-material/FormatPaint'
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import { homeUrl } from '../utils/routeConstants'
 import { UserContext } from '../contexts/UserContext'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
@@ -24,6 +30,49 @@ const ProfilePage = () => {
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const handleDeleteAccountCloseDialog = () => setDeleteAccountDialogOpen(false)
   const handleDeleteAccountOpenDialog = () => setDeleteAccountDialogOpen(true)
+
+  const _renderRating = (icon, label, value) => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          margin: '6px 0px',
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {icon}
+          <Typography sx={{ ml: 1 }}>{label}</Typography>
+        </Box>
+        <Rating name="read-only" value={value} precision={0.5} readOnly />
+      </Box>
+    )
+  }
+
+  const _renderRatings = () => {
+    return (
+      <Box sx={{ width: '55%' }}>
+        {_renderRating(<CheckIcon fontSize="small" />, 'Code Correctness', 3.7)}
+        {_renderRating(
+          <ArchitectureIcon fontSize="small" />,
+          'Code Design',
+          4.6
+        )}
+        {_renderRating(<FormatPaintIcon fontSize="small" />, 'Code Style', 0)}
+        {_renderRating(
+          <RecordVoiceOverIcon fontSize="small" />,
+          'Communication',
+          5
+        )}
+        {_renderRating(
+          <AccessTimeFilledIcon fontSize="small" />,
+          'Time Management',
+          2.5
+        )}
+      </Box>
+    )
+  }
 
   return (
     <Box
@@ -50,6 +99,10 @@ const ProfilePage = () => {
           />
         </Divider>
         <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
+        <Typography variant={'h6'} sx={{ mt: 2 }}>
+          Your stats:
+        </Typography>
+        {_renderRatings()}
       </Box>
 
       <Box sx={{ my: 3, mx: 2 }}>
