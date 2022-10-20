@@ -109,7 +109,7 @@ export const deleteUserScores = async (req, res) => {
   const userId = req.query.userId
   // tells us if we are only deleting from cache
   const deletedUser = req.query.deletedUser
-  if (!(userId && deletedUser)) {
+  if (!userId) {
     return res.status(400).json({ message: 'Username missing!' })
   }
 
