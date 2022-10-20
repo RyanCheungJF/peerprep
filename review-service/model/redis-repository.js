@@ -1,4 +1,5 @@
 import { createClient } from 'redis'
+import { FIELDS } from '../controller/review-controller.js'
 import 'dotenv/config'
 
 const REDIS_URI = process.env.REDIS_URI || 'localhost:6379'
@@ -14,23 +15,20 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 
 // for new writes and updates
-export const writeScoresToCache = async (username, newScores) => {
-  const cacheResults = await client.get(username)
+export const writeScoresToCache = async (newScores) => {
+  const cacheResults = await client.get(newScores.userId)
   const cacheData = JSON.parse(cacheResults)
   const data = {
-    userId: newScores.userId,
-    codeCorrectnessTotal:
-      newScores.codeCorrectnessTotal + (cacheData.codeCorrectnessTotal || 0),
-    codeDesignTotal:
-      newScores.codeDesignTotal + (cacheData.codeDesignTotal || 0),
-    codeStyleTotal: newScores.codeStyleTotal + (cacheData.codeStyleTotal || 0),
-    communicationTotal:
-      newScores.communicationTotal + (cacheData.communicationTotal || 0),
-    timeManagementTotal:
-      newScores.timeManagementTotal + (cacheData.timeManagementTotal || 0),
-    totalReviews: (newScores.totalReviews || 0) + 1,
+    userId: cacheData.userId,
+    totalReviews: (cacheData ? cacheData.totalReviews : 0) + 1,
   }
-  await client.set(username, JSON.stringify(data), { EX: HOUR, NX: true })
+  FIELDS.map((field) => {
+    data[field] = newScores[field] + (cacheData ? cacheData[field] : 0)
+  })
+  console.log(data)
+  await client.set(newScores.userId, JSON.stringify(data), {
+    EX: HOUR,
+  })
 }
 
 // get scores or undefined
@@ -42,5 +40,10 @@ export const getScoresFromCache = async (username) => {
 
 // upon logout/ user deletes account, we want a fresh pull upon next login
 export const deleteScoresFromCache = async (username) => {
-  await client.del(username)
+  try {
+    await client.del(username)
+    return true
+  } catch (err) {
+    return false
+  }
 }
