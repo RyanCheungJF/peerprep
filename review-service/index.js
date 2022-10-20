@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { getUserScores } from './controller/review-controller.js'
+import { getUserScores, createScores } from './controller/review-controller.js'
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
@@ -11,7 +11,7 @@ app.options('*', cors())
 const router = express.Router()
 
 router.get('/', getUserScores)
-router.post('/', () => {})
+router.post('/', createScores)
 router.delete('/', () => {})
 
 app.use('/api/review', router).all((_, res) => {

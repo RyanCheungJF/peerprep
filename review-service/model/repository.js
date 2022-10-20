@@ -18,3 +18,7 @@ db.collection('reviewmodels')
 export const getAllScoresForUser = async (query) => {
   return ReviewModel.find(query)
 }
+
+export const createScores = async (params) => {
+  return new ReviewModel(params)
+}
