@@ -7,6 +7,7 @@ import {
 import {
   ormGetAllScoresForUser as _getUserScores,
   ormCreateScores as _createScores,
+  ormDeleteAllScoresForUser as _deleteUserScores,
 } from '../model/review-orm.js'
 
 const generateZeroArray = (len) => {
@@ -73,4 +74,21 @@ export const createScores = async (req, res) => {
       .status(500)
       .json({ message: 'Database failure when creating new score!' })
   }
+}
+
+export const deleteUserScores = async (req, res) => {
+  const userId = req.query.userId
+  if (!userId) {
+    return res.status(400).json({ message: 'Username missing!' })
+  }
+
+  if (await _deleteUserScores(userId)) {
+    return res
+      .status(200)
+      .json({ message: `Deleted all reviews for user ${userId} successfully` })
+  }
+
+  return res
+    .status(500)
+    .json({ message: `Failed to delete reviews for ${userId}` })
 }

@@ -22,3 +22,7 @@ export const getAllScoresForUser = async (query) => {
 export const createScores = async (params) => {
   return new ReviewModel(params)
 }
+
+export const deleteAllScoresForUser = async (query) => {
+  return ReviewModel.deleteMany(query)
+}
