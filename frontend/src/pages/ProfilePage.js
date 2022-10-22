@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import Rating from '@mui/material/Rating'
@@ -13,6 +13,7 @@ import { homeUrl } from '../utils/routeConstants'
 import { UserContext } from '../contexts/UserContext'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
 import DeleteAccountDialog from '../components/DeleteAccountDialog'
+import { getReviewStats } from '../api/reviewService'
 
 const ProfilePage = () => {
   const user = useContext(UserContext)
@@ -30,6 +31,24 @@ const ProfilePage = () => {
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const handleDeleteAccountCloseDialog = () => setDeleteAccountDialogOpen(false)
   const handleDeleteAccountOpenDialog = () => setDeleteAccountDialogOpen(true)
+
+  // Fetch user's ratings
+  const [reviewStats, setReviewStats] = useState()
+  useEffect(() => {
+    const fetchAndSaveReviews = async () => {
+      try {
+        // TODO: change to user._id when backend fix is done
+        const res = await getReviewStats(user.username)
+        if (res.data) {
+          setReviewStats(res.data)
+        }
+      } catch (error) {
+        console.error("Error fetching user's reviews:", error)
+      }
+    }
+
+    fetchAndSaveReviews()
+  }, [user])
 
   const _renderRating = (icon, label, value) => {
     return (
@@ -51,26 +70,48 @@ const ProfilePage = () => {
   }
 
   const _renderRatings = () => {
+    if (!reviewStats) return null
+
+    const {
+      codeCorrectness,
+      codeDesign,
+      codeStyle,
+      communicationStyle,
+      timeManagement,
+    } = reviewStats
     return (
-      <Box sx={{ width: '55%' }}>
-        {_renderRating(<CheckIcon fontSize="small" />, 'Code Correctness', 3.7)}
-        {_renderRating(
-          <ArchitectureIcon fontSize="small" />,
-          'Code Design',
-          4.6
-        )}
-        {_renderRating(<FormatPaintIcon fontSize="small" />, 'Code Style', 0)}
-        {_renderRating(
-          <RecordVoiceOverIcon fontSize="small" />,
-          'Communication',
-          5
-        )}
-        {_renderRating(
-          <AccessTimeFilledIcon fontSize="small" />,
-          'Time Management',
-          2.5
-        )}
-      </Box>
+      <>
+        <Typography variant={'h6'} sx={{ mt: 2 }}>
+          Your stats:
+        </Typography>
+        <Box sx={{ width: '55%' }}>
+          {_renderRating(
+            <CheckIcon fontSize="small" />,
+            'Code Correctness',
+            codeCorrectness
+          )}
+          {_renderRating(
+            <ArchitectureIcon fontSize="small" />,
+            'Code Design',
+            codeDesign
+          )}
+          {_renderRating(
+            <FormatPaintIcon fontSize="small" />,
+            'Code Style',
+            codeStyle
+          )}
+          {_renderRating(
+            <RecordVoiceOverIcon fontSize="small" />,
+            'Communication',
+            communicationStyle
+          )}
+          {_renderRating(
+            <AccessTimeFilledIcon fontSize="small" />,
+            'Time Management',
+            timeManagement
+          )}
+        </Box>
+      </>
     )
   }
 
@@ -99,9 +140,6 @@ const ProfilePage = () => {
           />
         </Divider>
         <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
-        <Typography variant={'h6'} sx={{ mt: 2 }}>
-          Your stats:
-        </Typography>
         {_renderRatings()}
       </Box>
 
