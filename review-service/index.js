@@ -3,7 +3,8 @@ import cors from 'cors'
 import {
   getUserScores,
   createScores,
-  deleteUserScores,
+  deleteUserScoresFromCache,
+  deleteUserScoresFromDatabase,
 } from './controller/review-controller.js'
 
 const app = express()
@@ -16,7 +17,8 @@ const router = express.Router()
 
 router.get('/', getUserScores)
 router.post('/', createScores)
-router.delete('/', deleteUserScores)
+router.delete('/', deleteUserScoresFromCache)
+router.delete('/database', deleteUserScoresFromDatabase)
 
 app.use('/api/review', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

@@ -17,15 +17,17 @@ const HOUR = MINUTE * 60
 // for new writes and updates
 export const writeScoresToCache = async (newScores) => {
   const cacheResults = await client.get(newScores.userId)
+  console.log('newSCoreS', newScores)
   const cacheData = JSON.parse(cacheResults)
   const data = {
-    userId: cacheData.userId,
-    totalReviews: (cacheData ? cacheData.totalReviews : 0) + 1,
+    userId: newScores.userId,
+    totalReviews: cacheData
+      ? cacheData.totalReviews + 1
+      : newScores.totalReviews,
   }
-  FIELDS.map((field) => {
+  FIELDS.forEach((field) => {
     data[field] = newScores[field] + (cacheData ? cacheData[field] : 0)
   })
-  console.log(data)
   await client.set(newScores.userId, JSON.stringify(data), {
     EX: HOUR,
   })

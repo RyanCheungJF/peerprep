@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
 
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId
 let ReviewModelSchema = new Schema({
   revieweeid: {
-    type: String,
+    type: ObjectId,
     required: true,
   },
   reviewerid: {
-    type: String,
+    type: ObjectId,
     required: true,
   },
   scores: {
