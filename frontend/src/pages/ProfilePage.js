@@ -37,8 +37,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchAndSaveReviews = async () => {
       try {
-        // TODO: change to user._id when backend fix is done
-        const res = await getReviewStats(user.username)
+        const res = await getReviewStats(user._id)
         if (res.data) {
           setReviewStats(res.data)
         }
@@ -84,7 +83,7 @@ const ProfilePage = () => {
         <Typography variant={'h6'} sx={{ mt: 2 }}>
           Your stats:
         </Typography>
-        <Box sx={{ width: '55%' }}>
+        <Box sx={{ width: '350px' }}>
           {_renderRating(
             <CheckIcon fontSize="small" />,
             'Code Correctness',
