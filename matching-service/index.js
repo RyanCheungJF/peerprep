@@ -28,6 +28,7 @@ io.on('connection', (socket) => {
   })
   socket.on('notify-partner', (room, username, difficulty) => {
     socket.to(room).emit('found-connection', username, difficulty)
+    console.log("emit how many times")
   })
   socket.on('leave-room', (room, message) => {
     socket.to(room).emit('partner-left', message)

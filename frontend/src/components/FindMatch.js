@@ -25,6 +25,7 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   const [difficulty, setDifficulty] = useState('')
+  const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
   const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
@@ -38,31 +39,6 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
-
-  useEffect(() => {
-    matchingSocket.on('found-connection', (username, difficulty) => {
-      try {
-        const room = {
-          room_id: username,
-          id1: username,
-          id2: user.username,
-          id1_present: true,
-          id2_present: true,
-          difficulty: difficulty.toLowerCase(),
-          datetime: new Date(),
-        }
-        createRoomService(room)
-      } catch (err) {
-        console.log(err)
-      }
-      navigate(collabUrl, {
-        state: {
-          room: username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
-    })
-  }, [navigate, user.username])
 
   const handleFindMatch = (difficulty) => {
     if (
@@ -133,6 +109,37 @@ const FindMatch = () => {
       />
     )
   }
+
+  matchingSocket.on('found-connection', (username, difficulty) => {
+    console.log('==> Found Connection: ' + username + ' ' + difficulty)
+    const room = {
+      room_id: username,
+      id1: username,
+      id2: user.username,
+      id1_present: true,
+      id2_present: true,
+      difficulty: difficulty.toLowerCase(),
+      datetime: new Date(),
+    }
+    setRoom(room)
+  })
+
+  useEffect(() => {
+    if (room) {
+      try {
+        createRoomService(room)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        navigate(collabUrl, {
+          state: {
+            room: room.room_id,
+            difficulty: room.difficulty,
+          },
+        })
+      }
+    }
+  }, [room])
 
   return (
     <Box sx={{ my: 3 }}>
