@@ -139,7 +139,7 @@ const FindMatch = () => {
         })
       }
     }
-  }, [room])
+  }, [room, navigate])
 
   return (
     <Box sx={{ my: 3 }}>
