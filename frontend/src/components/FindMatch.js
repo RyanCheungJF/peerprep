@@ -28,8 +28,10 @@ const FindMatch = () => {
   const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -123,19 +125,18 @@ const FindMatch = () => {
     setRoom(room)
   })
 
-  useEffect(() => {
+  useEffect(async () => {
     if (room) {
       try {
-        createRoomService(room)
-      } catch (e) {
-        console.log(e)
-      } finally {
+        await createRoomService(room)
         navigate(collabUrl, {
           state: {
             room: room.room_id,
             difficulty: room.difficulty,
           },
         })
+      } catch (e) {
+        console.log(e)
       }
     }
   }, [room, navigate])
