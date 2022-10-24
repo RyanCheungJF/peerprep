@@ -62,7 +62,7 @@
     @apply flex;
   }
 
-  /* Collaboration Page Component: Question */
+  /* Collaboration Page Question Component */
   .question-div {
     @apply flex flex-col h-full relative overflow-auto;
   }
@@ -106,11 +106,17 @@
   }
 
   /* Collaboration Page Code Editor Component */
-  .code-editor-wrapper {
-    @apply flex flex-col h-full p-5;
+  .code-editor-div {
+    @apply flex flex-col h-full;
+  }
+  .code-editor-title-wrapper {
+    @apply flex flex-col;
   }
   .code-editor-title {
-    @apply font-inter font-bold text-2xl text-gray-700 pb-5;
+    @apply font-inter font-bold text-2xl text-gray-700 p-5;
+  }
+  .code-editor-editor-wrapper {
+    @apply flex flex-col h-full relative overflow-auto;
   }
 
   /* Components */
