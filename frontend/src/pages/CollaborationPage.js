@@ -8,8 +8,8 @@ import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import ConfirmationDialog from '../components/ConfirmationDialog'
 import Question from '../components/Question'
+import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
 import { getCollabRoomId } from '../utils/main'
-import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 
 const CollaborationPage = () => {
@@ -17,6 +17,7 @@ const CollaborationPage = () => {
   const navigate = useNavigate()
 
   const [question, setQuestion] = useState({})
+
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
@@ -27,6 +28,11 @@ const CollaborationPage = () => {
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
     setLeaveRoomConfirmationDialogOpen(true)
+
+  // Review Partner Dialog
+  const [reviewPartnerDialogOpen, setReviewPartnerDialogOpen] = useState(false)
+  const handleReviewPartnerCloseDialog = () => setReviewPartnerDialogOpen(false)
+  const handleReviewPartnerOpenDialog = () => setReviewPartnerDialogOpen(true)
 
   useEffect(() => {
     getQuestion()
@@ -51,7 +57,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {
-      // TODO: CHECK frontend again after Bing Cheng rectifies the matching service bug
+      // TODO: CHECK frontend again after matching service bug is rectified
       setIsPartnerOnline(false)
     })
     collabSocket.on('partner-connected', (roomClients) => {
@@ -63,7 +69,7 @@ const CollaborationPage = () => {
   useEffect(() => {
     matchingSocket.on('partner-left', (data) => {
       if (data === 'partner left') {
-        // TODO: CHECK frontend again after Bing Cheng rectifies the matching service bug
+        // TODO: CHECK frontend again after matching service bug is rectified
         setIsPartnerOnline(null)
         setIsPartnerLeft(true)
       }
@@ -90,11 +96,8 @@ const CollaborationPage = () => {
       console.log(err)
     }
 
-    navigate(homeUrl)
-  }
-
-  const partnerLeftRoom = () => {
-    navigate(homeUrl)
+    handleLeaveRoomConfirmationCloseDialog()
+    handleReviewPartnerOpenDialog()
   }
 
   const renderPartnerOfflineAlertDialog = () => {
@@ -113,9 +116,9 @@ const CollaborationPage = () => {
     return (
       <AlertDialog
         dialogOpen={isPartnerLeft}
-        handleCloseDialog={partnerLeftRoom}
+        handleCloseDialog={handleReviewPartnerOpenDialog}
         dialogTitle="Partner Left"
-        dialogMsg="Your partner has left the room. You will be redirected to the Home page."
+        dialogMsg="Your partner has left the room. You may now review your partner."
         dialogButtonText="OK"
       />
     )
@@ -131,6 +134,15 @@ const CollaborationPage = () => {
         dialogMsg="Are you sure you want to leave the room?"
         dialogDismissButtonText="No"
         dialogConfirmationButtonText="Yes"
+      />
+    )
+  }
+
+  const renderReviewPartnerDialog = () => {
+    return (
+      <ReviewPartnerDialog
+        dialogOpen={reviewPartnerDialogOpen}
+        handleCloseDialog={handleReviewPartnerCloseDialog}
       />
     )
   }
@@ -168,6 +180,7 @@ const CollaborationPage = () => {
       {renderPartnerOfflineAlertDialog()}
       {renderPartnerLeftAlertDialog()}
       {renderLeaveRoomConfirmationDialog()}
+      {renderReviewPartnerDialog()}
     </Box>
   )
 }
