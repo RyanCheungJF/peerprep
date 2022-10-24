@@ -42,9 +42,9 @@ export const ormUpdateRoom = async (room_id, body) => {
   }
 }
 
-export const ormDeleteRoom = async (room) => {
+export const ormDeleteRoom = async (room_id) => {
   try {
-    return await deleteRoom(room)
+    return await deleteRoom(room_id)
   } catch (err) {
     console.log('ERROR: Could not delete room')
     return { err }

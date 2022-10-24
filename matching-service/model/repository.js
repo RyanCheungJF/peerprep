@@ -32,8 +32,8 @@ export const createRoom = async (params) => {
 }
 
 // delete a room
-export const deleteRoom = async (roomToBeDeleted) => {
-  return roomToBeDeleted.remove()
+export const deleteRoom = async (room_id) => {
+  return socketRoomModel.deleteOne({ room_id: room_id })
 }
 
 // update a room

@@ -10,7 +10,6 @@ import {
   updateRoom,
   deleteRoom,
 } from './controller/match-controller.js'
-import getRoomByRoomId from './middleware/getRoomByRoomId.js'
 
 const SOCKET_PORT = 8300
 

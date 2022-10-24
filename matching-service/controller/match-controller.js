@@ -115,7 +115,7 @@ export const deleteRoom = async (req, res) => {
   console.log('DELETE /api/room ' + JSON.stringify(req.params.room_id))
 
   try {
-    const room = await ormDeleteRoom(res.room)
+    const room = await ormDeleteRoom(req.params.room_id)
     return res
       .status(200)
       .json({ message: 'Room ' + room.room_id + ' deleted successfully!' })
