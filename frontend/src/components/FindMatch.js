@@ -8,18 +8,17 @@ import {
   MenuItem,
   Select,
 } from '@mui/material'
+import { findMatch, deleteMatch } from '../api/matchingService'
+import { createRoomService } from '../api/roomservice'
+import { UserContext } from '../contexts/UserContext'
+import { collabUrl } from '../utils/routeConstants'
+import { matchingSocket } from '../utils/socket'
 import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
-import { matchingSocket } from '../utils/socket'
-import { collabUrl } from '../utils/routeConstants'
-import { findMatch, deleteMatch } from '../api/matchingService'
-import { UserContext } from '../contexts/UserContext'
-import { createRoomService } from '../api/roomservice'
 
 const FindMatch = () => {
-  const navigate = useNavigate()
-
   const user = useContext(UserContext)
+  const navigate = useNavigate()
 
   // Define finding match time out seconds
   const findingMatchTimeOutSeconds = 30
@@ -103,10 +102,6 @@ const FindMatch = () => {
   }
 
   const renderUnableToFindMatchAlertDialog = () => {
-    if (!selectDifficultyErrorDialogOpen) {
-      return null
-    }
-
     return (
       <AlertDialog
         dialogOpen={selectDifficultyErrorDialogOpen}
@@ -119,11 +114,13 @@ const FindMatch = () => {
   }
 
   const renderFindingMatchDialog = () => {
-    if (!findingMatchDialogOpen) {
-      return null
-    }
+    // Return null when findingMatchDialogOpen = false
+    // This closes the dialog and unmounts the component.
 
-    return (
+    // Return FindingMatchDialog component when findingMatchDialogOpen = true
+    // This mounts the component and opens the dialog.
+    // This ensures that timer is restarted on every component mount.
+    return !findingMatchDialogOpen ? null : (
       <FindingMatchDialog
         dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
@@ -152,12 +149,10 @@ const FindMatch = () => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         <Button
-          sx={{ px: 2 }}
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md pl-6 pr-6"
           onClick={() => handleFindMatch(difficulty)}
         >
           Find Match
