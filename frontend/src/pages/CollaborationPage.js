@@ -10,6 +10,7 @@ import { findRoomService, deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
 import { getCollabRoomId } from '../utils/main'
+import moment from 'moment'
 
 const CollaborationPage = () => {
   const location = useLocation()
@@ -30,10 +31,32 @@ const CollaborationPage = () => {
   }, [])
 
   useEffect(() => {
+    const checkExpiry = async (room_id) => {
+      try {
+        const res = await findRoomService(room_id)
+        if (res.data && JSON.stringify(res.data) !== '{}') {
+          const now = moment()
+          const expiration = moment(res.data.datetime)
+
+          // get the difference between the moments of the two dates in minutes
+          const diff = now.diff(expiration, 'minutes')
+
+          if (diff > 30) {
+            console.log(`room: ${room_id} expired`)
+            await deleteRoomService(room_id)
+            navigate(homeUrl, { replace: true })
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     if (!location.state?.room) {
       navigate(homeUrl, { replace: true })
       return
     }
+    checkExpiry(location.state.room)
 
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
@@ -58,7 +81,7 @@ const CollaborationPage = () => {
   }, [navigate])
 
   const getQuestion = async () => {
-    if (location.state.qnsid) {
+    if (location.state && location.state.qnsid) {
       try {
         const res = await findQuestionById(location.state.qnsid)
         setQuestion(res.data[0])
@@ -67,9 +90,11 @@ const CollaborationPage = () => {
       }
     } else {
       try {
-        const res = await findRoomService({ room_id: location.state.room })
-        const qnsRes = await findQuestionById(res.data.qnsid)
-        setQuestion(qnsRes.data[0])
+        if (location.state) {
+          const res = await findRoomService({ room_id: location.state.room })
+          const qnsRes = await findQuestionById(res.data.qnsid)
+          setQuestion(qnsRes.data[0])
+        }
       } catch (err) {
         console.log('ERROR', err)
       }
