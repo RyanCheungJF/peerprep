@@ -21,7 +21,7 @@ export const getQuestion = async (req, res) => {
   }
 
   const questions = await _findByDifficulty(difficulty)
-  if (!questions || questions.length == 0) {
+  if (!questions || questions.length === 0) {
     return res.status(500).json({ message: 'Error retrieving question.' })
   }
   const question = selectRandomQuestion(questions)

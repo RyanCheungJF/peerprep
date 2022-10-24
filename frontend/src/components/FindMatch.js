@@ -26,6 +26,7 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   const [difficulty, setDifficulty] = useState('')
+  const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
   const [
@@ -41,31 +42,6 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
-
-  useEffect(() => {
-    matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
-      try {
-        const room = {
-          room_id: username,
-          id1: username,
-          id2: user.username,
-          qnsid: qnsid,
-          difficulty: difficulty.toLowerCase(),
-          datetime: new Date(),
-        }
-        createRoomService(room)
-      } catch (err) {
-        console.log(err)
-      }
-      navigate(collabUrl, {
-        state: {
-          room: username,
-          difficulty: difficulty.toLowerCase(),
-          qnsid: qnsid,
-        },
-      })
-    })
-  }, [navigate, user.username])
 
   const handleFindMatch = (difficulty) => {
     if (
@@ -146,6 +122,39 @@ const FindMatch = () => {
       />
     )
   }
+
+  matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
+    const room = {
+      room_id: username,
+      id1: username,
+      id2: user.username,
+      qnsid: qnsid,
+      difficulty: difficulty.toLowerCase(),
+      datetime: new Date(),
+    }
+    setRoom(room)
+  })
+
+  useEffect(() => {
+    const createRoom = async () => {
+      try {
+        await createRoomService(room)
+        navigate(collabUrl, {
+          state: {
+            room: room.room_id,
+            difficulty: room.difficulty,
+            qnsid: room.qnsid,
+          },
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    if (room) {
+      createRoom()
+    }
+  }, [room, navigate])
 
   return (
     <Box sx={{ my: 3 }}>
