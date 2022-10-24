@@ -51,6 +51,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {
+      // TODO: CHECK frontend again after Bing Cheng rectifies the matching service bug
       setIsPartnerOnline(false)
     })
     collabSocket.on('partner-connected', (roomClients) => {
@@ -62,6 +63,7 @@ const CollaborationPage = () => {
   useEffect(() => {
     matchingSocket.on('partner-left', (data) => {
       if (data === 'partner left') {
+        // TODO: CHECK frontend again after Bing Cheng rectifies the matching service bug
         setIsPartnerOnline(null)
         setIsPartnerLeft(true)
       }
@@ -92,8 +94,6 @@ const CollaborationPage = () => {
   }
 
   const partnerLeftRoom = () => {
-    // TO CHECK/FIX:
-    // Currently two dialogs appear, one for disconnected and another for leaving
     navigate(homeUrl)
   }
 
