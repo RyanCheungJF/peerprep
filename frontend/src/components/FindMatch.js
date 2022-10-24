@@ -125,8 +125,8 @@ const FindMatch = () => {
     setRoom(room)
   })
 
-  useEffect(async () => {
-    if (room) {
+  useEffect(() => {
+    const createRoom = async () => {
       try {
         await createRoomService(room)
         navigate(collabUrl, {
@@ -138,6 +138,10 @@ const FindMatch = () => {
       } catch (e) {
         console.log(e)
       }
+    }
+
+    if (room) {
+      createRoom()
     }
   }, [room, navigate])
 
