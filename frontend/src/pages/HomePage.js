@@ -22,6 +22,8 @@ const HomePage = () => {
             navigate(collabUrl, {
               state: {
                 room: res.data.room_id,
+                difficulty: res.data.difficulty,
+                qnsid: res.data.qnsid,
               },
             })
           }

@@ -15,6 +15,7 @@ import { collabUrl } from '../utils/routeConstants'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
 import { createRoomService } from '../api/roomservice'
+import { findQuestionByDifficulty as _findByDifficulty } from '../api/questionService'
 
 const FindMatch = () => {
   const navigate = useNavigate()
@@ -27,8 +28,10 @@ const FindMatch = () => {
   const [difficulty, setDifficulty] = useState('')
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -40,14 +43,13 @@ const FindMatch = () => {
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
 
   useEffect(() => {
-    matchingSocket.on('found-connection', (username, difficulty) => {
+    matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
       try {
         const room = {
           room_id: username,
           id1: username,
           id2: user.username,
-          id1_present: true,
-          id2_present: true,
+          qnsid: qnsid,
           difficulty: difficulty.toLowerCase(),
           datetime: new Date(),
         }
@@ -59,6 +61,7 @@ const FindMatch = () => {
         state: {
           room: username,
           difficulty: difficulty.toLowerCase(),
+          qnsid: qnsid,
         },
       })
     })
@@ -87,13 +90,23 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      matchingSocket.emit('notify-partner', room, user.username, difficulty)
-      navigate(collabUrl, {
-        state: {
-          room: user.username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase())
+      if (questionRes) {
+        matchingSocket.emit(
+          'notify-partner',
+          room,
+          user.username,
+          difficulty,
+          questionRes.data.qnsid
+        )
+        navigate(collabUrl, {
+          state: {
+            room: user.username,
+            difficulty: difficulty.toLowerCase(),
+            qnsid: questionRes.data.qnsid,
+          },
+        })
+      }
     }
   }
 

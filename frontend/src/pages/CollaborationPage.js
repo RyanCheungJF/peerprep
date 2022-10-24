@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Button } from '@mui/material'
-import { Box } from '@mui/material'
+import { Button, Box } from '@mui/material'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import PartnerOfflineDialog from '../components/PartnerOfflineDialog'
 import Question from '../components/Question'
-import { findQuestion } from '../api/questionService'
-import { deleteRoomService } from '../api/roomservice'
+import { findQuestionById } from '../api/questionService'
+import { findRoomService, deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
 import { getCollabRoomId } from '../utils/main'
@@ -59,11 +58,21 @@ const CollaborationPage = () => {
   }, [navigate])
 
   const getQuestion = async () => {
-    try {
-      const res = await findQuestion(location.state.difficulty)
-      setQuestion(res.data)
-    } catch (err) {
-      console.log('ERROR', err)
+    if (location.state.qnsid) {
+      try {
+        const res = await findQuestionById(location.state.qnsid)
+        setQuestion(res.data[0])
+      } catch (err) {
+        console.log('ERROR', err)
+      }
+    } else {
+      try {
+        const res = await findRoomService({ room_id: location.state.room })
+        const qnsRes = await findQuestionById(res.data.qnsid)
+        setQuestion(qnsRes.data[0])
+      } catch (err) {
+        console.log('ERROR', err)
+      }
     }
   }
 
