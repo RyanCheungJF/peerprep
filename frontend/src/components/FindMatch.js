@@ -111,7 +111,6 @@ const FindMatch = () => {
   }
 
   matchingSocket.on('found-connection', (username, difficulty) => {
-    console.log('==> Found Connection: ' + username + ' ' + difficulty)
     const room = {
       room_id: username,
       id1: username,
