@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { homeUrl } from '../utils/routeConstants'
-import { UserContext } from '../contexts/UserContext'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
 import DeleteAccountDialog from '../components/DeleteAccountDialog'
+import { UserContext } from '../contexts/UserContext'
+import { homeUrl } from '../utils/routeConstants'
 
 const ProfilePage = () => {
   const user = useContext(UserContext)
-
   const navigate = useNavigate()
 
   // Change Password Dialog
@@ -24,6 +23,30 @@ const ProfilePage = () => {
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
   const handleDeleteAccountCloseDialog = () => setDeleteAccountDialogOpen(false)
   const handleDeleteAccountOpenDialog = () => setDeleteAccountDialogOpen(true)
+
+  const renderChangePasswordDialog = () => {
+    // Return null when changePasswordDialogOpen = false
+    // This closes the dialog and unmounts the component.
+
+    // Return ChangePasswordDialog component when changePasswordDialogOpen = true
+    // This mounts the component and opens the dialog.
+    // This ensures that TextField newPassword is empty on every component mount.
+    return !changePasswordDialogOpen ? null : (
+      <ChangePasswordDialog
+        dialogOpen={changePasswordDialogOpen}
+        handleCloseDialog={handleChangePasswordCloseDialog}
+      />
+    )
+  }
+
+  const renderDeleteAccountDialog = () => {
+    return (
+      <DeleteAccountDialog
+        dialogOpen={deleteAccountDialogOpen}
+        handleCloseDialog={handleDeleteAccountCloseDialog}
+      />
+    )
+  }
 
   return (
     <Box
@@ -40,7 +63,6 @@ const ProfilePage = () => {
       <Box sx={{ my: 3, mx: 2 }}>
         <Typography variant={'h3'}>Profile Page</Typography>
       </Box>
-
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
           <Chip
@@ -51,7 +73,6 @@ const ProfilePage = () => {
         </Divider>
         <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
       </Box>
-
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
           <Chip
@@ -79,17 +100,8 @@ const ProfilePage = () => {
           />
         </Stack>
       </Box>
-
-      <ChangePasswordDialog
-        dialogOpen={changePasswordDialogOpen}
-        handleCloseDialog={handleChangePasswordCloseDialog}
-      />
-
-      <DeleteAccountDialog
-        dialogOpen={deleteAccountDialogOpen}
-        handleCloseDialog={handleDeleteAccountCloseDialog}
-      />
-
+      {renderChangePasswordDialog()}
+      {renderDeleteAccountDialog()}
       <Box sx={{ my: 3, mx: 2 }}>
         <Button variant={'outlined'} onClick={() => navigate(homeUrl)}>
           Back to Home
