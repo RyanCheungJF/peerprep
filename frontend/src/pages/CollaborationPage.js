@@ -112,6 +112,8 @@ const CollaborationPage = () => {
       console.log(err)
     }
 
+    // TO CHECK: CHECK frontend again after matching service bug is rectified
+
     // After room is deleted, setIsPartnerLeft as true and setIsPartnerOnline as
     // false so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog
     // will not be shown if partner happens to submit of skip review first
