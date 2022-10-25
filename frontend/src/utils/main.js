@@ -17,7 +17,6 @@ export function expirationCheck(datetime, expirationFunction) {
 
   // get the difference between the moments of the two dates in minutes
   const diff = now.diff(expiration, 'minutes')
-  console.log("diff  bro: ", diff)
 
   expirationFunction(diff)
   
