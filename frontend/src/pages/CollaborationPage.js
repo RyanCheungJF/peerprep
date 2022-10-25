@@ -88,7 +88,7 @@ const CollaborationPage = () => {
   }
 
   /*
-    TODO: Change question
+    TODO: Get New Question
       Need to change the code to handle the logic such that the new question
       is set for both parties when one of them presses it
   */
