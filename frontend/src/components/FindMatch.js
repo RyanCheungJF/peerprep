@@ -24,10 +24,13 @@ const FindMatch = () => {
   const findingMatchTimeOutSeconds = 30
 
   const [difficulty, setDifficulty] = useState('')
+  const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -37,31 +40,6 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
-
-  useEffect(() => {
-    matchingSocket.on('found-connection', (username, difficulty) => {
-      try {
-        const room = {
-          room_id: username,
-          id1: username,
-          id2: user.username,
-          id1_present: true,
-          id2_present: true,
-          difficulty: difficulty.toLowerCase(),
-          datetime: new Date(),
-        }
-        createRoomService(room)
-      } catch (err) {
-        console.log(err)
-      }
-      navigate(collabUrl, {
-        state: {
-          room: username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
-    })
-  }, [navigate, user.username])
 
   const handleFindMatch = (difficulty) => {
     if (
@@ -130,6 +108,39 @@ const FindMatch = () => {
       />
     )
   }
+
+  matchingSocket.on('found-connection', (username, difficulty) => {
+    const room = {
+      room_id: username,
+      id1: username,
+      id2: user.username,
+      id1_present: true,
+      id2_present: true,
+      difficulty: difficulty.toLowerCase(),
+      datetime: new Date(),
+    }
+    setRoom(room)
+  })
+
+  useEffect(() => {
+    const createRoom = async () => {
+      try {
+        await createRoomService(room)
+        navigate(collabUrl, {
+          state: {
+            room: room.room_id,
+            difficulty: room.difficulty,
+          },
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    if (room) {
+      createRoom()
+    }
+  }, [room, navigate])
 
   return (
     <Box sx={{ my: 3 }}>
