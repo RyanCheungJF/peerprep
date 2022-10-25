@@ -109,7 +109,7 @@ export const createScores = async (req, res) => {
 export const deleteUserScoresFromCache = async (req, res) => {
   const userId = req.query.userId
   if (!userId) {
-    return res.status(400).json({ message: 'Username missing!' })
+    return res.status(400).json({ message: 'User ID missing!' })
   }
 
   const successfulDelete = await deleteScoresFromCache(userId)
@@ -121,7 +121,7 @@ export const deleteUserScoresFromCache = async (req, res) => {
 export const deleteUserScoresFromDatabase = async (req, res) => {
   const userId = req.query.userId
   if (!userId) {
-    return res.status(400).json({ message: 'Username missing!' })
+    return res.status(400).json({ message: 'User ID missing!' })
   }
 
   if (
