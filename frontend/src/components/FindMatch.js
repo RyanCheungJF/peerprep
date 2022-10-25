@@ -27,10 +27,8 @@ const FindMatch = () => {
   const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [
-    selectDifficultyErrorDialogOpen,
-    setSelectDifficultyErrorDialogOpen,
-  ] = useState(false)
+  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
+    useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -163,7 +161,7 @@ const FindMatch = () => {
         }}
       >
         <Button
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md pl-6 pr-6"
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
           onClick={() => handleFindMatch(difficulty)}
         >
           Find Match
