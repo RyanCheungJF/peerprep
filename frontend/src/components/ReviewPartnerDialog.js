@@ -10,6 +10,11 @@ import {
   Grid,
   Rating,
 } from '@mui/material'
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
+import ArchitectureIcon from '@mui/icons-material/Architecture'
+import CheckIcon from '@mui/icons-material/Check'
+import FormatPaintIcon from '@mui/icons-material/FormatPaint'
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 import { homeUrl } from '../utils/routeConstants'
 
 const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
@@ -51,7 +56,10 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
         </DialogContentText>
         <Grid container spacing={2} marginTop={2}>
           <Grid item xs={4}>
-            <DialogContentText>Code Correctness</DialogContentText>
+            <DialogContentText>
+              <CheckIcon fontSize="small" sx={{ mr: 1 }} />
+              Code Correctness
+            </DialogContentText>
           </Grid>
           <Grid item xs={8}>
             <Rating
@@ -64,7 +72,10 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            <DialogContentText>Code Design</DialogContentText>
+            <DialogContentText>
+              <ArchitectureIcon fontSize="small" sx={{ mr: 1 }} />
+              Code Design
+            </DialogContentText>
           </Grid>
           <Grid item xs={8}>
             <Rating
@@ -77,7 +88,10 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            <DialogContentText>Code Style</DialogContentText>
+            <DialogContentText>
+              <FormatPaintIcon fontSize="small" sx={{ mr: 1 }} />
+              Code Style
+            </DialogContentText>
           </Grid>
           <Grid item xs={8}>
             <Rating
@@ -90,7 +104,10 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            <DialogContentText>Communication</DialogContentText>
+            <DialogContentText>
+              <RecordVoiceOverIcon fontSize="small" sx={{ mr: 1 }} />
+              Communication
+            </DialogContentText>
           </Grid>
           <Grid item xs={8}>
             <Rating
@@ -103,7 +120,10 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
             />
           </Grid>
           <Grid item xs={4}>
-            <DialogContentText>Time Management</DialogContentText>
+            <DialogContentText>
+              <AccessTimeFilledIcon fontSize="small" sx={{ mr: 1 }} />
+              Time Management
+            </DialogContentText>
           </Grid>
           <Grid item xs={8}>
             <Rating
