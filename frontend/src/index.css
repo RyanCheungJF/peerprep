@@ -62,7 +62,7 @@
     @apply flex;
   }
 
-  /* Collaboration Page Question Component */
+  /* Collaboration Page - Question Component */
   .question-div {
     @apply flex flex-col h-full;
   }
@@ -91,7 +91,7 @@
     @apply font-semibold pb-6;
   }
 
-  /* Collaboration Page Chat Component */
+  /* Collaboration Page - Chat Component */
   .chat-div {
     @apply flex flex-col h-full;
   }
@@ -111,7 +111,7 @@
     @apply flex gap-3 p-5;
   }
 
-  /* Collaboration Page Code Editor Component */
+  /* Collaboration Page - Code Editor Component */
   .code-editor-div {
     @apply flex flex-col h-full;
   }
@@ -125,7 +125,7 @@
     @apply flex flex-col relative h-full overflow-auto;
   }
 
-  /* Collaboration Page Time Remaining Component */
+  /* Collaboration Page - Time Remaining Display */
   .time-remaining-div {
     @apply absolute h-16 w-fit top-0 inset-x-0 mx-auto ;
   }
