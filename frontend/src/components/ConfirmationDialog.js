@@ -7,12 +7,14 @@ import {
   DialogTitle,
 } from '@mui/material'
 
-const AlertDialog = ({
+const ConfirmationDialog = ({
   dialogOpen,
-  handleCloseDialog,
+  handleDismiss,
+  handleConfirmation,
   dialogTitle,
   dialogMsg,
-  dialogButtonText,
+  dialogDismissButtonText,
+  dialogConfirmationButtonText,
 }) => {
   return (
     <Dialog open={dialogOpen}>
@@ -21,10 +23,13 @@ const AlertDialog = ({
         <DialogContentText>{dialogMsg}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDialog}>{dialogButtonText}</Button>
+        <Button onClick={handleDismiss}>{dialogDismissButtonText}</Button>
+        <Button onClick={handleConfirmation}>
+          {dialogConfirmationButtonText}
+        </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default AlertDialog
+export default ConfirmationDialog

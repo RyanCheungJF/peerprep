@@ -8,13 +8,13 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material'
-import { UserContext } from '../contexts/UserContext'
 import { deleteUser } from '../api/userService'
+import { UserContext } from '../contexts/UserContext'
 import { baseUrl } from '../utils/routeConstants'
 
 const DeleteAccountDialog = ({ dialogOpen, handleCloseDialog }) => {
-  const navigate = useNavigate()
   const user = useContext(UserContext)
+  const navigate = useNavigate()
 
   const handleDeleteAccount = async () => {
     try {
