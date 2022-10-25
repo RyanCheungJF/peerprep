@@ -1,13 +1,23 @@
-import { Box, Divider, Paper } from '@mui/material'
+import { Box, Button, Divider, Paper } from '@mui/material'
 
-const Question = ({ question }) => {
+const Question = ({ question, getNewQuestion }) => {
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
       <Box className="question-div">
-        <Box className="question-title-wrapper">
-          <p className="question-title">Question</p>
-          <Divider />
+        <Box className="question-title-and-next-question-button-wrapper">
+          <Box className="question-title-wrapper">
+            <p className="question-title">Question</p>
+          </Box>
+          <Box className="question-next-question-button-wrapper">
+            <Button
+              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md pl-6 pr-6"
+              onClick={() => getNewQuestion()}
+            >
+              Change Question
+            </Button>
+          </Box>
         </Box>
+        <Divider />
         <Box className="question-details-wrapper-outer">
           <Box className="question-details-wrapper-inner">
             <p

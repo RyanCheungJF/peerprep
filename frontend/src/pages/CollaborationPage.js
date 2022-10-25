@@ -85,6 +85,20 @@ const CollaborationPage = () => {
     }
   }
 
+  /*
+    TODO: Change question
+      Need to change the code to handle the logic such that the new question
+      is set for both parties when one of them presses it
+  */
+  const getNewQuestion = async () => {
+    try {
+      const res = await findQuestion(location.state.difficulty)
+      setQuestion(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const leaveRoom = async () => {
     try {
       console.log('deleting room with id: ' + location.state.room)
@@ -159,7 +173,7 @@ const CollaborationPage = () => {
       <Box className="collaboration-page-left-container">
         <Box className="coding-question-chat-container">
           <Box className="coding-question-container">
-            <Question question={question} />
+            <Question question={question} getNextQuestion={getNewQuestion} />
           </Box>
           <Box className="coding-chat-container">
             <Chat room={location.state?.room} />
