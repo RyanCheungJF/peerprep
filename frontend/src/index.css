@@ -25,7 +25,7 @@
 
   /* UserAuth Component (For Login & Signup Pages) */
   .userauth-title {
-    @apply font-inter font-bold text-5xl py-10 text-gray-700;
+    @apply font-inter font-bold text-5xl text-gray-700 py-10;
   }
   .left-button-wrapper {
     @apply px-2;
@@ -39,48 +39,112 @@
     @apply font-inter font-bold text-4xl text-gray-700;
   }
 
-  /* Coding Page */
-  .left-coding-container {
-    @apply flex flex-col basis-1/2;
+  /* Collaboration Page */
+  .collaboration-page-container {
+    @apply flex p-6;
   }
-  .right-coding-container {
-    @apply flex basis-1/2 justify-center;
+  .collaboration-page-left-container {
+    @apply flex flex-col basis-1/2 pr-3;
+  }
+  .collaboration-page-right-container {
+    @apply flex flex-col basis-1/2 pl-3;
+  }
+  .coding-question-chat-container {
+    @apply flex flex-col h-full;
   }
   .coding-question-container {
-    @apply flex basis-1/2;
+    @apply flex basis-1/2 pb-6;
   }
   .coding-chat-container {
-    @apply flex basis-1/2;
-  }
-  .coding-chat-div {
-    @apply pl-3 pt-2 h-full;
-  }
-  .coding-chat-title {
-    @apply pl-3 font-inter font-bold text-3xl text-gray-700;
+    @apply flex basis-1/2 pb-6;
   }
   .coding-button-container {
-    @apply justify-center;
-  }
-  .leave-room-button {
-    @apply font-inter bg-pink-700 hover:bg-pink-800 text-white font-light rounded-md w-1/5;
+    @apply flex;
   }
 
+  /* Collaboration Page - Question Component */
+  .question-div {
+    @apply flex flex-col h-full;
+  }
+  .question-title-and-next-question-button-wrapper {
+    @apply flex flex-row;
+  }
+  .question-title-wrapper {
+    @apply flex grow items-center p-5;
+  }
+  .question-title {
+    @apply font-inter font-bold text-2xl text-gray-700;
+  }
+  .question-next-question-button-wrapper {
+    @apply flex items-center p-5;
+  }
+  .question-details-wrapper-outer {
+    @apply flex flex-col relative h-full overflow-auto;
+  }
+  .question-details-wrapper-inner {
+    @apply flex flex-col absolute w-full p-5;
+  }
+  .question-details-title {
+    @apply font-bold text-lg underline underline-offset-4 pb-6;
+  }
+  .question-details-example-title {
+    @apply font-semibold pb-6;
+  }
+
+  /* Collaboration Page - Chat Component */
+  .chat-div {
+    @apply flex flex-col h-full;
+  }
+  .chat-title-wrapper {
+    @apply flex flex-col;
+  }
+  .chat-title {
+    @apply font-inter font-bold text-2xl text-gray-700 p-5;
+  }
+  .chat-messages-wrapper {
+    @apply flex flex-col relative h-full overflow-auto;
+  }
+  .chat-message-and-send-button-wrapper {
+    @apply flex flex-col; 
+  }
+  .chat-message-and-send-button {
+    @apply flex gap-3 p-5;
+  }
+
+  /* Collaboration Page - Code Editor Component */
+  .code-editor-div {
+    @apply flex flex-col h-full;
+  }
+  .code-editor-title-wrapper {
+    @apply flex flex-col;
+  }
+  .code-editor-title {
+    @apply font-inter font-bold text-2xl text-gray-700 p-5;
+  }
+  .code-editor-editor-wrapper {
+    @apply flex flex-col relative h-full overflow-auto;
+  }
+
+  /* Collaboration Page - Time Remaining Display */
+  .time-remaining-div {
+    @apply absolute h-16 w-fit top-0 inset-x-0 mx-auto ;
+  }
+  .time-remaining-wrapper {
+    @apply flex h-full items-center justify-center;
+  }
+  .time-remaining {
+    @apply font-inter bg-neutral-100 rounded-md py-1 px-6;
+  }
+  .time-remaining-alert {
+    @apply font-inter bg-pink-700 text-white rounded-md py-1 px-6;
+  }
+  
   /* Components */
   .button {
+    /* I think this is not used because button design has to change directly via className */
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
   }
   .navbar {
     @apply font-inter grow font-bold text-3xl text-gray-900;
-  }
-
-  /* Question Information */
-  .question-display {
-    @apply overflow-auto pl-6;
-  }
-  .question-title {
-    @apply font-bold text-lg underline underline-offset-4;
-  }
-  .example-title {
-    @apply font-semibold;
   }
 }

@@ -75,7 +75,7 @@ const UserAuth = ({
         <Box className="left-button-wrapper">
           <Button
             sx={{ px: 2 }}
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md"
             onClick={() => navigate(toggleDestination)}
           >
             {toggleText}
@@ -84,7 +84,7 @@ const UserAuth = ({
         <Box>
           <Button
             sx={{ px: 2 }}
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md"
             onClick={() => {
               setUsernameSubmittedEmpty(username === '')
               setPasswordSubmittedEmpty(password === '')
