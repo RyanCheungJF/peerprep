@@ -17,6 +17,8 @@ const CollaborationPage = () => {
   const navigate = useNavigate()
 
   const [question, setQuestion] = useState({})
+  // const [timeRemaining, setTimeRemaining] = useState({}) // to implement
+  const [timeRemaining, setTimeRemaining] = useState('30')
 
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
@@ -162,40 +164,61 @@ const CollaborationPage = () => {
   }
 
   return (
-    <Box
-      className="collaboration-page-container"
-      sx={{
-        // content height = 100vh - nav bar height - vertical padding
-        // height: 'calc(100vh - 64px - 2 * 16px)',
-        height: 'calc(100vh - 64px - 24px)',
-      }}
-    >
-      <Box className="collaboration-page-left-container">
-        <Box className="coding-question-chat-container">
-          <Box className="coding-question-container">
-            <Question question={question} getNextQuestion={getNewQuestion} />
-          </Box>
-          <Box className="coding-chat-container">
-            <Chat room={location.state?.room} />
-          </Box>
-        </Box>
-        <Box className="coding-button-container">
-          <Button
-            className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md pl-6 pr-6"
-            onClick={() => handleLeaveRoomConfirmationOpenDialog()}
-          >
-            Leave Room
-          </Button>
+    <>
+      <Box className="time-remaining-div">
+        <Box className="time-remaining-wrapper">
+          {timeRemaining > 5 && (
+            <p className="time-remaining">
+              Time Remaining: {timeRemaining} mins
+            </p>
+          )}
+          {timeRemaining <= 5 && timeRemaining > 1 && (
+            <p className="time-remaining-alert">
+              Time Remaining: {timeRemaining} mins
+            </p>
+          )}
+          {timeRemaining <= 1 && (
+            <p className="time-remaining-alert">
+              Time Remaining: {timeRemaining} min
+            </p>
+          )}
         </Box>
       </Box>
-      <Box className="collaboration-page-right-container">
-        <CodeEditor room={location.state?.room} />
+      <Box
+        className="collaboration-page-container"
+        sx={{
+          // content height = 100vh - nav bar height - vertical padding
+          // height: 'calc(100vh - 64px - 2 * 16px)',
+          height: 'calc(100vh - 64px - 24px)',
+        }}
+      >
+        <Box className="collaboration-page-left-container">
+          <Box className="coding-question-chat-container">
+            <Box className="coding-question-container">
+              <Question question={question} getNextQuestion={getNewQuestion} />
+            </Box>
+            <Box className="coding-chat-container">
+              <Chat room={location.state?.room} />
+            </Box>
+          </Box>
+          <Box className="coding-button-container">
+            <Button
+              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md px-6"
+              onClick={() => handleLeaveRoomConfirmationOpenDialog()}
+            >
+              Leave Room
+            </Button>
+          </Box>
+        </Box>
+        <Box className="collaboration-page-right-container">
+          <CodeEditor room={location.state?.room} />
+        </Box>
+        {renderPartnerOfflineAlertDialog()}
+        {renderPartnerLeftAlertDialog()}
+        {renderLeaveRoomConfirmationDialog()}
+        {renderReviewPartnerDialog()}
       </Box>
-      {renderPartnerOfflineAlertDialog()}
-      {renderPartnerLeftAlertDialog()}
-      {renderLeaveRoomConfirmationDialog()}
-      {renderReviewPartnerDialog()}
-    </Box>
+    </>
   )
 }
 
