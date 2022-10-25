@@ -59,7 +59,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {
-      // TODO: CHECK frontend again after matching service bug is rectified
+      // TO CHECK: CHECK frontend again after matching service bug is rectified
       setIsPartnerOnline(false)
     })
     collabSocket.on('partner-connected', (roomClients) => {
@@ -71,9 +71,9 @@ const CollaborationPage = () => {
   useEffect(() => {
     matchingSocket.on('partner-left', (data) => {
       if (data === 'partner left') {
-        // TODO: CHECK frontend again after matching service bug is rectified
-        setIsPartnerOnline(null)
+        // TO CHECK: CHECK frontend again after matching service bug is rectified
         setIsPartnerLeft(true)
+        setIsPartnerOnline(false) // so that it will not show PartnerOfflineAlertDialog
       }
     })
   }, [navigate])
@@ -112,6 +112,12 @@ const CollaborationPage = () => {
       console.log(err)
     }
 
+    // After room is deleted, setIsPartnerLeft as true setIsPartnerOnline as false
+    // so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog will not
+    // be shown if partner happens to submit of skip review first
+    setIsPartnerLeft(true)
+    setIsPartnerOnline(false)
+
     handleLeaveRoomConfirmationCloseDialog()
     handleReviewPartnerOpenDialog()
   }
@@ -119,7 +125,7 @@ const CollaborationPage = () => {
   const renderPartnerOfflineAlertDialog = () => {
     return (
       <AlertDialog
-        dialogOpen={!isPartnerOnline}
+        dialogOpen={!isPartnerOnline && !isPartnerLeft}
         handleCloseDialog={leaveRoom}
         dialogTitle="Partner Disconnected"
         dialogMsg="Your partner has disconnected. Waiting for him/her to reconnect..."
