@@ -10,7 +10,7 @@ import { findRoomService, deleteRoomService } from '../api/roomservice'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import { homeUrl } from '../utils/routeConstants'
 import { getCollabRoomId } from '../utils/main'
-import moment from 'moment'
+import { expirationCheck } from '../utils/main'
 
 const CollaborationPage = () => {
   const location = useLocation()
@@ -35,17 +35,13 @@ const CollaborationPage = () => {
       try {
         const res = await findRoomService(room_id)
         if (res.data && JSON.stringify(res.data) !== '{}') {
-          const now = moment()
-          const expiration = moment(res.data.datetime)
-
-          // get the difference between the moments of the two dates in minutes
-          const diff = now.diff(expiration, 'minutes')
-
-          if (diff > 30) {
-            console.log(`room: ${room_id} expired`)
-            await deleteRoomService(room_id)
-            navigate(homeUrl, { replace: true })
-          }
+          expirationCheck(res.data.datetime, async (diff) => {
+            if (diff > 30) {
+              console.log(`room: ${room_id} expired`)
+              await deleteRoomService(room_id)
+              navigate(homeUrl, { replace: true })
+            }
+          })
         }
       } catch (error) {
         console.log(error)

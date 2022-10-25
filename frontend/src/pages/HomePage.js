@@ -5,7 +5,7 @@ import { UserContext } from '../contexts/UserContext'
 import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collabUrl } from '../utils/routeConstants'
-import moment from 'moment'
+import { expirationCheck } from '../utils/main'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -20,23 +20,19 @@ const HomePage = () => {
         try {
           const res = await findRoomService(filter)
           if (res.data && JSON.stringify(res.data) !== '{}') {
-            const now = moment()
-            const expiration = moment(res.data.datetime)
-
-            // get the difference between the moments of the two dates in minutes
-            const diff = now.diff(expiration, 'minutes')
-
-            if (diff <= 30) {
-              navigate(collabUrl, {
-                state: {
-                  room: res.data.room_id,
-                  difficulty: res.data.difficulty,
-                  qnsid: res.data.qnsid,
-                },
-              })
-            } else {
-              await deleteRoomService(res.data.room_id)
-            }
+            expirationCheck(res.data.datetime, async (diff) => {
+              if (diff <= 30) {
+                navigate(collabUrl, {
+                  state: {
+                    room: res.data.room_id,
+                    difficulty: res.data.difficulty,
+                    qnsid: res.data.qnsid,
+                  },
+                })
+              } else {
+                await deleteRoomService(res.data.room_id)
+              }
+            })
           }
         } catch (err) {
           console.log(err)
