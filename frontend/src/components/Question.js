@@ -10,7 +10,7 @@ const Question = ({ question, getNewQuestion }) => {
           </Box>
           <Box className="question-next-question-button-wrapper">
             <Button
-              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md pl-6 pr-6"
+              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md pl-6 pr-6"
               onClick={() => getNewQuestion()}
             >
               Change Question

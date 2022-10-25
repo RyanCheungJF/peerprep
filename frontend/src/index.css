@@ -128,7 +128,7 @@
 
   /* Components */
   .button {
-    /* I think this is not used */
+    /* I think this is not used because button design has to change directly via className */
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
   }
   .navbar {
