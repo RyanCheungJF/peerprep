@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../contexts/UserContext'
+import { createReviewStats } from '../api/reviewService'
 import {
   Button,
   Dialog,
@@ -17,7 +19,12 @@ import FormatPaintIcon from '@mui/icons-material/FormatPaint'
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 import { homeUrl } from '../utils/routeConstants'
 
-const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
+const ReviewPartnerDialog = ({
+  dialogOpen,
+  handleCloseDialog,
+  partneruuid,
+}) => {
+  const user = useContext(UserContext)
   const navigate = useNavigate()
 
   const [codeCorrectnessValue, setCodeCorrectnessValue] = useState(0)
@@ -31,17 +38,16 @@ const ReviewPartnerDialog = ({ dialogOpen, handleCloseDialog }) => {
     navigate(homeUrl)
   }
 
-  const handleSubmitReview = () => {
-    /*
-      TODO: Integrate backend of review service
+  const handleSubmitReview = async () => {
+    const FIELDS = [
+      codeCorrectnessValue,
+      codeDesignValue,
+      codeStyleValue,
+      communicationValue,
+      timeManagementValue,
+    ]
 
-      Values are represented as follows:
-        Code Correctness: codeCorrectnessValue
-        Code Design: codeDesignValue
-        Code Style: codeStyleValue
-        Communication: communicationValue
-        Time Management: timeManagementValue
-    */
+    await createReviewStats(user._id, partneruuid, FIELDS)
 
     handleCloseDialog()
     navigate(homeUrl)

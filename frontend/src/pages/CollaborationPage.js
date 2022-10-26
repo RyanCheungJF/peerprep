@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { UserContext } from '../contexts/UserContext'
 import { Box, Button } from '@mui/material'
 import { findQuestion } from '../api/questionService'
 import { deleteRoomService } from '../api/roomservice'
@@ -13,12 +14,14 @@ import { getCollabRoomId } from '../utils/main'
 import { collabSocket, matchingSocket } from '../utils/socket'
 
 const CollaborationPage = () => {
+  const user = useContext(UserContext)
   const location = useLocation()
   const navigate = useNavigate()
 
   const [question, setQuestion] = useState({})
   // const [timeRemaining, setTimeRemaining] = useState({}) // to implement
   const [timeRemaining, setTimeRemaining] = useState('30')
+  const [partneruuid, setPartneruuid] = useState('')
 
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
@@ -55,6 +58,7 @@ const CollaborationPage = () => {
     }
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
+    matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
   }, [location.state, navigate])
 
   useEffect(() => {
@@ -65,6 +69,9 @@ const CollaborationPage = () => {
     collabSocket.on('partner-connected', (roomClients) => {
       // Check if user is the only one in the room or if there are more ppl
       setIsPartnerOnline(roomClients.length > 1)
+    })
+    matchingSocket.on('partner-uuid', (uuid) => {
+      setPartneruuid(uuid)
     })
   }, [])
 
@@ -167,6 +174,7 @@ const CollaborationPage = () => {
       <ReviewPartnerDialog
         dialogOpen={reviewPartnerDialogOpen}
         handleCloseDialog={handleReviewPartnerCloseDialog}
+        partneruuid={partneruuid}
       />
     )
   }
