@@ -49,7 +49,7 @@ router.get('/room', findOneRoom)
 router.post('/room', createRoom)
 router.patch('/room/:room_id', getRoomByRoomId, updateRoom)
 router.delete('/room/:room_id', getRoomByRoomId, deleteRoom)
-router.delete('/user/:username/room', deleteRoomByUsername)
+router.delete('/user/:username/room', deleteRoomByUsername(io))
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

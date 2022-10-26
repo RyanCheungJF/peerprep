@@ -125,7 +125,7 @@ export const deleteRoom = async (req, res) => {
   }
 }
 
-export const deleteRoomByUsername = async (req, res) => {
+export const deleteRoomByUsername = (io) => async (req, res) => {
   const { username } = req.params
   if (!username) {
     return res.status(400).json({ message: 'Username not provided.' })
@@ -139,8 +139,8 @@ export const deleteRoomByUsername = async (req, res) => {
         .json({ message: `No room for user ${username} exists.` })
     }
 
-    // TODO: emit websocket event so that the partner is notified that the room is deleted
-    //       matchingSocket.emit('leave-room', deletedRoom.room_id, 'partner left')
+    // inform partner that the room is now deleted
+    io.to(deletedRoom.room_id).emit('partner-left', 'partner left')
     return res.status(200).json({
       message: `Room for user ${username} deleted successfully!`,
       room: deletedRoom,
