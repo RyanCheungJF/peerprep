@@ -11,6 +11,7 @@ import {
   broadcastConnection,
   broadcastDisconnection,
 } from './controller/room-controller.js'
+import { deleteRoom as httpDeleteRoom } from './controller/express-controller.js'
 
 const PORT = 8400
 
@@ -21,9 +22,7 @@ app.use(cors())
 app.options('*', cors())
 
 const router = express.Router()
-router.delete('/', () => {
-  console.log('delete called')
-})
+router.delete('/room/:roomId', httpDeleteRoom)
 
 app.use('/api/collaboration', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')
