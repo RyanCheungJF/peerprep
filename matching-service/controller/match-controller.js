@@ -9,7 +9,7 @@ import {
   ormCreateRoom as _createRoom,
   ormDeleteRoom as _deleteRoom,
   ormUpdateRoom as _updateRoom,
-  ormDeleteRoomByUserId as _deleteRoomByUserId,
+  ormDeleteRoomByUsername as _deleteRoomByUsername,
 } from '../model/socket-room-orm.js'
 
 export const findMatch = async (req, res) => {
@@ -125,22 +125,24 @@ export const deleteRoom = async (req, res) => {
   }
 }
 
-export const deleteRoomByUserId = async (req, res) => {
-  const { user_id } = req.params
-  if (!user_id) {
-    return res.status(400).json({ message: 'User id not provided.' })
+export const deleteRoomByUsername = async (req, res) => {
+  const { username } = req.params
+  if (!username) {
+    return res.status(400).json({ message: 'Username not provided.' })
   }
 
   try {
-    const deletedRoom = await _deleteRoomByUserId(user_id)
+    const deletedRoom = await _deleteRoomByUsername(username)
     if (!deletedRoom) {
       return res
         .status(404)
-        .json({ message: `No room for user ${user_id} exists.` })
+        .json({ message: `No room for user ${username} exists.` })
     }
 
+    // TODO: emit websocket event so that the partner is notified that the room is deleted
+    //       matchingSocket.emit('leave-room', deletedRoom.room_id, 'partner left')
     return res.status(200).json({
-      message: `Room for user ${user_id} deleted successfully!`,
+      message: `Room for user ${username} deleted successfully!`,
       room: deletedRoom,
     })
   } catch (err) {

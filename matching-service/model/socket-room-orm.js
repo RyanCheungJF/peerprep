@@ -52,9 +52,9 @@ export const ormDeleteRoom = async (room) => {
   }
 }
 
-export const ormDeleteRoomByUserId = async (userId) => {
+export const ormDeleteRoomByUsername = async (username) => {
   try {
-    return deleteRoom_2({ $or: [{ id1: userId }, { id2: userId }] })
+    return deleteRoom_2({ $or: [{ id1: username }, { id2: username }] })
   } catch (err) {
     console.log('ERROR: Could not delete room')
     return { err }
