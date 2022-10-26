@@ -7,6 +7,8 @@ import {
   ormInvalidateJWT as _invalidateJWT,
   ormFindUserById as _findUserById,
 } from '../model/user-orm.js'
+import { deleteMatchRoom } from '../services/matching-service.js'
+import { deleteCollabRoom } from '../services/collaboration-service.js'
 import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
@@ -63,7 +65,28 @@ export const deleteUser = async (req, res) => {
       .json({ message: 'Failed to invalidate user token. User not deleted.' })
   }
 
-  if (await _deleteUser(username)) {
+  // A serially-executed promise to delete the user's matching-svc room, which returns a room id,
+  // and then delete the collab-svc room using that id
+  const _deleteMatchAndCollabRooms = deleteMatchRoom(username).then(
+    (response) => {
+      const roomId = response.data?.room?.room_id
+
+      if (roomId) {
+        return deleteCollabRoom(roomId)
+      } else {
+        console.error(
+          'No deleted room id returned from matching-svc. Likely a bad request or bug from matching-svc.'
+        )
+      }
+    }
+  )
+
+  const [deleteUserResult, _] = await Promise.allSettled([
+    _deleteUser(username),
+    _deleteMatchAndCollabRooms,
+  ])
+
+  if (deleteUserResult) {
     return res
       .status(200)
       .json({ message: `Deleted user ${username} successfully` })
