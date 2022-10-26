@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { getQuestion } from './controller/question-controller.js'
+import { getQuestion, findQuestionById } from './controller/question-controller.js'
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
@@ -11,6 +11,7 @@ app.options('*', cors())
 const router = express.Router()
 
 router.get('/', getQuestion)
+router.get('/:qnsid', findQuestionById)
 
 app.use('/api/question', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')
