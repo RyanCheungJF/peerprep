@@ -9,6 +9,7 @@ import {
   createRoom,
   updateRoom,
   deleteRoom,
+  deleteRoomByUserId,
 } from './controller/match-controller.js'
 import getRoomByRoomId from './middleware/getRoomByRoomId.js'
 
@@ -48,6 +49,7 @@ router.get('/room', findOneRoom)
 router.post('/room', createRoom)
 router.patch('/room/:room_id', getRoomByRoomId, updateRoom)
 router.delete('/room/:room_id', getRoomByRoomId, deleteRoom)
+router.delete('/user/:user_id/room', deleteRoomByUserId)
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

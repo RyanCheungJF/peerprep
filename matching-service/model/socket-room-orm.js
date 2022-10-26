@@ -4,6 +4,7 @@ import {
   createRoom,
   updateRoom,
   deleteRoom,
+  deleteRoom_2,
 } from './repository.js'
 
 export const ormFindAllRooms = async (filter) => {
@@ -45,6 +46,15 @@ export const ormUpdateRoom = async (room_id, body) => {
 export const ormDeleteRoom = async (room) => {
   try {
     return await deleteRoom(room)
+  } catch (err) {
+    console.log('ERROR: Could not delete room')
+    return { err }
+  }
+}
+
+export const ormDeleteRoomByUserId = async (userId) => {
+  try {
+    return deleteRoom_2({ $or: [{ id1: userId }, { id2: userId }] })
   } catch (err) {
     console.log('ERROR: Could not delete room')
     return { err }

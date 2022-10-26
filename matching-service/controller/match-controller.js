@@ -9,6 +9,7 @@ import {
   ormCreateRoom as _createRoom,
   ormDeleteRoom as _deleteRoom,
   ormUpdateRoom as _updateRoom,
+  ormDeleteRoomByUserId as _deleteRoomByUserId,
 } from '../model/socket-room-orm.js'
 
 export const findMatch = async (req, res) => {
@@ -119,6 +120,29 @@ export const deleteRoom = async (req, res) => {
     return res
       .status(200)
       .json({ message: 'Room ' + room.room_id + ' deleted successfully!' })
+  } catch (err) {
+    return res.status(500).json({ message: 'Error with deleting room!' })
+  }
+}
+
+export const deleteRoomByUserId = async (req, res) => {
+  const { user_id } = req.params
+  if (!user_id) {
+    return res.status(400).json({ message: 'User id not provided.' })
+  }
+
+  try {
+    const deletedRoom = await _deleteRoomByUserId(user_id)
+    if (!deletedRoom) {
+      return res
+        .status(404)
+        .json({ message: `No room for user ${user_id} exists.` })
+    }
+
+    return res.status(200).json({
+      message: `Room for user ${user_id} deleted successfully!`,
+      room: deletedRoom,
+    })
   } catch (err) {
     return res.status(500).json({ message: 'Error with deleting room!' })
   }
