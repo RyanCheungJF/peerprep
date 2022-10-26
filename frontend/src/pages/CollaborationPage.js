@@ -12,14 +12,18 @@ import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
 import { getCollabRoomId } from '../utils/main'
 import { expirationCheck } from '../utils/main'
 import { collabSocket, matchingSocket } from '../utils/socket'
+import moment from 'moment'
 
 const CollaborationPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const TENSECONDS = 10 * 1000
+  const MAXTIME = 30
+
   const [question, setQuestion] = useState({})
-  // const [timeRemaining, setTimeRemaining] = useState({}) // to implement
-  const [timeRemaining, setTimeRemaining] = useState('30')
+  const [timeRemaining, setTimeRemaining] = useState(MAXTIME)
+  const [room, setRoom] = useState({})
 
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
@@ -73,27 +77,49 @@ const CollaborationPage = () => {
 
     handleLeaveRoomConfirmationCloseDialog()
     handleReviewPartnerOpenDialog()
-  }, [location.state.qnsid, location.state.room])
+  }, [location.state])
 
-  const checkExpiry = useCallback(async (room_id) => {
-    try {
-      const res = await findRoomService({ room_id: room_id })
-      if (res.data && JSON.stringify(res.data) !== '{}') {
-        expirationCheck(
-          res.data.datetime,
-          async () => {
-            console.log(`room: ${room_id} expired`)
-            // await deleteRoomService(room_id)
-            // navigate(homeUrl, { replace: true })
-            leaveRoom()
-          },
-          () => {}
-        )
+  const getTimeRemaining = useCallback(() => {
+    const now = moment()
+    const end = moment(room.datetime)
+    const diff = now.diff(end, 'minutes')
+    const timeLeft = diff < 30 ? MAXTIME - diff : 0
+    return timeLeft
+  }, [room.datetime])
+
+  const checkExpiry = useCallback(
+    async (room_id) => {
+      try {
+        const res = await findRoomService({ room_id: room_id })
+        if (res.data && JSON.stringify(res.data) !== '{}') {
+          setRoom(res.data)
+          expirationCheck(
+            res.data.datetime,
+            async () => {
+              console.log(`room: ${room_id} expired`)
+              // await deleteRoomService(room_id)
+              // navigate(homeUrl, { replace: true })
+              leaveRoom()
+            },
+            () => {
+              setTimeRemaining(getTimeRemaining())
+            }
+          )
+        }
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }, [leaveRoom])
+    },
+    [leaveRoom, getTimeRemaining]
+  )
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimeRemaining(() => getTimeRemaining())
+    }, TENSECONDS)
+
+    return () => clearInterval(countdown)
+  }, [room.datetime, getTimeRemaining, TENSECONDS])
 
   useEffect(() => {
     if (!location.state?.room) {
