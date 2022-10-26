@@ -20,8 +20,12 @@ const HomePage = () => {
         try {
           const res = await findRoomService(filter)
           if (res.data && JSON.stringify(res.data) !== '{}') {
-            expirationCheck(res.data.datetime, async (diff) => {
-              if (diff <= 30) {
+            expirationCheck(
+              res.data.datetime,
+              async () => {
+                await deleteRoomService(res.data.room_id)
+              },
+              async () =>
                 navigate(collabUrl, {
                   state: {
                     room: res.data.room_id,
@@ -29,10 +33,7 @@ const HomePage = () => {
                     qnsid: res.data.qnsid,
                   },
                 })
-              } else {
-                await deleteRoomService(res.data.room_id)
-              }
-            })
+            )
           }
         } catch (err) {
           console.log(err)

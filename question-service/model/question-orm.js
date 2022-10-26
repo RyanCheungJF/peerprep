@@ -1,4 +1,4 @@
-import { findQuestionByFilter } from './repository.js'
+import { findQuestionByFilter, findOneQuestionByFilter } from './repository.js'
 
 export const ormFindByDifficulty = async (difficulty) => {
   try {
@@ -11,7 +11,7 @@ export const ormFindByDifficulty = async (difficulty) => {
 
 export const ormFindById = async (id) => {
   try {
-    return await findQuestionByFilter({ qnsid: id })
+    return await findOneQuestionByFilter({ qnsid: id })
   } catch (err) {
     console.log('ERROR: Could not retrieve question')
     return { err }

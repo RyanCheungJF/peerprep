@@ -18,3 +18,7 @@ db.collection('questionmodels')
 export const findQuestionByFilter = async (query) => {
   return QuestionModel.find(query)
 }
+
+export const findOneQuestionByFilter = async (query) => {
+  return QuestionModel.findOne(query)
+}

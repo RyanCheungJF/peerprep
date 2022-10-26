@@ -11,13 +11,17 @@ export const getJWTExpiry = () =>
   new Date(new Date().getTime() + JWT_EXPIRY_IN_MINS * 60 * 1000)
 
 
-export function expirationCheck(datetime, expirationFunction) {
+export function expirationCheck(datetime, expiredCallBack, notExpiredCallBack) {
   const now = moment()
   const expiration = moment(datetime)
 
   // get the difference between the moments of the two dates in minutes
   const diff = now.diff(expiration, 'minutes')
 
-  expirationFunction(diff)
+  if (diff > 0) {
+    expiredCallBack()
+  } else {
+    notExpiredCallBack()
+  }
   
 }

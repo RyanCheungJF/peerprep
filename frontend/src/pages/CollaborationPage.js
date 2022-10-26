@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Box, Button } from '@mui/material'
 import { findQuestionById } from '../api/questionService'
@@ -11,7 +11,6 @@ import Question from '../components/Question'
 import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
 import { getCollabRoomId } from '../utils/main'
 import { expirationCheck } from '../utils/main'
-import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 
 const CollaborationPage = () => {
@@ -26,8 +25,10 @@ const CollaborationPage = () => {
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
   // Leave Room Confirmation Dialog
-  const [leaveRoomConfirmationDialogOpen, setLeaveRoomConfirmationDialogOpen] =
-    useState(false)
+  const [
+    leaveRoomConfirmationDialogOpen,
+    setLeaveRoomConfirmationDialogOpen,
+  ] = useState(false)
   const handleLeaveRoomConfirmationCloseDialog = () =>
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
@@ -50,18 +51,45 @@ const CollaborationPage = () => {
     }
   }, [])
 
+  const leaveRoom = useCallback(async () => {
+    try {
+      console.log('deleting room with id: ' + location.state.room)
+      const res = await deleteRoomService(location.state.room)
+      matchingSocket.emit('leave-room', location.state.room, 'partner left')
+      collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
+      delete location.state.qnsid
+      console.log(JSON.stringify(res.data))
+    } catch (err) {
+      console.log(err)
+    }
+
+    // TO CHECK: CHECK frontend again after matching service bug is rectified
+
+    // After room is deleted, setIsPartnerLeft as true and setIsPartnerOnline as
+    // false so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog
+    // will not be shown if partner happens to submit of skip review first
+    setIsPartnerLeft(true)
+    setIsPartnerOnline(false)
+
+    handleLeaveRoomConfirmationCloseDialog()
+    handleReviewPartnerOpenDialog()
+  }, [location.state.qnsid, location.state.room])
+
   useEffect(() => {
     const checkExpiry = async (room_id) => {
       try {
         const res = await findRoomService(room_id)
         if (res.data && JSON.stringify(res.data) !== '{}') {
-          expirationCheck(res.data.datetime, async (diff) => {
-            if (diff > 30) {
+          expirationCheck(
+            res.data.datetime,
+            async () => {
               console.log(`room: ${room_id} expired`)
-              await deleteRoomService(room_id)
-              navigate(homeUrl, { replace: true })
-            }
-          })
+              // await deleteRoomService(room_id)
+              // navigate(homeUrl, { replace: true })
+              leaveRoom()
+            },
+            () => {}
+          )
         }
       } catch (error) {
         console.log(error)
@@ -77,7 +105,7 @@ const CollaborationPage = () => {
 
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
-  }, [location.state, navigate])
+  }, [location.state, navigate, leaveRoom])
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {
@@ -104,7 +132,7 @@ const CollaborationPage = () => {
     if (location.state && location.state.qnsid) {
       try {
         const res = await findQuestionById(location.state.qnsid)
-        setQuestion(res.data[0])
+        setQuestion(res.data)
       } catch (err) {
         console.log('ERROR', err)
       }
@@ -113,40 +141,17 @@ const CollaborationPage = () => {
         if (location.state) {
           const res = await findRoomService({ room_id: location.state.room })
           const qnsRes = await findQuestionById(res.data.qnsid)
-          setQuestion(qnsRes.data[0])
+          setQuestion(qnsRes.data)
         }
       } catch (err) {
         console.log('ERROR', err)
       }
     }
   }
-  
+
   const getNewQuestion = async () => {
     // TODO: Handle the logic such that the new question is
     // set for both parties when one of them presses the button
-  }
-
-  const leaveRoom = async () => {
-    try {
-      console.log('deleting room with id: ' + location.state.room)
-      const res = await deleteRoomService(location.state.room)
-      matchingSocket.emit('leave-room', location.state.room, 'partner left')
-      collabSocket.emit('leave-room', getCollabRoomId(location.state.room))
-      console.log(JSON.stringify(res.data))
-    } catch (err) {
-      console.log(err)
-    }
-
-    // TO CHECK: CHECK frontend again after matching service bug is rectified
-
-    // After room is deleted, setIsPartnerLeft as true and setIsPartnerOnline as
-    // false so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog
-    // will not be shown if partner happens to submit of skip review first
-    setIsPartnerLeft(true)
-    setIsPartnerOnline(false)
-
-    handleLeaveRoomConfirmationCloseDialog()
-    handleReviewPartnerOpenDialog()
   }
 
   const renderPartnerOfflineAlertDialog = () => {
