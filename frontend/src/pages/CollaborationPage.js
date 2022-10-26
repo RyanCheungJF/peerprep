@@ -75,27 +75,27 @@ const CollaborationPage = () => {
     handleReviewPartnerOpenDialog()
   }, [location.state.qnsid, location.state.room])
 
-  useEffect(() => {
-    const checkExpiry = async (room_id) => {
-      try {
-        const res = await findRoomService(room_id)
-        if (res.data && JSON.stringify(res.data) !== '{}') {
-          expirationCheck(
-            res.data.datetime,
-            async () => {
-              console.log(`room: ${room_id} expired`)
-              // await deleteRoomService(room_id)
-              // navigate(homeUrl, { replace: true })
-              leaveRoom()
-            },
-            () => {}
-          )
-        }
-      } catch (error) {
-        console.log(error)
+  const checkExpiry = useCallback(async (room_id) => {
+    try {
+      const res = await findRoomService({ room_id: room_id })
+      if (res.data && JSON.stringify(res.data) !== '{}') {
+        expirationCheck(
+          res.data.datetime,
+          async () => {
+            console.log(`room: ${room_id} expired`)
+            // await deleteRoomService(room_id)
+            // navigate(homeUrl, { replace: true })
+            leaveRoom()
+          },
+          () => {}
+        )
       }
+    } catch (error) {
+      console.log(error)
     }
+  }, [leaveRoom])
 
+  useEffect(() => {
     if (!location.state?.room) {
       setIsPartnerLeft(true)
       return
@@ -105,7 +105,7 @@ const CollaborationPage = () => {
 
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
-  }, [location.state, navigate, leaveRoom])
+  }, [location.state, checkExpiry])
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {

@@ -18,7 +18,7 @@ export function expirationCheck(datetime, expiredCallBack, notExpiredCallBack) {
   // get the difference between the moments of the two dates in minutes
   const diff = now.diff(expiration, 'minutes')
 
-  if (diff > 0) {
+  if (diff > 30) {
     expiredCallBack()
   } else {
     notExpiredCallBack()
