@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { UserContext } from '../contexts/UserContext'
 import { Box, Button } from '@mui/material'
@@ -28,10 +28,8 @@ const CollaborationPage = () => {
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
   // Leave Room Confirmation Dialog
-  const [
-    leaveRoomConfirmationDialogOpen,
-    setLeaveRoomConfirmationDialogOpen,
-  ] = useState(false)
+  const [leaveRoomConfirmationDialogOpen, setLeaveRoomConfirmationDialogOpen] =
+    useState(false)
   const handleLeaveRoomConfirmationCloseDialog = () =>
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
@@ -78,25 +76,28 @@ const CollaborationPage = () => {
     handleReviewPartnerOpenDialog()
   }, [location.state.qnsid, location.state.room])
 
-  const checkExpiry = useCallback(async (room_id) => {
-    try {
-      const res = await findRoomService({ room_id: room_id })
-      if (res.data && JSON.stringify(res.data) !== '{}') {
-        expirationCheck(
-          res.data.datetime,
-          async () => {
-            console.log(`room: ${room_id} expired`)
-            // await deleteRoomService(room_id)
-            // navigate(homeUrl, { replace: true })
-            leaveRoom()
-          },
-          () => {}
-        )
+  const checkExpiry = useCallback(
+    async (room_id) => {
+      try {
+        const res = await findRoomService({ room_id: room_id })
+        if (res.data && JSON.stringify(res.data) !== '{}') {
+          expirationCheck(
+            res.data.datetime,
+            async () => {
+              console.log(`room: ${room_id} expired`)
+              // await deleteRoomService(room_id)
+              // navigate(homeUrl, { replace: true })
+              leaveRoom()
+            },
+            () => {}
+          )
+        }
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }, [leaveRoom])
+    },
+    [leaveRoom]
+  )
 
   useEffect(() => {
     if (!location.state?.room) {
@@ -110,6 +111,8 @@ const CollaborationPage = () => {
     matchingSocket.emit('join-room', location.state.room)
     matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
   }, [location.state, checkExpiry])
+
+  useEffect(() => {}, [partneruuid])
 
   useEffect(() => {
     collabSocket.on('partner-disconnected', () => {

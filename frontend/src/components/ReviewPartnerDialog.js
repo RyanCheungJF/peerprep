@@ -47,7 +47,7 @@ const ReviewPartnerDialog = ({
       timeManagementValue,
     ]
 
-    await createReviewStats(user._id, partneruuid, FIELDS)
+    await createReviewStats(partneruuid, user._id, FIELDS)
 
     handleCloseDialog()
     navigate(homeUrl)
