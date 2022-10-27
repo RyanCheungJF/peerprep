@@ -7,12 +7,8 @@ let SocketRoomModelSchema = new Schema({
     required: true,
     unique: true,
   },
-  id1_present: {
-    type: Boolean,
-    required: true,
-  },
-  id2_present: {
-    type: Boolean,
+  qnsid: {
+    type: Number,
     required: true,
   },
   difficulty: {

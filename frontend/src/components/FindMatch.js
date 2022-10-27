@@ -8,8 +8,9 @@ import {
   MenuItem,
   Select,
 } from '@mui/material'
-import { findMatch, deleteMatch } from '../api/matchingService'
+import { findQuestionByDifficulty as _findByDifficulty } from '../api/questionService'
 import { createRoomService } from '../api/roomservice'
+import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
 import { collabUrl } from '../utils/routeConstants'
 import { matchingSocket } from '../utils/socket'
@@ -62,13 +63,23 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      matchingSocket.emit('notify-partner', room, user.username, difficulty)
-      navigate(collabUrl, {
-        state: {
-          room: user.username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase())
+      if (questionRes) {
+        matchingSocket.emit(
+          'notify-partner',
+          room,
+          user.username,
+          difficulty,
+          questionRes.data.qnsid
+        )
+        navigate(collabUrl, {
+          state: {
+            room: user.username,
+            difficulty: difficulty.toLowerCase(),
+            qnsid: questionRes.data.qnsid,
+          },
+        })
+      }
     }
   }
 
@@ -107,13 +118,12 @@ const FindMatch = () => {
     )
   }
 
-  matchingSocket.on('found-connection', (username, difficulty) => {
+  matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
     const room = {
       room_id: username,
       id1: username,
       id2: user.username,
-      id1_present: true,
-      id2_present: true,
+      qnsid: qnsid,
       difficulty: difficulty.toLowerCase(),
       datetime: new Date(),
     }
@@ -128,6 +138,7 @@ const FindMatch = () => {
           state: {
             room: room.room_id,
             difficulty: room.difficulty,
+            qnsid: room.qnsid,
           },
         })
       } catch (e) {
