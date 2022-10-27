@@ -11,7 +11,6 @@ import {
   deleteRoom,
   deleteRoomByUsername,
 } from './controller/match-controller.js'
-import getRoomByRoomId from './middleware/getRoomByRoomId.js'
 
 const SOCKET_PORT = 8300
 
@@ -27,8 +26,8 @@ io.on('connection', (socket) => {
   socket.on('join-room', (room) => {
     socket.join(room)
   })
-  socket.on('notify-partner', (room, username, difficulty) => {
-    socket.to(room).emit('found-connection', username, difficulty)
+  socket.on('notify-partner', (room, username, difficulty, qnsid) => {
+    socket.to(room).emit('found-connection', username, difficulty, qnsid)
   })
   socket.on('leave-room', (room, message) => {
     socket.to(room).emit('partner-left', message)
@@ -47,8 +46,8 @@ router.delete('/', deleteMatch)
 router.get('/rooms', findAllRooms)
 router.get('/room', findOneRoom)
 router.post('/room', createRoom)
-router.patch('/room/:room_id', getRoomByRoomId, updateRoom)
-router.delete('/room/:room_id', getRoomByRoomId, deleteRoom)
+router.patch('/room/:room_id', updateRoom)
+router.delete('/room/:room_id', deleteRoom)
 router.delete('/user/:username/room', deleteRoomByUsername(io))
 
 app.use('/api/match', router).all((_, res) => {

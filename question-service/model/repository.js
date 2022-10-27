@@ -15,6 +15,10 @@ let db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 db.collection('questionmodels')
 
-export const findQuestionByDifficulty = async (query) => {
+export const findQuestionByFilter = async (query) => {
   return QuestionModel.find(query)
+}
+
+export const findOneQuestionByFilter = async (query) => {
+  return QuestionModel.findOne(query)
 }
