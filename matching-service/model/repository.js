@@ -31,12 +31,13 @@ export const createRoom = async (params) => {
   return new socketRoomModel(params)
 }
 
-// delete a room
-export const deleteRoom = async (room_id) => {
-  return socketRoomModel.deleteOne({ room_id: room_id })
+// deletes a room
+export const deleteRoom = async (filter) => {
+  return socketRoomModel.deleteOne(filter)
 }
 
-export const deleteRoom_2 = async (filter) => {
+// deletes a room and returns the deleted room
+export const deleteAndReturnRoom = async (filter) => {
   return socketRoomModel.findOneAndDelete(filter)
 }
 
