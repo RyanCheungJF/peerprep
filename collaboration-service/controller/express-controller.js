@@ -11,7 +11,7 @@ export const deleteRoom = async (req, res) => {
   const collabRoomId = `${COLLAB_ROOM_PREFIX}${roomId}`
   const [dbResult, redisResult] = await Promise.allSettled([
     _deleteRoom(collabRoomId),
-    _redisDeleteRoom(collabRoomId), //redis operation doesn't fail or throw erors
+    _redisDeleteRoom(collabRoomId),
   ])
 
   if (
