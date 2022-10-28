@@ -7,6 +7,7 @@ import {
   ormInvalidateJWT as _invalidateJWT,
   ormFindUserById as _findUserById,
 } from '../model/user-orm.js'
+import { invalidateReviewCache } from '../services/reviewService.js'
 import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
@@ -125,8 +126,12 @@ export const updateUserPassword = async (req, res) => {
 }
 
 export const logoutUser = async (req, res) => {
-  const invalidationResult = await _invalidateJWT(req.token)
-  if (invalidationResult) {
+  const [jwtInvalidationResult, _] = await Promise.allSettled([
+    _invalidateJWT(req.token),
+    invalidateReviewCache(req.userId),
+  ])
+
+  if (jwtInvalidationResult) {
     return res
       .status(200)
       .json({ messsage: 'User logged out - token invalidated.' })

@@ -31,6 +31,9 @@ io.on('connection', (socket) => {
   socket.on('leave-room', (room, message) => {
     socket.to(room).emit('partner-left', message)
   })
+  socket.on('get-partner-uuid', (room, uuid) => {
+    socket.to(room).emit('partner-uuid', uuid)
+  })
 })
 
 app.use(express.urlencoded({ extended: true }))

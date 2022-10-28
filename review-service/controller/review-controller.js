@@ -63,19 +63,34 @@ export const getUserScores = async (req, res) => {
     return res.status(200).json(generateAverageScoresForUser(cacheScores))
   }
 
-  const reviews = await _getUserScores(userId)
-  if (!reviews || reviews.length === 0) {
-    return res.status(500).json({ message: `${userId} has no reviews` })
-  }
+  try {
+    const reviews = await _getUserScores(userId)
+    if (!reviews || reviews.length === 0) {
+      const scoresObject = {
+        userId: userId,
+        totalReviews: 0,
+      }
+      FIELDS.forEach((field) => {
+        scoresObject[field] = 0
+      })
+      return res.status(200).json(scoresObject)
+    }
 
-  const totalScores = generateTotalScoresForUser(reviews, userId)
-  await writeScoresToCache(totalScores)
-  return res.status(200).json(generateAverageScoresForUser(totalScores))
+    const totalScores = generateTotalScoresForUser(reviews, userId)
+    await writeScoresToCache(totalScores)
+    return res.status(200).json(generateAverageScoresForUser(totalScores))
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: 'Database error when reading records' })
+  }
 }
 
 export const createScores = async (req, res) => {
   try {
+    console.log(req.body)
     const { revieweeid, reviewerid, scores } = req.body
+    console.log(revieweeid, reviewerid, scores)
     if (!(revieweeid && reviewerid && scores.length === FIELDS.length)) {
       return res
         .status(400)
@@ -109,7 +124,7 @@ export const createScores = async (req, res) => {
 export const deleteUserScoresFromCache = async (req, res) => {
   const userId = req.query.userId
   if (!userId) {
-    return res.status(400).json({ message: 'Username missing!' })
+    return res.status(400).json({ message: 'User ID missing!' })
   }
 
   const successfulDelete = await deleteScoresFromCache(userId)
@@ -121,7 +136,7 @@ export const deleteUserScoresFromCache = async (req, res) => {
 export const deleteUserScoresFromDatabase = async (req, res) => {
   const userId = req.query.userId
   if (!userId) {
-    return res.status(400).json({ message: 'Username missing!' })
+    return res.status(400).json({ message: 'User ID missing!' })
   }
 
   if (
