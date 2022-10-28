@@ -20,11 +20,11 @@ const CollaborationPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const TENSECONDS = 10 * 1000
-  const MAXTIME = 30
+  const TEN_SEC_IN_MS = 10 * 1000
+  const MAX_TIME_IN_MIN = 30
 
   const [question, setQuestion] = useState({})
-  const [timeRemaining, setTimeRemaining] = useState(MAXTIME)
+  const [timeRemaining, setTimeRemaining] = useState(MAX_TIME_IN_MIN)
   const [room, setRoom] = useState({})
   const [partneruuid, setPartneruuid] = useState('')
 
@@ -84,7 +84,7 @@ const CollaborationPage = () => {
     const now = moment()
     const end = moment(room.datetime)
     const diff = now.diff(end, 'minutes')
-    const timeLeft = diff < 30 ? MAXTIME - diff : 0
+    const timeLeft = diff < MAX_TIME_IN_MIN ? MAX_TIME_IN_MIN - diff : 0
     return timeLeft
   }, [room.datetime])
 
@@ -117,10 +117,10 @@ const CollaborationPage = () => {
   useEffect(() => {
     const countdown = setInterval(() => {
       setTimeRemaining(() => getTimeRemaining())
-    }, TENSECONDS)
+    }, TEN_SEC_IN_MS)
 
     return () => clearInterval(countdown)
-  }, [room.datetime, getTimeRemaining, TENSECONDS])
+  }, [room.datetime, getTimeRemaining, TEN_SEC_IN_MS])
 
   useEffect(() => {
     if (!location.state?.room) {
@@ -133,7 +133,7 @@ const CollaborationPage = () => {
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
     matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
-  }, [location.state, checkExpiry])
+  }, [location.state, checkExpiry, user._id])
 
   useEffect(() => {}, [partneruuid])
 
