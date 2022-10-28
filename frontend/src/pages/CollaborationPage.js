@@ -188,6 +188,15 @@ const CollaborationPage = () => {
 
   useEffect(() => {}, [partneruuid])
 
+  useEffect(() => {
+    console.log('========================================')
+    console.log('partneruuid: ' + partneruuid)
+    console.log('1. isOwnselfLeft: ' + isOwnselfLeft)
+    console.log('2. isPartnerOnline: ' + isPartnerOnline)
+    console.log('3. isPartnerLeft: ' + isPartnerLeft)
+    console.log('========================================')
+  }, [partneruuid, isOwnselfLeft, isPartnerOnline, isPartnerLeft])
+
   const renderPartnerOfflineAlertDialog = () => {
     return (
       <AlertDialog
