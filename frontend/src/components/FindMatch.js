@@ -22,7 +22,7 @@ const FindMatch = () => {
   const navigate = useNavigate()
 
   // Define finding match time out seconds
-  const findingMatchTimeOutSeconds = 30
+  const FINDING_MATCH_TIMEOUT_SEC = 30
 
   const [difficulty, setDifficulty] = useState('')
   const [room, setRoom] = useState()
@@ -111,7 +111,7 @@ const FindMatch = () => {
       <FindingMatchDialog
         dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
-        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        findingMatchTimeOutSeconds={FINDING_MATCH_TIMEOUT_SEC}
         startMatchingService={startMatchingService}
         stopMatchingService={stopMatchingService}
       />
