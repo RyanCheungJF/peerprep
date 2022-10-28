@@ -12,6 +12,7 @@ import Question from '../components/Question'
 import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
 import { getCollabRoomId } from '../utils/main'
 import { expirationCheck } from '../utils/main'
+import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import moment from 'moment'
 
@@ -28,6 +29,7 @@ const CollaborationPage = () => {
   const [room, setRoom] = useState({})
   const [partneruuid, setPartneruuid] = useState('')
 
+  const [isOwnselfLeft, setIsOwnselfLeft] = useState(false)
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
@@ -70,11 +72,10 @@ const CollaborationPage = () => {
 
     // TO CHECK: CHECK frontend again after matching service bug is rectified
 
-    // After room is deleted, setIsPartnerLeft as true and setIsPartnerOnline as
-    // false so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog
-    // will not be shown if partner happens to submit of skip review first
-    setIsPartnerLeft(true)
-    setIsPartnerOnline(false)
+    // After user leaves the room and room is deleted, setIsOwnselfLeft to true
+    // so that either PartnerLeftAlertDialog or PartnerOfflineAlertDialog will
+    // not open if partner happens to submit or skip review first
+    setIsOwnselfLeft(true)
 
     handleLeaveRoomConfirmationCloseDialog()
     handleReviewPartnerOpenDialog()
@@ -124,7 +125,7 @@ const CollaborationPage = () => {
 
   useEffect(() => {
     if (!location.state?.room) {
-      setIsPartnerLeft(true)
+      navigate(homeUrl, { replace: true })
       return
     }
 
@@ -133,7 +134,7 @@ const CollaborationPage = () => {
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
     matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
-  }, [location.state, checkExpiry, user._id])
+  }, [location.state, navigate, checkExpiry, user._id])
 
   useEffect(() => {}, [partneruuid])
 
@@ -190,7 +191,7 @@ const CollaborationPage = () => {
   const renderPartnerOfflineAlertDialog = () => {
     return (
       <AlertDialog
-        dialogOpen={!isPartnerOnline && !isPartnerLeft}
+        dialogOpen={!isOwnselfLeft && !isPartnerOnline && !isPartnerLeft}
         handleCloseDialog={leaveRoom}
         dialogTitle="Partner Disconnected"
         dialogMsg="Your partner has disconnected. Waiting for him/her to reconnect..."
@@ -202,7 +203,7 @@ const CollaborationPage = () => {
   const renderPartnerLeftAlertDialog = () => {
     return (
       <AlertDialog
-        dialogOpen={isPartnerLeft}
+        dialogOpen={!isOwnselfLeft && isPartnerLeft && !isPartnerOnline}
         handleCloseDialog={handleReviewPartnerOpenDialog}
         dialogTitle="Partner Left"
         dialogMsg="Your partner has left the room. You may now review your partner."
