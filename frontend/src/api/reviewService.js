@@ -9,3 +9,11 @@ export const getReviewStats = async (userId) => {
   })
   return res
 }
+
+export const createReviewStats = async (revieweeid, reviewerid, scores) => {
+  await axios.post(URL_REVIEW_SVC, {
+    revieweeid,
+    reviewerid,
+    scores,
+  })
+}
