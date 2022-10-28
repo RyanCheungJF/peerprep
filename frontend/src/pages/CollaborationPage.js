@@ -24,9 +24,9 @@ const CollaborationPage = () => {
   const TEN_SEC_IN_MS = 10 * 1000
   const MAX_TIME_IN_MIN = 30
 
+  const [room, setRoom] = useState({})
   const [question, setQuestion] = useState({})
   const [timeRemaining, setTimeRemaining] = useState(MAX_TIME_IN_MIN)
-  const [room, setRoom] = useState({})
   const [partneruuid, setPartneruuid] = useState('')
 
   const [isOwnselfLeft, setIsOwnselfLeft] = useState(false)
@@ -47,16 +47,66 @@ const CollaborationPage = () => {
   const handleReviewPartnerOpenDialog = () => setReviewPartnerDialogOpen(true)
 
   useEffect(() => {
-    getQuestion()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
     collabSocket.connect()
     return () => {
       collabSocket.disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    collabSocket.on('partner-disconnected', () => {
+      // TO CHECK: CHECK frontend again after matching service bug is rectified
+      setIsPartnerOnline(false)
+    })
+    collabSocket.on('partner-connected', (roomClients) => {
+      // Check if user is the only one in the room or if there are more ppl
+      setIsPartnerOnline(roomClients.length > 1)
+    })
+    matchingSocket.on('partner-uuid', (uuid) => {
+      setPartneruuid(uuid)
+    })
+  }, [])
+
+  useEffect(() => {
+    matchingSocket.on('partner-left', (data) => {
+      if (data === 'partner left') {
+        // TO CHECK: CHECK frontend again after matching service bug is rectified
+        setIsPartnerLeft(true)
+        setIsPartnerOnline(false) // so that it will not show PartnerOfflineAlertDialog
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    getQuestion()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const getQuestion = async () => {
+    if (location.state && location.state.qnsid) {
+      try {
+        const res = await findQuestionById(location.state.qnsid)
+        setQuestion(res.data)
+      } catch (err) {
+        console.log('ERROR: ', err)
+      }
+    } else {
+      try {
+        if (location.state) {
+          const res = await findRoomService({ room_id: location.state.room })
+          const qnsRes = await findQuestionById(res.data.qnsid)
+          setQuestion(qnsRes.data)
+        }
+      } catch (err) {
+        console.log('ERROR: ', err)
+      }
+    }
+  }
+
+  const getNewQuestion = async () => {
+    // TODO: Handle the logic such that the new question is
+    // set for both parties when one of them presses the button
+  }
 
   const leaveRoom = useCallback(async () => {
     try {
@@ -89,6 +139,14 @@ const CollaborationPage = () => {
     return timeLeft
   }, [room.datetime])
 
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimeRemaining(() => getTimeRemaining())
+    }, TEN_SEC_IN_MS)
+
+    return () => clearInterval(countdown)
+  }, [room.datetime, getTimeRemaining, TEN_SEC_IN_MS])
+
   const checkExpiry = useCallback(
     async (room_id) => {
       try {
@@ -116,14 +174,6 @@ const CollaborationPage = () => {
   )
 
   useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimeRemaining(() => getTimeRemaining())
-    }, TEN_SEC_IN_MS)
-
-    return () => clearInterval(countdown)
-  }, [room.datetime, getTimeRemaining, TEN_SEC_IN_MS])
-
-  useEffect(() => {
     if (!location.state?.room) {
       navigate(homeUrl, { replace: true })
       return
@@ -137,56 +187,6 @@ const CollaborationPage = () => {
   }, [location.state, navigate, checkExpiry, user._id])
 
   useEffect(() => {}, [partneruuid])
-
-  useEffect(() => {
-    collabSocket.on('partner-disconnected', () => {
-      // TO CHECK: CHECK frontend again after matching service bug is rectified
-      setIsPartnerOnline(false)
-    })
-    collabSocket.on('partner-connected', (roomClients) => {
-      // Check if user is the only one in the room or if there are more ppl
-      setIsPartnerOnline(roomClients.length > 1)
-    })
-    matchingSocket.on('partner-uuid', (uuid) => {
-      setPartneruuid(uuid)
-    })
-  }, [])
-
-  useEffect(() => {
-    matchingSocket.on('partner-left', (data) => {
-      if (data === 'partner left') {
-        // TO CHECK: CHECK frontend again after matching service bug is rectified
-        setIsPartnerLeft(true)
-        setIsPartnerOnline(false) // so that it will not show PartnerOfflineAlertDialog
-      }
-    })
-  }, [navigate])
-
-  const getQuestion = async () => {
-    if (location.state && location.state.qnsid) {
-      try {
-        const res = await findQuestionById(location.state.qnsid)
-        setQuestion(res.data)
-      } catch (err) {
-        console.log('ERROR', err)
-      }
-    } else {
-      try {
-        if (location.state) {
-          const res = await findRoomService({ room_id: location.state.room })
-          const qnsRes = await findQuestionById(res.data.qnsid)
-          setQuestion(qnsRes.data)
-        }
-      } catch (err) {
-        console.log('ERROR', err)
-      }
-    }
-  }
-
-  const getNewQuestion = async () => {
-    // TODO: Handle the logic such that the new question is
-    // set for both parties when one of them presses the button
-  }
 
   const renderPartnerOfflineAlertDialog = () => {
     return (
