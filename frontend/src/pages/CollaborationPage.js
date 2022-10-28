@@ -13,15 +13,19 @@ import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
 import { getCollabRoomId } from '../utils/main'
 import { expirationCheck } from '../utils/main'
 import { collabSocket, matchingSocket } from '../utils/socket'
+import moment from 'moment'
 
 const CollaborationPage = () => {
   const user = useContext(UserContext)
   const location = useLocation()
   const navigate = useNavigate()
 
+  const TEN_SEC_IN_MS = 10 * 1000
+  const MAX_TIME_IN_MIN = 30
+
   const [question, setQuestion] = useState({})
-  // const [timeRemaining, setTimeRemaining] = useState({}) // to implement
-  const [timeRemaining, setTimeRemaining] = useState('30')
+  const [timeRemaining, setTimeRemaining] = useState(MAX_TIME_IN_MIN)
+  const [room, setRoom] = useState({})
   const [partneruuid, setPartneruuid] = useState('')
 
   const [isPartnerOnline, setIsPartnerOnline] = useState(true)
@@ -74,13 +78,22 @@ const CollaborationPage = () => {
 
     handleLeaveRoomConfirmationCloseDialog()
     handleReviewPartnerOpenDialog()
-  }, [location.state.qnsid, location.state.room])
+  }, [location.state])
+
+  const getTimeRemaining = useCallback(() => {
+    const now = moment()
+    const end = moment(room.datetime)
+    const diff = now.diff(end, 'minutes')
+    const timeLeft = diff < MAX_TIME_IN_MIN ? MAX_TIME_IN_MIN - diff : 0
+    return timeLeft
+  }, [room.datetime])
 
   const checkExpiry = useCallback(
     async (room_id) => {
       try {
         const res = await findRoomService({ room_id: room_id })
         if (res.data && JSON.stringify(res.data) !== '{}') {
+          setRoom(res.data)
           expirationCheck(
             res.data.datetime,
             async () => {
@@ -89,15 +102,25 @@ const CollaborationPage = () => {
               // navigate(homeUrl, { replace: true })
               leaveRoom()
             },
-            () => {}
+            () => {
+              setTimeRemaining(getTimeRemaining())
+            }
           )
         }
       } catch (error) {
         console.log(error)
       }
     },
-    [leaveRoom]
+    [leaveRoom, getTimeRemaining]
   )
+
+  useEffect(() => {
+    const countdown = setInterval(() => {
+      setTimeRemaining(() => getTimeRemaining())
+    }, TEN_SEC_IN_MS)
+
+    return () => clearInterval(countdown)
+  }, [room.datetime, getTimeRemaining, TEN_SEC_IN_MS])
 
   useEffect(() => {
     if (!location.state?.room) {
@@ -110,7 +133,7 @@ const CollaborationPage = () => {
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
     matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
-  }, [location.state, checkExpiry])
+  }, [location.state, checkExpiry, user._id])
 
   useEffect(() => {}, [partneruuid])
 
