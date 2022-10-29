@@ -302,7 +302,7 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
           passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_QUESTION_SVC,REGISTRY
+          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_FRONTEND,REGISTRY
           script: |
             # Login to DigitalOcean container registry
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
