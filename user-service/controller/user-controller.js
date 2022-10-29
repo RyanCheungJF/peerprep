@@ -9,7 +9,7 @@ import {
 } from '../model/user-orm.js'
 import { deleteMatchRoom } from '../services/matching-service.js'
 import { deleteCollabRoom } from '../services/collaboration-service.js'
-import { invalidateReviewCache } from '../services/reviewService.js'
+import { invalidateReviewCache } from '../services/review-service.js'
 import { JWT_EXPIRY } from '../constants.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
