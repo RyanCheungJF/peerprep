@@ -127,8 +127,8 @@ jobs:
             # Login to DigitalOcean container registry
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
             # Stop running container
-            docker compose down
+            docker-compose down
             # Pull latest images
-            docker compose pull
+            docker-compose pull
             # Restart docker compose stack with latest images
-            docker compose up -d
+            docker-compose up -d
