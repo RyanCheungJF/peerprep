@@ -12,51 +12,58 @@ env:
   IMAGE_NAME_QUESTION_SVC: "question-service"
   IMAGE_NAME_COLLAB_SVC: "collaboration-service"
   IMAGE_NAME_MATCHING_SVC: "matching-service"
+  IMAGE_NAME_REVIEW_SVC: "review-service"
 
 jobs:
-  # build_and_push:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout the repo
-  #       uses: actions/checkout@v2
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
 
-  #     - name: Build frontend container image
-  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_FRONTEND) ./frontend
+      # - name: Build frontend container image
+      #   run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_FRONTEND) ./frontend
 
-  #     - name: Build user-service container image
-  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC) ./user-service
+      # - name: Build user-service container image
+      #   run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC) ./user-service
 
-  #     - name: Build question-service container image
-  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC) ./question-service
+      # - name: Build question-service container image
+      #   run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC) ./question-service
 
-  #     - name: Build collaboration-service container image
-  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC) ./collaboration-service
+      # - name: Build collaboration-service container image
+      #   run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC) ./collaboration-service
 
-  #     - name: Build matching-service container image
-  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC) ./matching-service
+      # - name: Build matching-service container image
+      #   run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC) ./matching-service
 
-  #     - name: Install doctl
-  #       uses: digitalocean/action-doctl@v2
-  #       with:
-  #         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Build review-service container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME_REVIEW_SVC) ./review-service
 
-  #     - name: Log in to DigitalOcean Container Registry
-  #       run: doctl registry login --expiry-seconds 600
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-  #     - name: Push frontend image to DigitalOcean Container Registry
-  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_FRONTEND)
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 600
 
-  #     - name: Push user-service image to DigitalOcean Container Registry
-  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC)
+      # - name: Push frontend image to DigitalOcean Container Registry
+      #   run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_FRONTEND)
 
-  #     - name: Push question-service image to DigitalOcean Container Registry
-  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC)
+      # - name: Push user-service image to DigitalOcean Container Registry
+      #   run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_USER_SVC)
 
-  #     - name: Push collaboration-service image to DigitalOcean Container Registry
-  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC)
+      # - name: Push question-service image to DigitalOcean Container Registry
+      #   run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC)
 
-  #     - name: Push matching-service image to DigitalOcean Container Registry
-  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC)
+      # - name: Push collaboration-service image to DigitalOcean Container Registry
+      #   run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_COLLAB_SVC)
+
+      # - name: Push matching-service image to DigitalOcean Container Registry
+      #   run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_MATCHING_SVC)
+
+      - name: Push review-service image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME_REVIEW_SVC)
 
   # deploy:
   #   runs-on: ubuntu-latest
@@ -239,3 +246,29 @@ jobs:
             docker rm $IMAGE_NAME_QUESTION_SVC
             # Run question-svc image
             docker run -d --name $IMAGE_NAME_QUESTION_SVC -p 80:8100 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_QUESTION_SVC
+
+  deploy_review_service:
+    runs-on: ubuntu-latest
+    # needs: build_and_push
+
+    env:
+      HOSTNAME: "reviews.peerprep.me"
+
+    steps:
+      - name: SSH into Digital Ocean droplet and deploy latest image
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ env.HOSTNAME }}
+          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_REVIEW_SVC,REGISTRY
+          script: |
+            # Login to DigitalOcean container registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            # Stop running container
+            docker stop $IMAGE_NAME_REVIEW_SVC
+            # Delete old container so we can recreate it with the latest pulled image
+            docker rm $IMAGE_NAME_REVIEW_SVC
+            # Run -svc image
+            docker run -d --name $IMAGE_NAME_REVIEW_SVC -p 80:8500 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_REVIEW_SVC
