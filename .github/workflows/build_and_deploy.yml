@@ -221,35 +221,35 @@ jobs:
   #           # Restart docker compose stack with latest images
   #           docker-compose up -d
 
-  deploy_question_service:
-    runs-on: ubuntu-latest
-    # needs: build_and_push
+  # deploy_question_service:
+  #   runs-on: ubuntu-latest
+  #   # needs: build_and_push
 
-    env:
-      HOSTNAME: "questions.peerprep.me"
+  #   env:
+  #     HOSTNAME: "questions.peerprep.me"
 
-    steps:
-      - name: SSH into Digital Ocean droplet and deploy latest image
-        uses: appleboy/ssh-action@v0.1.3
-        with:
-          host: ${{ env.HOSTNAME }}
-          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
-          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
-          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_QUESTION_SVC,REGISTRY
-          script: |
-            # Login to DigitalOcean container registry
-            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
-            # Stop running container
-            docker stop $IMAGE_NAME_QUESTION_SVC
-            # Delete old container so we can recreate it with the latest pulled image
-            docker rm $IMAGE_NAME_QUESTION_SVC
-            # Run question-svc image
-            docker run -d --name $IMAGE_NAME_QUESTION_SVC -p 80:8100 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_QUESTION_SVC
+  #   steps:
+  #     - name: SSH into Digital Ocean droplet and deploy latest image
+  #       uses: appleboy/ssh-action@v0.1.3
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_QUESTION_SVC,REGISTRY
+  #         script: |
+  #           # Login to DigitalOcean container registry
+  #           docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+  #           # Stop running container
+  #           docker stop $IMAGE_NAME_QUESTION_SVC
+  #           # Delete old container so we can recreate it with the latest pulled image
+  #           docker rm $IMAGE_NAME_QUESTION_SVC
+  #           # Run question-svc image
+  #           docker run -d --name $IMAGE_NAME_QUESTION_SVC -p 80:8100 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_QUESTION_SVC
 
   deploy_review_service:
     runs-on: ubuntu-latest
-    # needs: build_and_push
+    needs: build_and_push
 
     env:
       HOSTNAME: "reviews.peerprep.me"
