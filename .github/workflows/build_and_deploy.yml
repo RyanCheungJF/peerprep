@@ -221,45 +221,45 @@ jobs:
   #           # Restart docker compose stack with latest images
   #           docker-compose up -d
 
-  deploy_review_service:
-    runs-on: ubuntu-latest
-    # needs: build_and_push
+  # deploy_review_service:
+  #   runs-on: ubuntu-latest
+  #   # needs: build_and_push
 
-    env:
-      HOSTNAME: "reviews.peerprep.me"
+  #   env:
+  #     HOSTNAME: "reviews.peerprep.me"
 
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v2
 
-      - name: Copy the latest docker-compose file to the Digital Ocean droplet
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ env.HOSTNAME }}
-          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
-          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
-          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          source: "review-service/docker-compose.yml"
-          target: "~"
-          strip_components: 1
+  #     - name: Copy the latest docker-compose file to the Digital Ocean droplet
+  #       uses: appleboy/scp-action@master
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         source: "review-service/docker-compose.yml"
+  #         target: "~"
+  #         strip_components: 1
 
-      - name: SSH into Digital Ocean droplet and deploy latest images
-        uses: appleboy/ssh-action@v0.1.3
-        with:
-          host: ${{ env.HOSTNAME }}
-          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
-          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
-          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-          script: |
-            # Login to DigitalOcean container registry
-            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
-            # Stop running container
-            docker-compose down
-            # Pull latest images
-            docker-compose pull
-            # Restart docker compose stack with latest images
-            docker-compose up -d
+  #     - name: SSH into Digital Ocean droplet and deploy latest images
+  #       uses: appleboy/ssh-action@v0.1.3
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  #         script: |
+  #           # Login to DigitalOcean container registry
+  #           docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+  #           # Stop running container
+  #           docker-compose down
+  #           # Pull latest images
+  #           docker-compose pull
+  #           # Restart docker compose stack with latest images
+  #           docker-compose up -d
 
   # deploy_question_service:
   #   runs-on: ubuntu-latest
@@ -286,3 +286,29 @@ jobs:
   #           docker rm $IMAGE_NAME_QUESTION_SVC
   #           # Run question-svc image
   #           docker run -d --name $IMAGE_NAME_QUESTION_SVC -p 80:8100 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_QUESTION_SVC
+
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    # needs: build_and_push
+
+    env:
+      HOSTNAME: "www.peerprep.me"
+
+    steps:
+      - name: SSH into Digital Ocean droplet and deploy latest image
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ env.HOSTNAME }}
+          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+          envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},IMAGE_NAME_QUESTION_SVC,REGISTRY
+          script: |
+            # Login to DigitalOcean container registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            # Stop running container
+            docker stop $IMAGE_NAME_FRONTEND
+            # Delete old container so we can recreate it with the latest pulled image
+            docker rm $IMAGE_NAME_FRONTEND
+            # Run frontend image
+            docker run -d --name $IMAGE_NAME_FRONTEND -p 80:3000 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_FRONTEND
