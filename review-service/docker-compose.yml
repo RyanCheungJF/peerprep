@@ -6,7 +6,7 @@ services:
       - review-service-volume:/redis
     restart: on-failure
 
-  matching-service:
+  review-service:
     image: registry.digitalocean.com/cs3219-g35-peerprep/review-service:latest
     ports:
       - 80:8500
