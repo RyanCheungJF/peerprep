@@ -35,7 +35,7 @@ const ReviewPartnerDialog = ({
 
   const handleSkipReview = () => {
     handleCloseDialog()
-    navigate(homeUrl)
+    navigate(homeUrl, { replace: true })
   }
 
   const handleSubmitReview = async () => {
@@ -50,7 +50,7 @@ const ReviewPartnerDialog = ({
     await createReviewStats(partneruuid, user._id, FIELDS)
 
     handleCloseDialog()
-    navigate(homeUrl)
+    navigate(homeUrl, { replace: true })
   }
 
   return (

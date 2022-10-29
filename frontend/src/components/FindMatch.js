@@ -22,7 +22,7 @@ const FindMatch = () => {
   const navigate = useNavigate()
 
   // Define finding match time out seconds
-  const findingMatchTimeOutSeconds = 30
+  const FINDING_MATCH_TIMEOUT_SEC = 30
 
   const [difficulty, setDifficulty] = useState('')
   const [room, setRoom] = useState()
@@ -57,7 +57,11 @@ const FindMatch = () => {
     console.log('==> Start Matching Service')
     console.log('Difficulty: ' + difficulty)
 
+    // console.log('========================================')
+    // console.log('Matching Socket: ' + matchingSocket.id)
     const res = await findMatch(user._id, matchingSocket.id, difficulty)
+    // console.log(res)
+    // console.log('========================================')
 
     // Gets a response
     if (res) {
@@ -111,7 +115,7 @@ const FindMatch = () => {
       <FindingMatchDialog
         dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
-        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        findingMatchTimeOutSeconds={FINDING_MATCH_TIMEOUT_SEC}
         startMatchingService={startMatchingService}
         stopMatchingService={stopMatchingService}
       />
@@ -119,6 +123,8 @@ const FindMatch = () => {
   }
 
   matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
+    // console.log('========================================')
+    // console.log('found-connection')
     const room = {
       room_id: username,
       id1: username,
@@ -127,6 +133,8 @@ const FindMatch = () => {
       difficulty: difficulty.toLowerCase(),
       datetime: new Date(),
     }
+    // console.log(room)
+    // console.log('========================================')
     setRoom(room)
   })
 
