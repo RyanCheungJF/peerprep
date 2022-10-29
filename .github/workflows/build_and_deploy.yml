@@ -174,29 +174,58 @@ jobs:
   #           # Restart docker compose stack with latest images
   #           docker-compose up -d
 
-  deploy_matching_service:
+  # deploy_matching_service:
+  #   runs-on: ubuntu-latest
+  #   # needs: build_and_push
+
+  #   env:
+  #     HOSTNAME: "matching.peerprep.me"
+
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v2
+
+  #     - name: Copy the latest docker-compose file to the Digital Ocean droplet
+  #       uses: appleboy/scp-action@master
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         source: "matching-service/docker-compose.yml"
+  #         target: "~"
+  #         strip_components: 1
+
+  #     - name: SSH into Digital Ocean droplet and deploy latest images
+  #       uses: appleboy/ssh-action@v0.1.3
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  #         script: |
+  #           # Login to DigitalOcean container registry
+  #           docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+  #           # Stop running container
+  #           docker-compose down
+  #           # Pull latest images
+  #           docker-compose pull
+  #           # Restart docker compose stack with latest images
+  #           docker-compose up -d
+
+  deploy_question_service:
     runs-on: ubuntu-latest
     # needs: build_and_push
 
     env:
-      HOSTNAME: "matching.peerprep.me"
+      HOSTNAME: "questions.peerprep.me"
 
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
 
-      - name: Copy the latest docker-compose file to the Digital Ocean droplet
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ env.HOSTNAME }}
-          username: ${{ secrets.DIGITALOCEAN_USERNAME }}
-          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
-          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          source: "matching-service/docker-compose.yml"
-          target: "~"
-          strip_components: 1
-
-      - name: SSH into Digital Ocean droplet and deploy latest images
+      - name: SSH into Digital Ocean droplet and deploy latest image
         uses: appleboy/ssh-action@v0.1.3
         with:
           host: ${{ env.HOSTNAME }}
@@ -208,8 +237,6 @@ jobs:
             # Login to DigitalOcean container registry
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
             # Stop running container
-            docker-compose down
-            # Pull latest images
-            docker-compose pull
-            # Restart docker compose stack with latest images
-            docker-compose up -d
+            docker stop $(echo $IMAGE_NAME_QUESTION_SVC)
+            # Run question-svc image
+            docker run -d --name $(echo $IMAGE_NAME_QUESTION_SVC) -p 80:8100 --env-file ~/.env --pull=always $(echo $REGISTRY)/$(echo $IMAGE_NAME_QUESTION_SVC)
