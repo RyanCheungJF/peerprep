@@ -94,12 +94,51 @@ jobs:
   #           # Restart docker compose stack with latest images
   #           docker compose up -d
 
-  deploy_user_service:
+  # deploy_user_service:
+  #   runs-on: ubuntu-latest
+  #   # needs: build_and_push
+
+  #   env:
+  #     HOSTNAME: "users.peerprep.me"
+
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v2
+
+  #     - name: Copy the latest docker-compose file to the Digital Ocean droplet
+  #       uses: appleboy/scp-action@master
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         source: "./user-service/docker-compose.yml"
+  #         target: "~"
+
+  #     - name: SSH into Digital Ocean droplet and deploy latest images
+  #       uses: appleboy/ssh-action@v0.1.3
+  #       with:
+  #         host: ${{ env.HOSTNAME }}
+  #         username: ${{ secrets.DIGITALOCEAN_USERNAME }}
+  #         key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+  #         passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
+  #         envs: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  #         script: |
+  #           # Login to DigitalOcean container registry
+  #           docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+  #           # Stop running container
+  #           docker-compose down
+  #           # Pull latest images
+  #           docker-compose pull
+  #           # Restart docker compose stack with latest images
+  #           docker-compose up -d
+
+  deploy_collaboration_service:
     runs-on: ubuntu-latest
     # needs: build_and_push
 
     env:
-      HOSTNAME: "users.peerprep.me"
+      HOSTNAME: "collaboration.peerprep.me"
 
     steps:
       - name: Checkout the repo
@@ -112,7 +151,7 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
           passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          source: "./user-service/docker-compose.yml"
+          source: "./collaboration-service/docker-compose.yml"
           target: "~"
 
       - name: SSH into Digital Ocean droplet and deploy latest images
