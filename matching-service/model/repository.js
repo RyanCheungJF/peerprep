@@ -21,7 +21,7 @@ export const findAllRooms = async (filter) => {
   return socketRoomModel.find(filter)
 }
 
-// find one room by filter 
+// find one room by filter
 export const findOneRoom = async (filter) => {
   return socketRoomModel.findOne(filter)
 }
@@ -31,9 +31,14 @@ export const createRoom = async (params) => {
   return new socketRoomModel(params)
 }
 
-// delete a room
-export const deleteRoom = async (room_id) => {
-  return socketRoomModel.deleteOne({ room_id: room_id })
+// deletes a room
+export const deleteRoom = async (filter) => {
+  return socketRoomModel.deleteOne(filter)
+}
+
+// deletes a room and returns the deleted room
+export const deleteAndReturnRoom = async (filter) => {
+  return socketRoomModel.findOneAndDelete(filter)
 }
 
 // update a room

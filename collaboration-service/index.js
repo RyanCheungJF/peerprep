@@ -1,4 +1,6 @@
 import { Server } from 'socket.io'
+import express from 'express'
+import cors from 'cors'
 
 import { messageHandler } from './controller/chat-controller.js'
 import { sharedCodeHandler } from './controller/shared-code-controller.js'
@@ -9,13 +11,28 @@ import {
   broadcastConnection,
   broadcastDisconnection,
 } from './controller/room-controller.js'
+import { deleteRoom as httpDeleteRoom } from './controller/express-controller.js'
 
-const SOCKET_PORT = 8400
+const PORT = 8400
 
-const io = new Server(SOCKET_PORT, {
-  cors: { origin: '*' },
+const app = express()
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(cors())
+app.options('*', cors())
+
+const router = express.Router()
+router.delete('/room/:roomId', httpDeleteRoom)
+
+app.use('/api/collaboration', router).all((_, res) => {
+  res.setHeader('content-type', 'application/json')
+  res.setHeader('Access-Control-Allow-Origin', '*')
 })
 
+const server = app.listen(PORT, () =>
+  console.log(`matching-service listening on port ${PORT}`)
+)
+const io = new Server(server, { cors: { origin: '*' } })
 io.on('connection', (socket) => {
   socket.on('join-room', (roomId) => {
     console.log('socket joining room:', roomId)

@@ -9,6 +9,7 @@ import {
   createRoom,
   updateRoom,
   deleteRoom,
+  deleteRoomByUsername,
 } from './controller/match-controller.js'
 
 const SOCKET_PORT = 8300
@@ -50,6 +51,7 @@ router.get('/room', findOneRoom)
 router.post('/room', createRoom)
 router.patch('/room/:room_id', updateRoom)
 router.delete('/room/:room_id', deleteRoom)
+router.delete('/user/:username/room', deleteRoomByUsername(io))
 
 app.use('/api/match', router).all((_, res) => {
   res.setHeader('content-type', 'application/json')

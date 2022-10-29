@@ -7,6 +7,7 @@ import {
   ormGetRoom as _getRoom,
   ormDeleteRoom as _deleteRoom,
 } from '../model/collaboration-room-orm.js'
+import { COLLAB_ROOM_PREFIX } from '../constants.js'
 
 /**
  * Retrieves a room from redis and saves it to the DB for persistence
@@ -56,4 +57,4 @@ export const broadcastDisconnection = (socket) => () => {
 }
 
 const getCollabRoomId = (rooms) =>
-  rooms.find((r) => r.startsWith('collab-room:'))
+  rooms.find((r) => r.startsWith(COLLAB_ROOM_PREFIX))
