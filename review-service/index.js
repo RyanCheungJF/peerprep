@@ -17,7 +17,7 @@ const router = express.Router()
 
 router.get('/', getUserScores)
 router.post('/', createScores)
-router.delete('/', deleteUserScoresFromCache)
+router.delete('/cache', deleteUserScoresFromCache)
 router.delete('/database', deleteUserScoresFromDatabase)
 
 app.use('/api/review', router).all((_, res) => {
