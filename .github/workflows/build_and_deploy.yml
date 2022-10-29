@@ -151,8 +151,9 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
           passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
-          source: "collab-service/docker-compose.yml"
+          source: "collaboration-service/docker-compose.yml"
           target: "~"
+          strip_components: 1
 
       - name: SSH into Digital Ocean droplet and deploy latest images
         uses: appleboy/ssh-action@v0.1.3
