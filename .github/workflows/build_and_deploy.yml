@@ -238,5 +238,7 @@ jobs:
             docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
             # Stop running container
             docker stop $IMAGE_NAME_QUESTION_SVC
+            # Delete old container so we can recreate it with the latest pulled image
+            docker rm $IMAGE_NAME_QUESTION_SVC
             # Run question-svc image
             docker run -d --name $IMAGE_NAME_QUESTION_SVC -p 80:8100 --env-file ~/.env --pull=always $REGISTRY/$IMAGE_NAME_QUESTION_SVC
