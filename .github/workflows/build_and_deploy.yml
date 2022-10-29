@@ -222,9 +222,6 @@ jobs:
       HOSTNAME: "questions.peerprep.me"
 
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
-
       - name: SSH into Digital Ocean droplet and deploy latest image
         uses: appleboy/ssh-action@v0.1.3
         with:
