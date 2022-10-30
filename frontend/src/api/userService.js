@@ -18,6 +18,8 @@ import { loginUrl } from '../utils/routeConstants'
 // custom axios instance with request and response interceptors to handle auth
 const axiosWithAuth = axios.create()
 
+const ONE_MINUTE_IN_MS = 60 * 1000
+
 // attach user's JWT bearer token to every outgoing request
 axiosWithAuth.interceptors.request.use(
   (config) => {
@@ -63,7 +65,7 @@ export const loginUser = async (username, password) => {
 export const extendJWTExpiration = async (additionalMinutes) => {
   const token = getJWT()
   if (token) {
-    Cookies.set(COOKIES_AUTH_TOKEN, token, { expires: new Date(getJWTExpiry() + additionalMinutes) }) // Add additional 20 mins to the current JWT time, total 35 mins
+    Cookies.set(COOKIES_AUTH_TOKEN, token, { expires: new Date(getJWTExpiry().getTime() + (additionalMinutes * ONE_MINUTE_IN_MS)) }) // Add additional 20 mins to the current JWT time, total 35 mins
   }
 }
 
