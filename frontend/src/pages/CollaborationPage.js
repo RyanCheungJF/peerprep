@@ -2,8 +2,11 @@ import { useContext, useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { UserContext } from '../contexts/UserContext'
 import { Box, Button } from '@mui/material'
-import { findQuestionById } from '../api/questionService'
-import { findRoomService, deleteRoomService } from '../api/roomservice'
+import {
+  findQuestionById,
+  findQuestionByDifficulty,
+} from '../api/questionService'
+import { findRoomService, deleteRoomService, updateRoomService } from '../api/roomservice'
 import AlertDialog from '../components/AlertDialog'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
@@ -34,8 +37,10 @@ const CollaborationPage = () => {
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
   // Leave Room Confirmation Dialog
-  const [leaveRoomConfirmationDialogOpen, setLeaveRoomConfirmationDialogOpen] =
-    useState(false)
+  const [
+    leaveRoomConfirmationDialogOpen,
+    setLeaveRoomConfirmationDialogOpen,
+  ] = useState(false)
   const handleLeaveRoomConfirmationCloseDialog = () =>
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
@@ -91,21 +96,44 @@ const CollaborationPage = () => {
         console.log('ERROR: ', err)
       }
     } else {
-      try {
-        if (location.state) {
-          const res = await findRoomService({ room_id: location.state.room })
-          const qnsRes = await findQuestionById(res.data.qnsid)
-          setQuestion(qnsRes.data)
-        }
-      } catch (err) {
-        console.log('ERROR: ', err)
-      }
+      getQuestionFromMongoDB()
     }
   }
 
-  const getNewQuestion = async () => {
-    // TODO: Handle the logic such that the new question is
-    // set for both parties when one of them presses the button
+  const getQuestionFromMongoDB = useCallback(async () => {
+    try {
+      if (location.state) {
+        const res = await findRoomService({ room_id: location.state.room })
+        const qnsRes = await findQuestionById(res.data.qnsid)
+        setQuestion(qnsRes.data)
+      }
+    } catch (err) {
+      console.log('ERROR: ', err)
+    }
+  }, [location.state])
+
+  useEffect(() => {
+    collabSocket.on('change-question', async (qnsid) => {
+      try {
+        const qnsRes = await findQuestionById(qnsid)
+        setQuestion(qnsRes.data)
+      } catch (err) {
+        console.log('ERROR: ', err)
+      }
+    })
+  }, [])
+
+  async function getNewQuestion()  {
+    try {
+      if (room) {
+        const res = await findQuestionByDifficulty(room.difficulty)
+        setQuestion(res.data)
+        const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
+        collabSocket.emit('change-question', res.data.qnsid, getCollabRoomId(room.room_id))
+      }
+    } catch(err) {
+      console.log('ERROR: ', err)
+    }
   }
 
   const leaveRoom = useCallback(async () => {
@@ -277,7 +305,7 @@ const CollaborationPage = () => {
         <Box className="collaboration-page-left-container">
           <Box className="coding-question-chat-container">
             <Box className="coding-question-container">
-              <Question question={question} getNextQuestion={getNewQuestion} />
+              <Question question={question} onClick={getNewQuestion} />
             </Box>
             <Box className="coding-chat-container">
               <Chat room={location.state?.room} />
