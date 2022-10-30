@@ -51,19 +51,21 @@ const HomePage = () => {
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="home-page-wrapper">
-        <Box className="p-6">
-          <p className="home-page-header">Welcome back, {user.username}!</p>
-        </Box>
-        <Box className="p-6">
-          <Divider>
-            <Chip
-              sx={{ p: 2, fontSize: '1.1rem' }}
-              label="Select Difficulty & Find Match"
-              color="primary"
-            />
-          </Divider>
-          <FindMatch />
+      <Box className="home-page-scroll-container">
+        <Box className="home-page-flex-container">
+          <Box className="p-6">
+            <p className="home-page-header">Welcome back, {user.username}!</p>
+          </Box>
+          <Box className="p-6">
+            <Divider>
+              <Chip
+                sx={{ p: 2, fontSize: '1.1rem' }}
+                label="Select Difficulty & Find Match"
+                color="primary"
+              />
+            </Divider>
+            <FindMatch />
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -84,7 +84,7 @@ const Chat = ({ room }) => {
         </Box>
         <Box className="chat-message-and-send-button-container">
           <Divider />
-          <Box className="chat-message-and-send-button">
+          <Box className="chat-message-and-send-button-wrapper">
             <FormControl fullWidth>
               <TextField
                 label="Type your message..."

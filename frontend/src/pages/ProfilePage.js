@@ -144,62 +144,64 @@ const ProfilePage = () => {
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="profile-page-wrapper">
-        <Box className="p-6">
-          <p className="profile-page-header">My Profile</p>
-        </Box>
-        <Box className="p-6">
-          <Divider>
-            <Chip
-              sx={{ p: 2, fontSize: '1.1rem' }}
-              label="Personal Information"
-              color="primary"
-            />
-          </Divider>
-          <Box className="pt-6">
-            <Box>
-              <p className="profile-page-sub-header pb-3">Username:</p>
-              <p className="profile-page-normal-text">{user.username}</p>
-            </Box>
-            <Box className="pt-12">{_renderRatings()}</Box>
+      <Box className="profile-page-scroll-container">
+        <Box className="profile-page-flex-container">
+          <Box className="p-6">
+            <p className="profile-page-header">My Profile</p>
           </Box>
-        </Box>
-        <Box className="p-6">
-          <Divider>
-            <Chip
-              sx={{ p: 2, fontSize: '1.1rem' }}
-              label="Account Management"
-              color="primary"
-            />
-          </Divider>
-          <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
-            <Chip
-              sx={{ fontSize: '1rem' }}
-              icon={<EditIcon />}
-              label="Change Password"
-              color="info"
-              variant="outlined"
-              onClick={handleChangePasswordOpenDialog}
-            />
-            <Chip
-              sx={{ fontSize: '1rem' }}
-              icon={<DeleteIcon />}
-              label="Delete Account"
-              color="error"
-              variant="outlined"
-              onClick={handleDeleteAccountOpenDialog}
-            />
-          </Stack>
-        </Box>
-        {renderChangePasswordDialog()}
-        {renderDeleteAccountDialog()}
-        <Box className="p-6">
-          <Button
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
-            onClick={() => navigate(homeUrl)}
-          >
-            Back
-          </Button>
+          <Box className="p-6">
+            <Divider>
+              <Chip
+                sx={{ p: 2, fontSize: '1.1rem' }}
+                label="Personal Information"
+                color="primary"
+              />
+            </Divider>
+            <Box className="pt-6">
+              <Box>
+                <p className="profile-page-sub-header pb-3">Username:</p>
+                <p className="profile-page-normal-text">{user.username}</p>
+              </Box>
+              <Box className="pt-12">{_renderRatings()}</Box>
+            </Box>
+          </Box>
+          <Box className="p-6">
+            <Divider>
+              <Chip
+                sx={{ p: 2, fontSize: '1.1rem' }}
+                label="Account Management"
+                color="primary"
+              />
+            </Divider>
+            <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+              <Chip
+                sx={{ fontSize: '1rem' }}
+                icon={<EditIcon />}
+                label="Change Password"
+                color="info"
+                variant="outlined"
+                onClick={handleChangePasswordOpenDialog}
+              />
+              <Chip
+                sx={{ fontSize: '1rem' }}
+                icon={<DeleteIcon />}
+                label="Delete Account"
+                color="error"
+                variant="outlined"
+                onClick={handleDeleteAccountOpenDialog}
+              />
+            </Stack>
+          </Box>
+          {renderChangePasswordDialog()}
+          {renderDeleteAccountDialog()}
+          <Box className="p-6">
+            <Button
+              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+              onClick={() => navigate(homeUrl)}
+            >
+              Back
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>
