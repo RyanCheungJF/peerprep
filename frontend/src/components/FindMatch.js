@@ -28,8 +28,10 @@ const FindMatch = () => {
   const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -51,6 +53,10 @@ const FindMatch = () => {
     } else {
       handleSelectDifficultyErrorOpenDialog()
     }
+  }
+
+  window.onbeforeunload = (event) => {
+    deleteMatch(user._id, matchingSocket.id, difficulty) // reset matching service
   }
 
   const startMatchingService = async () => {
