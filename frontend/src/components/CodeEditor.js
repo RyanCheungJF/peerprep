@@ -26,12 +26,12 @@ const CodeEditor = ({ room }) => {
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
-      <Box className="code-editor-div">
-        <Box className="code-editor-title-wrapper">
+      <Box className="code-editor-container">
+        <Box className="code-editor-title-container">
           <p className="code-editor-title">Code Editor</p>
           <Divider />
         </Box>
-        <Box className="code-editor-editor-wrapper">
+        <Box className="code-editor-editor-container">
           <Editor
             value={code}
             onValueChange={handleCodeChange}

@@ -247,7 +247,7 @@ const CollaborationPage = () => {
 
   return (
     <>
-      <Box className="time-remaining-div">
+      <Box className="time-remaining-container">
         <Box className="time-remaining-wrapper">
           {timeRemaining > 5 && (
             <p className="time-remaining">
@@ -271,11 +271,13 @@ const CollaborationPage = () => {
         sx={{
           // content height = 100vh - nav bar height - vertical padding
           // height: 'calc(100vh - 64px - 2 * 16px)',
-          height: 'calc(100vh - 64px - 24px)',
+
+          // content height = 100vh - nav bar height
+          height: 'calc(100vh - 64px)',
         }}
       >
         <Box className="collaboration-page-left-container">
-          <Box className="coding-question-chat-container">
+          <Box className="coding-question-and-chat-container">
             <Box className="coding-question-container">
               <Question question={question} getNextQuestion={getNewQuestion} />
             </Box>
@@ -285,7 +287,7 @@ const CollaborationPage = () => {
           </Box>
           <Box className="coding-button-container">
             <Button
-              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md px-6"
+              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-medium rounded-md px-6"
               onClick={() => handleLeaveRoomConfirmationOpenDialog()}
             >
               Leave Room

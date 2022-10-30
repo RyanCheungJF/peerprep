@@ -99,19 +99,15 @@ const UserAuth = ({
       </Box>
 
       <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
-        <DialogTitle className="font-inter">{dialogTitle}</DialogTitle>
+        <DialogTitle>{dialogTitle}</DialogTitle>
         <DialogContent dividers>
-          <DialogContentText className="font-inter">
-            {dialogMsg}
-          </DialogContentText>
+          <DialogContentText>{dialogMsg}</DialogContentText>
         </DialogContent>
         <DialogActions>
           {isAuthSuccess ? (
             redirectButton()
           ) : (
-            <Button className="font-inter" onClick={closeDialog}>
-              OK
-            </Button>
+            <Button onClick={closeDialog}>OK</Button>
           )}
         </DialogActions>
       </Dialog>
