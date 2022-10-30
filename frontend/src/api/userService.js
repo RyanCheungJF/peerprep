@@ -60,6 +60,13 @@ export const loginUser = async (username, password) => {
   return res
 }
 
+export const extendJWTExpiration = async (additionalMinutes) => {
+  const token = getJWT()
+  if (token) {
+    Cookies.set(COOKIES_AUTH_TOKEN, token, { expires: new Date(getJWTExpiry() + additionalMinutes) }) // Add additional 20 mins to the current JWT time, total 35 mins
+  }
+}
+
 export const logoutUser = async () => {
   const res = await axiosWithAuth.post(URL_USER_LOGOUT_SVC)
   if (res?.status === STATUS_CODE_SUCCESS) {

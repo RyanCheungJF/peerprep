@@ -18,6 +18,7 @@ import { expirationCheck } from '../utils/main'
 import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import moment from 'moment'
+import { extendJWTExpiration } from '../api/userService'
 
 const CollaborationPage = () => {
   const user = useContext(UserContext)
@@ -126,6 +127,7 @@ const CollaborationPage = () => {
   async function getNewQuestion()  {
     try {
       if (room) {
+        extendJWTExpiration(20)// extend by additional 20 minutes, total 35 minutes
         const res = await findQuestionByDifficulty(room.difficulty)
         setQuestion(res.data)
         const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
