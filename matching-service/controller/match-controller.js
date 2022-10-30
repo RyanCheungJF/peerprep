@@ -106,7 +106,7 @@ export const updateRoom = async (req, res) => {
   console.log('PATCH /api/room ' + JSON.stringify(req.body))
   try {
     const room = await _updateRoom(req.params.room_id, req.body)
-    return res.status(200).json({ message: 'Room updated successfully!' })
+    return res.status(200).json({ message: 'Room updated successfully!', data: room })
   } catch (err) {
     return res.status(400).json({ message: 'Error with updating room!' })
   }

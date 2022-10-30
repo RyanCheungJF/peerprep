@@ -128,9 +128,12 @@ const CollaborationPage = () => {
     try {
       if (room) {
         extendJWTExpiration(20)// extend by additional 20 minutes, total 35 minutes
-        const res = await findQuestionByDifficulty(room.difficulty)
+        const res = await findQuestionByDifficulty(room.difficulty, room.qnsid)
         setQuestion(res.data)
         const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
+        if (patchRoomRes.status === 200) {
+          setRoom(patchRoomRes.data)
+        }
         collabSocket.emit('change-question', res.data.qnsid, getCollabRoomId(room.room_id))
       }
     } catch(err) {

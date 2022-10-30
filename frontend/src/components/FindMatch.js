@@ -68,7 +68,7 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      const questionRes = await _findByDifficulty(difficulty.toLowerCase())
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase(), undefined)
       if (questionRes) {
         matchingSocket.emit(
           'notify-partner',
