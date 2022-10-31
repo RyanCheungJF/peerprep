@@ -51,13 +51,14 @@ const HomePage = () => {
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="home-page-wrapper">
+      <Box className="home-page-container-wrapper">
         <Box className="p-6">
           <p className="home-page-header">Welcome back, {user.username}!</p>
         </Box>
         <Box className="p-6">
           <Divider>
             <Chip
+              className="font-inter"
               sx={{ p: 2, fontSize: '1.1rem' }}
               label="Select Difficulty & Find Match"
               color="primary"

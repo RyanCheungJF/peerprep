@@ -80,7 +80,7 @@ const ProfilePage = () => {
     } = reviewStats
     return (
       <>
-        <p className="profile-page-sub-header pb-3">Your Stats:</p>
+        <p className="profile-page-sub-header pb-4">My Stats:</p>
         <Box>
           {_renderRating(
             <CheckIcon fontSize="small" />,
@@ -144,13 +144,14 @@ const ProfilePage = () => {
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="profile-page-wrapper">
+      <Box className="profile-page-container-wrapper">
         <Box className="p-6">
           <p className="profile-page-header">My Profile</p>
         </Box>
         <Box className="p-6">
           <Divider>
             <Chip
+              className="font-inter"
               sx={{ p: 2, fontSize: '1.1rem' }}
               label="Personal Information"
               color="primary"
@@ -158,7 +159,7 @@ const ProfilePage = () => {
           </Divider>
           <Box className="pt-6">
             <Box>
-              <p className="profile-page-sub-header pb-3">Username:</p>
+              <p className="profile-page-sub-header pb-4">Username:</p>
               <p className="profile-page-normal-text">{user.username}</p>
             </Box>
             <Box className="pt-12">{_renderRatings()}</Box>
@@ -167,6 +168,7 @@ const ProfilePage = () => {
         <Box className="p-6">
           <Divider>
             <Chip
+              className="font-inter"
               sx={{ p: 2, fontSize: '1.1rem' }}
               label="Account Management"
               color="primary"
@@ -175,6 +177,7 @@ const ProfilePage = () => {
           <Box className="pt-6">
             <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
               <Chip
+                className="font-inter"
                 sx={{ fontSize: '1rem' }}
                 icon={<EditIcon />}
                 label="Change Password"
@@ -183,6 +186,7 @@ const ProfilePage = () => {
                 onClick={handleChangePasswordOpenDialog}
               />
               <Chip
+                className="font-inter"
                 sx={{ fontSize: '1rem' }}
                 icon={<DeleteIcon />}
                 label="Delete Account"

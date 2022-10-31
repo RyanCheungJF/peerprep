@@ -39,7 +39,7 @@ const UserAuth = ({
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="userauth-flex-container">
+      <Box className="userauth-container-wrapper">
         <p className="userauth-title">{pageTitle}</p>
         <TextField
           autoFocus
@@ -61,38 +61,25 @@ const UserAuth = ({
           onChange={(e) => setPassword(e.target.value)}
           sx={{ marginBottom: '2rem' }}
         />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}
-        >
-          <Box className="left-button-wrapper">
-            <Button
-              sx={{ px: 2 }}
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md"
-              onClick={() => navigate(toggleDestination)}
-            >
-              {toggleText}
-            </Button>
-          </Box>
-          <Box>
-            <Button
-              sx={{ px: 2 }}
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md"
-              onClick={() => {
-                setUsernameSubmittedEmpty(username === '')
-                setPasswordSubmittedEmpty(password === '')
-                if (username && password) {
-                  handleAuth(username, password)
-                }
-              }}
-            >
-              {ctaText}
-            </Button>
-          </Box>
+        <Box className="userauth-button-container">
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
+            onClick={() => navigate(toggleDestination)}
+          >
+            {toggleText}
+          </Button>
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
+            onClick={() => {
+              setUsernameSubmittedEmpty(username === '')
+              setPasswordSubmittedEmpty(password === '')
+              if (username && password) {
+                handleAuth(username, password)
+              }
+            }}
+          >
+            {ctaText}
+          </Button>
         </Box>
 
         <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
