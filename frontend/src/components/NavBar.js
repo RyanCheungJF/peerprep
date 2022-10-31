@@ -7,12 +7,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { isUserLoggedIn, logoutUser } from '../api/userService'
-import {
-  baseUrl,
-  signupUrl,
-  loginUrl,
-  profileUrl,
-} from '../utils/routeConstants'
+import { loginUrl, profileUrl, publicRoutes } from '../utils/routeConstants'
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null)
@@ -44,12 +39,7 @@ const NavBar = () => {
   }
 
   const _renderAccountIcon = () => {
-    if (
-      !isUserLoggedIn() &&
-      (location.pathname === baseUrl ||
-        location.pathname === signupUrl ||
-        location.pathname === loginUrl)
-    ) {
+    if (!isUserLoggedIn() && publicRoutes.includes(location.pathname)) {
       return null
     }
 

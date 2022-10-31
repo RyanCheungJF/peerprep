@@ -4,3 +4,4 @@ export const loginUrl = `${baseUrl}login`
 export const homeUrl = `${baseUrl}home`
 export const profileUrl = `${baseUrl}profile`
 export const collabUrl = `${baseUrl}collaborate`
+export const publicRoutes = [baseUrl, signupUrl, loginUrl]
