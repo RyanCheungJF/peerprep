@@ -81,7 +81,7 @@ const ProfilePage = () => {
     return (
       <>
         <p className="profile-page-sub-header pb-3">Your Stats:</p>
-        <Box className="profile-page-your-stats-ratings-wrapper">
+        <Box>
           {_renderRating(
             <CheckIcon fontSize="small" />,
             'Code Correctness',
@@ -144,36 +144,36 @@ const ProfilePage = () => {
         height: 'calc(100vh - 64px)',
       }}
     >
-      <Box className="profile-page-scroll-container">
-        <Box className="profile-page-flex-container">
-          <Box className="p-6">
-            <p className="profile-page-header">My Profile</p>
-          </Box>
-          <Box className="p-6">
-            <Divider>
-              <Chip
-                sx={{ p: 2, fontSize: '1.1rem' }}
-                label="Personal Information"
-                color="primary"
-              />
-            </Divider>
-            <Box className="pt-6">
-              <Box>
-                <p className="profile-page-sub-header pb-3">Username:</p>
-                <p className="profile-page-normal-text">{user.username}</p>
-              </Box>
-              <Box className="pt-12">{_renderRatings()}</Box>
+      <Box className="profile-page-wrapper">
+        <Box className="p-6">
+          <p className="profile-page-header">My Profile</p>
+        </Box>
+        <Box className="p-6">
+          <Divider>
+            <Chip
+              sx={{ p: 2, fontSize: '1.1rem' }}
+              label="Personal Information"
+              color="primary"
+            />
+          </Divider>
+          <Box className="pt-6">
+            <Box>
+              <p className="profile-page-sub-header pb-3">Username:</p>
+              <p className="profile-page-normal-text">{user.username}</p>
             </Box>
+            <Box className="pt-12">{_renderRatings()}</Box>
           </Box>
-          <Box className="p-6">
-            <Divider>
-              <Chip
-                sx={{ p: 2, fontSize: '1.1rem' }}
-                label="Account Management"
-                color="primary"
-              />
-            </Divider>
-            <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+        </Box>
+        <Box className="p-6">
+          <Divider>
+            <Chip
+              sx={{ p: 2, fontSize: '1.1rem' }}
+              label="Account Management"
+              color="primary"
+            />
+          </Divider>
+          <Box className="pt-6">
+            <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
               <Chip
                 sx={{ fontSize: '1rem' }}
                 icon={<EditIcon />}
@@ -192,16 +192,16 @@ const ProfilePage = () => {
               />
             </Stack>
           </Box>
-          {renderChangePasswordDialog()}
-          {renderDeleteAccountDialog()}
-          <Box className="p-6">
-            <Button
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
-              onClick={() => navigate(homeUrl)}
-            >
-              Back
-            </Button>
-          </Box>
+        </Box>
+        {renderChangePasswordDialog()}
+        {renderDeleteAccountDialog()}
+        <Box className="p-6">
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+            onClick={() => navigate(homeUrl)}
+          >
+            Back
+          </Button>
         </Box>
       </Box>
     </Box>
