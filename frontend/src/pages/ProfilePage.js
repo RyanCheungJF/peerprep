@@ -69,7 +69,7 @@ const ProfilePage = () => {
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {icon}
-          <Typography sx={{ ml: 1 }}>{label}</Typography>
+          <p className="profile-stats-individual">{label}</p>
         </Box>
         <Rating name="read-only" value={value} precision={0.5} readOnly />
       </Box>
@@ -90,9 +90,7 @@ const ProfilePage = () => {
     } = reviewStats
     return (
       <>
-        <Typography variant={'h6'} sx={{ mt: 2 }}>
-          Your stats:
-        </Typography>
+        <p className="profile-stats-header">{user.username}'s stats:</p>
         <Box sx={{ width: '350px' }}>
           {_renderRating(
             <CheckIcon fontSize="small" />,
@@ -161,29 +159,31 @@ const ProfilePage = () => {
       }}
     >
       <Box sx={{ my: 3, mx: 2 }}>
-        <Typography variant={'h3'}>Profile Page</Typography>
+        <p className="profile-header">Profile Page</p>
       </Box>
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
           <Chip
-            sx={{ p: 2, fontSize: '1.1rem' }}
+            sx={{ p: 2, fontSize: '1.1rem', mb: 2 }}
+            className="font-inter"
             label="Personal Information"
             color="primary"
           />
         </Divider>
-        <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
         {_renderRatings()}
       </Box>
       <Box sx={{ my: 3, mx: 2 }}>
         <Divider>
           <Chip
             sx={{ p: 2, fontSize: '1.1rem' }}
+            className="font-inter"
             label="Account Management"
             color="primary"
           />
         </Divider>
         <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
           <Chip
+            className="font-inter"
             sx={{ fontSize: '1rem' }}
             icon={<EditIcon />}
             label="Change Password"
@@ -192,6 +192,7 @@ const ProfilePage = () => {
             onClick={handleChangePasswordOpenDialog}
           />
           <Chip
+            className="font-inter"
             sx={{ fontSize: '1rem' }}
             icon={<DeleteIcon />}
             label="Delete Account"
@@ -204,7 +205,10 @@ const ProfilePage = () => {
       {renderChangePasswordDialog()}
       {renderDeleteAccountDialog()}
       <Box sx={{ my: 3, mx: 2 }}>
-        <Button variant={'outlined'} onClick={() => navigate(homeUrl)}>
+        <Button
+          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md"
+          onClick={() => navigate(homeUrl)}
+        >
           Back to Home
         </Button>
       </Box>

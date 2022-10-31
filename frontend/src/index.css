@@ -39,6 +39,17 @@
     @apply font-inter font-bold text-4xl text-gray-700;
   }
 
+  /* Profile Page */
+  .profile-header {
+    @apply font-inter font-bold text-4xl text-gray-700;
+  }
+  .profile-stats-header {
+    @apply font-inter font-semibold text-2xl text-gray-700 underline;
+  }
+  .profile-stats-individual {
+    @apply font-inter pl-1;
+  }
+
   /* Collaboration Page */
   .collaboration-page-container {
     @apply flex p-6;
@@ -105,7 +116,7 @@
     @apply flex flex-col relative h-full overflow-auto;
   }
   .chat-message-and-send-button-wrapper {
-    @apply flex flex-col; 
+    @apply flex flex-col;
   }
   .chat-message-and-send-button {
     @apply flex gap-3 p-5;
@@ -127,7 +138,7 @@
 
   /* Collaboration Page - Time Remaining Display */
   .time-remaining-div {
-    @apply absolute h-16 w-fit top-0 inset-x-0 mx-auto ;
+    @apply absolute h-16 w-fit top-0 inset-x-0 mx-auto;
   }
   .time-remaining-wrapper {
     @apply flex h-full items-center justify-center;
@@ -138,7 +149,7 @@
   .time-remaining-alert {
     @apply font-inter bg-pink-700 text-white rounded-md py-1 px-6;
   }
-  
+
   /* Components */
   .button {
     /* I think this is not used because button design has to change directly via className */
