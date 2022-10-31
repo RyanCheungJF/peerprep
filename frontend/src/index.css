@@ -77,7 +77,7 @@
     @apply font-inter text-gray-700;
   }
   .profile-page-rating-wrapper {
-    @apply mb-2 flex w-80 items-center justify-between;
+    @apply mb-3 flex w-80 items-center justify-between;
   }
   .profile-page-rating-icon-and-label-wrapper {
     @apply flex items-center;
