@@ -58,12 +58,10 @@ const ReviewPartnerDialog = ({
     return (
       <>
         <Grid item xs={4}>
-          <DialogContentText>
-            <Stack direction="row" alignItems={'center'}>
-              {icon}
-              {label}
-            </Stack>
-          </DialogContentText>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            {icon}
+            <DialogContentText>{label}</DialogContentText>
+          </Stack>
         </Grid>
         <Grid item xs={8}>
           <Rating
@@ -85,33 +83,33 @@ const ReviewPartnerDialog = ({
         <DialogContentText>
           Review your partner based on the following metrics:
         </DialogContentText>
-        <Grid container spacing={2} marginTop={2}>
+        <Grid container spacing={1} marginTop={2}>
           {renderRating(
-            <CheckIcon fontSize="small" sx={{ mr: 1 }} />,
+            <CheckIcon fontSize="small" />,
             'Code Correctness',
             codeCorrectnessValue,
             setCodeCorrectnessValue
           )}
           {renderRating(
-            <ArchitectureIcon fontSize="small" sx={{ mr: 1 }} />,
+            <ArchitectureIcon fontSize="small" />,
             'Code Design',
             codeDesignValue,
             setCodeDesignValue
           )}
           {renderRating(
-            <FormatPaintIcon fontSize="small" sx={{ mr: 1 }} />,
+            <FormatPaintIcon fontSize="small" />,
             'Code Style',
             codeStyleValue,
             setCodeStyleValue
           )}
           {renderRating(
-            <RecordVoiceOverIcon fontSize="small" sx={{ mr: 1 }} />,
+            <RecordVoiceOverIcon fontSize="small" />,
             'Communication',
             communicationValue,
             setCommunicationValue
           )}
           {renderRating(
-            <AccessTimeFilledIcon fontSize="small" sx={{ mr: 1 }} />,
+            <AccessTimeFilledIcon fontSize="small" />,
             'Time Management',
             timeManagementValue,
             setTimeManagementValue
