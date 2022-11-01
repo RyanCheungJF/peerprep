@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Paper } from '@mui/material'
 
-const Question = ({ question, getNewQuestion }) => {
+const Question = ({ question, onClick }) => {
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
       <Box className="question-container">
@@ -11,7 +11,7 @@ const Question = ({ question, getNewQuestion }) => {
           <Box className="question-next-question-button-wrapper">
             <Button
               className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
-              onClick={() => getNewQuestion()}
+              onClick={() => onClick()}
             >
               Change Question
             </Button>

@@ -16,6 +16,7 @@ import { collabUrl } from '../utils/routeConstants'
 import { matchingSocket } from '../utils/socket'
 import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
+import { extendJWTExpiration } from '../api/userService'
 
 const FindMatch = () => {
   const user = useContext(UserContext)
@@ -78,7 +79,7 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      const questionRes = await _findByDifficulty(difficulty.toLowerCase())
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase(), undefined)
       if (questionRes) {
         matchingSocket.emit(
           'notify-partner',
@@ -87,6 +88,7 @@ const FindMatch = () => {
           difficulty,
           questionRes.data.qnsid
         )
+        extendJWTExpiration(20)
         navigate(collabUrl, {
           state: {
             room: user.username,
@@ -153,6 +155,7 @@ const FindMatch = () => {
     const createRoom = async () => {
       try {
         await createRoomService(room)
+        extendJWTExpiration(20)
         navigate(collabUrl, {
           state: {
             room: room.room_id,

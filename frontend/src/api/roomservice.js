@@ -19,3 +19,8 @@ export const deleteRoomService = async (room_id) => {
   const res = await axios.delete(URL_ROOM_SVC + room_id)
   return res
 }
+
+export const updateRoomService = async (room_id, updatedFields) => {
+  const res = await axios.patch(URL_ROOM_SVC + room_id, updatedFields)
+  return res
+}
