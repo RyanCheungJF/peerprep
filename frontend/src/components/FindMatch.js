@@ -160,8 +160,8 @@ const FindMatch = () => {
   }, [room, navigate])
 
   return (
-    <Box sx={{ my: 3 }}>
-      <FormControl fullWidth sx={{ mb: 3 }}>
+    <Box className="pt-6">
+      <FormControl fullWidth sx={{ mt: 1, mb: 3 }}>
         <InputLabel>Select Difficulty</InputLabel>
         <Select
           value={difficulty}
@@ -173,19 +173,12 @@ const FindMatch = () => {
           <MenuItem value="Hard">Hard</MenuItem>
         </Select>
       </FormControl>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
+      <Button
+        className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+        onClick={() => handleFindMatch(difficulty)}
       >
-        <Button
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
-          onClick={() => handleFindMatch(difficulty)}
-        >
-          Find Match
-        </Button>
-      </Box>
+        Find Match
+      </Button>
       {renderUnableToFindMatchAlertDialog()}
       {renderFindingMatchDialog()}
     </Box>

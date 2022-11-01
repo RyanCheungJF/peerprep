@@ -71,20 +71,20 @@ const Chat = ({ room }) => {
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
-      <Box className="chat-div">
-        <Box className="chat-title-wrapper">
+      <Box className="chat-container">
+        <Box className="chat-title-container">
           <p className="chat-title">Chat</p>
           <Divider />
         </Box>
-        <Box className="chat-messages-wrapper">
+        <Box className="chat-messages-container">
           <List sx={{ position: 'absolute', padding: '5px' }}>
             {displayChatMessages()}
             <ListItem ref={scrollPositionRef}></ListItem>
           </List>
         </Box>
-        <Box className="chat-message-and-send-button-wrapper">
+        <Box className="chat-message-and-send-button-container">
           <Divider />
-          <Box className="chat-message-and-send-button">
+          <Box className="chat-message-and-send-button-wrapper">
             <FormControl fullWidth>
               <TextField
                 label="Type your message..."
