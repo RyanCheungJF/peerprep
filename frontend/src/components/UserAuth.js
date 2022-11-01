@@ -84,9 +84,7 @@ const UserAuth = ({
 
         <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
           <DialogTitle>{dialogTitle}</DialogTitle>
-          <DialogContent dividers>
-            <DialogContentText>{dialogMsg}</DialogContentText>
-          </DialogContent>
+          <DialogContent dividers>{dialogMsg}</DialogContent>
           <DialogActions>
             {isAuthSuccess ? (
               redirectButton()
