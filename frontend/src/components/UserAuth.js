@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   TextField,
 } from '@mui/material'
@@ -83,7 +84,9 @@ const UserAuth = ({
 
         <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
           <DialogTitle>{dialogTitle}</DialogTitle>
-          <DialogContent dividers>{dialogMsg}</DialogContent>
+          <DialogContent dividers>
+            <DialogContentText>{dialogMsg}</DialogContentText>
+          </DialogContent>
           <DialogActions>
             {isAuthSuccess ? (
               redirectButton()

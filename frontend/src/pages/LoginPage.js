@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, DialogContentText } from '@mui/material'
+import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
   AUTH_REDIRECT,
@@ -49,25 +49,14 @@ const LoginPage = () => {
 
   const setSuccessDialog = (username) => {
     setIsDialogOpen(true)
-    setDialogTitle('Log in Success')
-    setDialogMsg(
-      <>
-        <DialogContentText>
-          {'You have successfully logged in.'}
-        </DialogContentText>
-        <DialogContentText>{`Welcome back, ${username}!`}</DialogContentText>
-      </>
-    )
+    setDialogTitle('Logged In Successfully')
+    setDialogMsg(`Hi, ${username}!👋 Welcome back to PeerPrep!`)
   }
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
     setDialogTitle('Unable To Log In')
-    setDialogMsg(
-      <>
-        <DialogContentText>{msg}</DialogContentText>
-      </>
-    )
+    setDialogMsg(msg)
   }
 
   const redirectButton = () => {
@@ -75,12 +64,7 @@ const LoginPage = () => {
     // reset the redirect url since it's only used this one time
     window.localStorage.removeItem(AUTH_REDIRECT)
     return (
-      <Button
-        className="font-inter"
-        component={Link}
-        to={redirectUrl}
-        replace={true}
-      >
+      <Button component={Link} to={redirectUrl} replace={true}>
         OK
       </Button>
     )
