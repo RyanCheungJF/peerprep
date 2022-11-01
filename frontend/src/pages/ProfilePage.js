@@ -1,14 +1,6 @@
 import { useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Rating,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Chip, Divider, Rating, Stack } from '@mui/material'
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import ArchitectureIcon from '@mui/icons-material/Architecture'
 import CheckIcon from '@mui/icons-material/Check'
@@ -59,19 +51,17 @@ const ProfilePage = () => {
 
   const _renderRating = (icon, label, value) => {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          margin: '6px 0px',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box className="profile-page-rating-wrapper">
+        <Box className="profile-page-rating-icon-and-label-wrapper">
           {icon}
-          <Typography sx={{ ml: 1 }}>{label}</Typography>
+          <p className="profile-page-rating-label ml-2">{label}</p>
         </Box>
-        <Rating name="read-only" value={value} precision={0.5} readOnly />
+        <Rating
+          name="read-only-rating"
+          value={value}
+          precision={0.5}
+          readOnly
+        />
       </Box>
     )
   }
@@ -90,10 +80,8 @@ const ProfilePage = () => {
     } = reviewStats
     return (
       <>
-        <Typography variant={'h6'} sx={{ mt: 2 }}>
-          Your stats:
-        </Typography>
-        <Box sx={{ width: '350px' }}>
+        <p className="profile-page-sub-header pb-4">My Stats:</p>
+        <Box>
           {_renderRating(
             <CheckIcon fontSize="small" />,
             'Code Correctness',
@@ -150,63 +138,75 @@ const ProfilePage = () => {
 
   return (
     <Box
+      className="profile-page-container"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '30%',
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
+        // content height = 100vh - nav bar height
+        height: 'calc(100vh - 64px)',
       }}
     >
-      <Box sx={{ my: 3, mx: 2 }}>
-        <Typography variant={'h3'}>Profile Page</Typography>
-      </Box>
-      <Box sx={{ my: 3, mx: 2 }}>
-        <Divider>
-          <Chip
-            sx={{ p: 2, fontSize: '1.1rem' }}
-            label="Personal Information"
-            color="primary"
-          />
-        </Divider>
-        <Typography sx={{ mt: 5 }}>Username: {user.username}</Typography>
-        {_renderRatings()}
-      </Box>
-      <Box sx={{ my: 3, mx: 2 }}>
-        <Divider>
-          <Chip
-            sx={{ p: 2, fontSize: '1.1rem' }}
-            label="Account Management"
-            color="primary"
-          />
-        </Divider>
-        <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
-          <Chip
-            sx={{ fontSize: '1rem' }}
-            icon={<EditIcon />}
-            label="Change Password"
-            color="info"
-            variant="outlined"
-            onClick={handleChangePasswordOpenDialog}
-          />
-          <Chip
-            sx={{ fontSize: '1rem' }}
-            icon={<DeleteIcon />}
-            label="Delete Account"
-            color="error"
-            variant="outlined"
-            onClick={handleDeleteAccountOpenDialog}
-          />
-        </Stack>
-      </Box>
-      {renderChangePasswordDialog()}
-      {renderDeleteAccountDialog()}
-      <Box sx={{ my: 3, mx: 2 }}>
-        <Button variant={'outlined'} onClick={() => navigate(homeUrl)}>
-          Back to Home
-        </Button>
+      <Box className="profile-page-container-wrapper">
+        <Box className="p-6">
+          <p className="profile-page-header">My Profile</p>
+        </Box>
+        <Box className="p-6">
+          <Divider>
+            <Chip
+              className="font-inter"
+              sx={{ p: 2, fontSize: '1.1rem' }}
+              label="Personal Information"
+              color="primary"
+            />
+          </Divider>
+          <Box className="pt-6">
+            <Box>
+              <p className="profile-page-sub-header pb-4">Username:</p>
+              <p className="profile-page-normal-text">{user.username}</p>
+            </Box>
+            <Box className="pt-12">{_renderRatings()}</Box>
+          </Box>
+        </Box>
+        <Box className="p-6">
+          <Divider>
+            <Chip
+              className="font-inter"
+              sx={{ p: 2, fontSize: '1.1rem' }}
+              label="Account Management"
+              color="primary"
+            />
+          </Divider>
+          <Box className="pt-6">
+            <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
+              <Chip
+                className="font-inter"
+                sx={{ fontSize: '1rem' }}
+                icon={<EditIcon />}
+                label="Change Password"
+                color="info"
+                variant="outlined"
+                onClick={handleChangePasswordOpenDialog}
+              />
+              <Chip
+                className="font-inter"
+                sx={{ fontSize: '1rem' }}
+                icon={<DeleteIcon />}
+                label="Delete Account"
+                color="error"
+                variant="outlined"
+                onClick={handleDeleteAccountOpenDialog}
+              />
+            </Stack>
+          </Box>
+        </Box>
+        {renderChangePasswordDialog()}
+        {renderDeleteAccountDialog()}
+        <Box className="p-6">
+          <Button
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+            onClick={() => navigate(homeUrl)}
+          >
+            Back
+          </Button>
+        </Box>
       </Box>
     </Box>
   )
