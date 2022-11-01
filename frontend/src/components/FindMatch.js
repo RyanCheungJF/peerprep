@@ -161,7 +161,7 @@ const FindMatch = () => {
 
   return (
     <Box className="pt-6">
-      <FormControl fullWidth sx={{ mb: 3 }}>
+      <FormControl fullWidth sx={{ mt: 1, mb: 3 }}>
         <InputLabel>Select Difficulty</InputLabel>
         <Select
           value={difficulty}
