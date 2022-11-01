@@ -55,14 +55,19 @@ const FindMatch = () => {
     }
   }
 
-  window.onbeforeunload = (event) => {
-    deleteMatch(user._id, matchingSocket.id, difficulty) // reset matching service
-  }
+  useEffect(() => {
+    const clearMatch = async () => {
+      if (user._id && matchingSocket.id && difficulty !== '') {
+        await deleteMatch(user._id, matchingSocket.id, difficulty)
+        window.removeEventListener('beforeunload', clearMatch)
+      }
+    }
+    window.addEventListener('beforeunload', clearMatch)
+  }, [difficulty, user._id])
 
   const startMatchingService = async () => {
     console.log('==> Start Matching Service')
     console.log('Difficulty: ' + difficulty)
-
     // console.log('========================================')
     // console.log('Matching Socket: ' + matchingSocket.id)
     const res = await findMatch(user._id, matchingSocket.id, difficulty)
