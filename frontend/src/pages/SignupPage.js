@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button, DialogContentText } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
   STATUS_CODE_CONFLICT,
@@ -15,6 +15,7 @@ const SignupPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isSignupSuccess, setIsSignupSuccess] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -47,14 +48,27 @@ const SignupPage = () => {
 
   const setSuccessDialog = () => {
     setIsDialogOpen(true)
-    setDialogTitle('Account Created Successfully')
-    setDialogMsg('You will now be redirected to the Log in page.')
+    setDialogTitle('Sign up Success')
+    setDialogMsg(
+      <>
+        <DialogContentText>
+          {'Your account has been successfully created.'}
+        </DialogContentText>
+        <DialogContentText>
+          {'You will now be redirected to the Log in page.'}
+        </DialogContentText>
+      </>
+    )
   }
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
     setDialogTitle('Unable To Create Account')
-    setDialogMsg(msg)
+    setDialogMsg(
+      <>
+        <DialogContentText>{msg}</DialogContentText>
+      </>
+    )
   }
 
   const redirectButton = () => (

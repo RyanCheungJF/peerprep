@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:alpine
+    volumes:
+      - review-service-volume:/redis
+    restart: on-failure
+
+  review-service:
+    image: registry.digitalocean.com/cs3219-g35-peerprep/review-service:latest
+    ports:
+      - 80:8500
+    environment:
+      # env variables read in from env file
+      - ENV
+      - DB_CLOUD_URI
+      - TOKEN_SECRET
+      # not read in from env file
+      - REDIS_URI=redis
+    depends_on:
+      - redis
+    restart: on-failure
+
+volumes:
+  review-service-volume:

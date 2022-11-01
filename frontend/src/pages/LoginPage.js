@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button, DialogContentText } from '@mui/material'
 import UserAuth from '../components/UserAuth'
 import {
   AUTH_REDIRECT,
@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const LoginPage = () => {
     try {
       const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
-        setSuccessDialog()
+        setSuccessDialog(username)
         setIsLoginSuccess(true)
       }
     } catch (err) {
@@ -46,16 +47,27 @@ const LoginPage = () => {
 
   const closeDialog = () => setIsDialogOpen(false)
 
-  const setSuccessDialog = () => {
+  const setSuccessDialog = (username) => {
     setIsDialogOpen(true)
-    setDialogTitle('Logged In Successfully')
-    setDialogMsg('You will now be redirected to the Home page.')
+    setDialogTitle('Log in Success')
+    setDialogMsg(
+      <>
+        <DialogContentText>
+          {'You have successfully logged in.'}
+        </DialogContentText>
+        <DialogContentText>{`Welcome back, ${username}!`}</DialogContentText>
+      </>
+    )
   }
 
   const setErrorDialog = (msg) => {
     setIsDialogOpen(true)
     setDialogTitle('Unable To Log In')
-    setDialogMsg(msg)
+    setDialogMsg(
+      <>
+        <DialogContentText>{msg}</DialogContentText>
+      </>
+    )
   }
 
   const redirectButton = () => {
