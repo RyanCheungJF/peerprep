@@ -1,25 +1,25 @@
 import { Box, Button, Divider, Paper } from '@mui/material'
 
-const Question = ({ question, getNewQuestion }) => {
+const Question = ({ question, onClick }) => {
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
-      <Box className="question-div">
-        <Box className="question-title-and-next-question-button-wrapper">
+      <Box className="question-container">
+        <Box className="question-title-and-next-question-button-container">
           <Box className="question-title-wrapper">
             <p className="question-title">Question</p>
           </Box>
           <Box className="question-next-question-button-wrapper">
             <Button
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md pl-6 pr-6"
-              onClick={() => getNewQuestion()}
+              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+              onClick={() => onClick()}
             >
               Change Question
             </Button>
           </Box>
         </Box>
         <Divider />
-        <Box className="question-details-wrapper-outer">
-          <Box className="question-details-wrapper-inner">
+        <Box className="question-details-container">
+          <Box className="question-details-wrapper">
             <p
               className="question-details-title"
               dangerouslySetInnerHTML={{ __html: question['title'] }}

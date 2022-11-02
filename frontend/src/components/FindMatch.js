@@ -16,6 +16,7 @@ import { collabUrl } from '../utils/routeConstants'
 import { matchingSocket } from '../utils/socket'
 import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
+import { extendJWTExpiration } from '../api/userService'
 
 const FindMatch = () => {
   const user = useContext(UserContext)
@@ -28,8 +29,10 @@ const FindMatch = () => {
   const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -53,10 +56,19 @@ const FindMatch = () => {
     }
   }
 
+  useEffect(() => {
+    const clearMatch = async () => {
+      if (user._id && matchingSocket.id && difficulty !== '') {
+        await deleteMatch(user._id, matchingSocket.id, difficulty)
+        window.removeEventListener('beforeunload', clearMatch)
+      }
+    }
+    window.addEventListener('beforeunload', clearMatch)
+  }, [difficulty, user._id])
+
   const startMatchingService = async () => {
     console.log('==> Start Matching Service')
     console.log('Difficulty: ' + difficulty)
-
     // console.log('========================================')
     // console.log('Matching Socket: ' + matchingSocket.id)
     const res = await findMatch(user._id, matchingSocket.id, difficulty)
@@ -67,7 +79,7 @@ const FindMatch = () => {
     if (res) {
       const data = res.data
       const room = data.socketID
-      const questionRes = await _findByDifficulty(difficulty.toLowerCase())
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase(), undefined)
       if (questionRes) {
         matchingSocket.emit(
           'notify-partner',
@@ -76,6 +88,7 @@ const FindMatch = () => {
           difficulty,
           questionRes.data.qnsid
         )
+        extendJWTExpiration(20)
         navigate(collabUrl, {
           state: {
             room: user.username,
@@ -142,6 +155,7 @@ const FindMatch = () => {
     const createRoom = async () => {
       try {
         await createRoomService(room)
+        extendJWTExpiration(20)
         navigate(collabUrl, {
           state: {
             room: room.room_id,
@@ -160,8 +174,8 @@ const FindMatch = () => {
   }, [room, navigate])
 
   return (
-    <Box sx={{ my: 3 }}>
-      <FormControl fullWidth sx={{ mb: 3 }}>
+    <Box className="pt-6">
+      <FormControl fullWidth sx={{ mt: 1, mb: 3 }}>
         <InputLabel>Select Difficulty</InputLabel>
         <Select
           value={difficulty}
@@ -173,19 +187,12 @@ const FindMatch = () => {
           <MenuItem value="Hard">Hard</MenuItem>
         </Select>
       </FormControl>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
+      <Button
+        className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+        onClick={() => handleFindMatch(difficulty)}
       >
-        <Button
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
-          onClick={() => handleFindMatch(difficulty)}
-        >
-          Find Match
-        </Button>
-      </Box>
+        Find Match
+      </Button>
       {renderUnableToFindMatchAlertDialog()}
       {renderFindingMatchDialog()}
     </Box>

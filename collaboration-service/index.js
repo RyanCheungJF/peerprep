@@ -12,6 +12,7 @@ import {
   broadcastDisconnection,
 } from './controller/room-controller.js'
 import { deleteRoom as httpDeleteRoom } from './controller/express-controller.js'
+import { changeQuestion } from './controller/question-controller.js'
 
 const PORT = 8400
 
@@ -45,6 +46,8 @@ io.on('connection', (socket) => {
 
   socket.on('send-message', messageHandler(socket))
   socket.on('push-code', sharedCodeHandler(socket))
+
+  socket.on('change-question', changeQuestion(socket))
 
   // Note: we listen for the 'disconnecting' event and not 'disconnected'.
   // The 'disconnected' event is emitted after the socket leaves all rooms,

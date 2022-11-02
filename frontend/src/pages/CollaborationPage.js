@@ -2,8 +2,11 @@ import { useContext, useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { UserContext } from '../contexts/UserContext'
 import { Box, Button } from '@mui/material'
-import { findQuestionById } from '../api/questionService'
-import { findRoomService, deleteRoomService } from '../api/roomservice'
+import {
+  findQuestionById,
+  findQuestionByDifficulty,
+} from '../api/questionService'
+import { findRoomService, deleteRoomService, updateRoomService } from '../api/roomservice'
 import AlertDialog from '../components/AlertDialog'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
@@ -15,6 +18,7 @@ import { expirationCheck } from '../utils/main'
 import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import moment from 'moment'
+import { extendJWTExpiration } from '../api/userService'
 
 const CollaborationPage = () => {
   const user = useContext(UserContext)
@@ -34,8 +38,10 @@ const CollaborationPage = () => {
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
   // Leave Room Confirmation Dialog
-  const [leaveRoomConfirmationDialogOpen, setLeaveRoomConfirmationDialogOpen] =
-    useState(false)
+  const [
+    leaveRoomConfirmationDialogOpen,
+    setLeaveRoomConfirmationDialogOpen,
+  ] = useState(false)
   const handleLeaveRoomConfirmationCloseDialog = () =>
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
@@ -94,21 +100,48 @@ const CollaborationPage = () => {
         console.log('ERROR: ', err)
       }
     } else {
-      try {
-        if (location.state) {
-          const res = await findRoomService({ room_id: location.state.room })
-          const qnsRes = await findQuestionById(res.data.qnsid)
-          setQuestion(qnsRes.data)
-        }
-      } catch (err) {
-        console.log('ERROR: ', err)
-      }
+      getQuestionFromMongoDB()
     }
   }
 
-  const getNewQuestion = async () => {
-    // TODO: Handle the logic such that the new question is
-    // set for both parties when one of them presses the button
+  const getQuestionFromMongoDB = useCallback(async () => {
+    try {
+      if (location.state) {
+        const res = await findRoomService({ room_id: location.state.room })
+        const qnsRes = await findQuestionById(res.data.qnsid)
+        setQuestion(qnsRes.data)
+      }
+    } catch (err) {
+      console.log('ERROR: ', err)
+    }
+  }, [location.state])
+
+  useEffect(() => {
+    collabSocket.on('change-question', async (qnsid) => {
+      try {
+        const qnsRes = await findQuestionById(qnsid)
+        setQuestion(qnsRes.data)
+      } catch (err) {
+        console.log('ERROR: ', err)
+      }
+    })
+  }, [])
+
+  async function getNewQuestion()  {
+    try {
+      if (room) {
+        extendJWTExpiration(20)// extend by additional 20 minutes, total 35 minutes
+        const res = await findQuestionByDifficulty(room.difficulty, room.qnsid)
+        setQuestion(res.data)
+        const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
+        if (patchRoomRes.status === 200) {
+          setRoom(patchRoomRes.data)
+        }
+        collabSocket.emit('change-question', res.data.qnsid, getCollabRoomId(room.room_id))
+      }
+    } catch(err) {
+      console.log('ERROR: ', err)
+    }
   }
 
   const leaveRoom = useCallback(async () => {
@@ -250,7 +283,7 @@ const CollaborationPage = () => {
 
   return (
     <>
-      <Box className="time-remaining-div">
+      <Box className="time-remaining-container">
         <Box className="time-remaining-wrapper">
           {timeRemaining > 5 && (
             <p className="time-remaining">
@@ -274,13 +307,15 @@ const CollaborationPage = () => {
         sx={{
           // content height = 100vh - nav bar height - vertical padding
           // height: 'calc(100vh - 64px - 2 * 16px)',
-          height: 'calc(100vh - 64px - 24px)',
+
+          // content height = 100vh - nav bar height
+          height: 'calc(100vh - 64px)',
         }}
       >
         <Box className="collaboration-page-left-container">
-          <Box className="coding-question-chat-container">
+          <Box className="coding-question-and-chat-container">
             <Box className="coding-question-container">
-              <Question question={question} getNextQuestion={getNewQuestion} />
+              <Question question={question} onClick={getNewQuestion} />
             </Box>
             <Box className="coding-chat-container">
               <Chat room={location.state?.room} />
@@ -288,7 +323,7 @@ const CollaborationPage = () => {
           </Box>
           <Box className="coding-button-container">
             <Button
-              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-semibold rounded-md px-6"
+              className="font-inter bg-pink-700 hover:bg-pink-800 text-white font-medium rounded-md px-6"
               onClick={() => handleLeaveRoomConfirmationOpenDialog()}
             >
               Leave Room
