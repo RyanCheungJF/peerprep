@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, useContext } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import {
   Box,
   Divider,
   FormControl,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -12,9 +11,9 @@ import {
   TextField,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
+import { UserContext } from '../contexts/UserContext'
 import { collabSocket } from '../utils/socket'
 import { getCollabRoomId } from '../utils/main'
-import { UserContext } from '../contexts/UserContext'
 
 const Chat = ({ room }) => {
   collabSocket.on('receive-message', (msg) => {
@@ -26,6 +25,7 @@ const Chat = ({ room }) => {
 
   const [message, setMessage] = useState('')
   const [chatMessages, setChatMessages] = useState([])
+
   const user = useContext(UserContext)
 
   const scrollPositionRef = useRef(null)
@@ -71,33 +71,34 @@ const Chat = ({ room }) => {
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }} elevation={5}>
-      <Box className="coding-chat-div">
-        <p className="coding-chat-title">Chat</p>
-        <Divider />
-        <Grid container spacing={4} alignItems="center">
-          <Grid xs={12} item>
-            <List sx={{ maxHeight: '15rem', overflow: 'auto' }}>
-              {displayChatMessages()}
-              <ListItem ref={scrollPositionRef}></ListItem>
-            </List>
-          </Grid>
-          <Grid xs={11} item sx={{ position: 'static', pb: 1 }}>
+      <Box className="chat-container">
+        <Box className="chat-title-container">
+          <p className="chat-title">Chat</p>
+          <Divider />
+        </Box>
+        <Box className="chat-messages-container">
+          <List sx={{ position: 'absolute', padding: '5px' }}>
+            {displayChatMessages()}
+            <ListItem ref={scrollPositionRef}></ListItem>
+          </List>
+        </Box>
+        <Box className="chat-message-and-send-button-container">
+          <Divider />
+          <Box className="chat-message-and-send-button-wrapper">
             <FormControl fullWidth>
               <TextField
+                label="Type your message..."
+                variant="outlined"
                 value={message}
                 onChange={handleMessageChange}
                 onKeyDown={handleEnterKeyDown}
-                label="Type your message..."
-                variant="outlined"
               />
             </FormControl>
-          </Grid>
-          <Grid xs={1} item sx={{ paddingLeft: '12px' }}>
-            <IconButton onClick={sendMessage} aria-label="send" color="primary">
+            <IconButton aria-label="send" color="primary" onClick={sendMessage}>
               <SendIcon />
             </IconButton>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
     </Paper>
   )

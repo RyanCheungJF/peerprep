@@ -33,58 +33,43 @@ const UserAuth = ({
 
   return (
     <Box
+      className="userauth-container"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '30%',
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
+        // content height = 100vh - nav bar height
+        height: 'calc(100vh - 64px)',
       }}
     >
-      <p className="userauth-title">{pageTitle}</p>
-      <TextField
-        autoFocus
-        error={usernameSubmittedEmpty}
-        label="Username"
-        helperText={usernameSubmittedEmpty ? 'Username cannot be empty' : ''}
-        variant="standard"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        sx={{ marginBottom: '1rem' }}
-      />
-      <TextField
-        error={passwordSubmittedEmpty}
-        label="Password"
-        helperText={passwordSubmittedEmpty ? 'Password cannot be empty' : ''}
-        variant="standard"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        sx={{ marginBottom: '2rem' }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
-        <Box className="left-button-wrapper">
+      <Box className="userauth-container-wrapper">
+        <p className="userauth-title">{pageTitle}</p>
+        <TextField
+          autoFocus
+          error={usernameSubmittedEmpty}
+          label="Username"
+          helperText={usernameSubmittedEmpty ? 'Username cannot be empty' : ''}
+          variant="standard"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          sx={{ marginBottom: '1rem' }}
+        />
+        <TextField
+          error={passwordSubmittedEmpty}
+          label="Password"
+          helperText={passwordSubmittedEmpty ? 'Password cannot be empty' : ''}
+          variant="standard"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={{ marginBottom: '2rem' }}
+        />
+        <Box className="userauth-button-container">
           <Button
-            sx={{ px: 2 }}
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
             onClick={() => navigate(toggleDestination)}
           >
             {toggleText}
           </Button>
-        </Box>
-        <Box>
           <Button
-            sx={{ px: 2 }}
-            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
+            className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md px-6"
             onClick={() => {
               setUsernameSubmittedEmpty(username === '')
               setPasswordSubmittedEmpty(password === '')
@@ -96,25 +81,21 @@ const UserAuth = ({
             {ctaText}
           </Button>
         </Box>
-      </Box>
 
-      <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
-        <DialogTitle className="font-inter">{dialogTitle}</DialogTitle>
-        <DialogContent dividers>
-          <DialogContentText className="font-inter">
-            {dialogMsg}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          {isAuthSuccess ? (
-            redirectButton()
-          ) : (
-            <Button className="font-inter" onClick={closeDialog}>
-              OK
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
+        <Dialog fullWidth={true} maxWidth="xs" open={isDialogOpen}>
+          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogContent dividers>
+            <DialogContentText>{dialogMsg}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            {isAuthSuccess ? (
+              redirectButton()
+            ) : (
+              <Button onClick={closeDialog}>OK</Button>
+            )}
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   )
 }

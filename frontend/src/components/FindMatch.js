@@ -8,27 +8,31 @@ import {
   MenuItem,
   Select,
 } from '@mui/material'
-import AlertDialog from './AlertDialog'
-import FindingMatchDialog from './FindingMatchDialog'
-import { matchingSocket } from '../utils/socket'
-import { collabUrl } from '../utils/routeConstants'
+import { findQuestionByDifficulty as _findByDifficulty } from '../api/questionService'
+import { createRoomService } from '../api/roomservice'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
-import { createRoomService } from '../api/roomservice'
+import { collabUrl } from '../utils/routeConstants'
+import { matchingSocket } from '../utils/socket'
+import AlertDialog from './AlertDialog'
+import FindingMatchDialog from './FindingMatchDialog'
+import { extendJWTExpiration } from '../api/userService'
 
 const FindMatch = () => {
+  const user = useContext(UserContext)
   const navigate = useNavigate()
 
-  const user = useContext(UserContext)
-
   // Define finding match time out seconds
-  const findingMatchTimeOutSeconds = 30
+  const FINDING_MATCH_TIMEOUT_SEC = 30
 
   const [difficulty, setDifficulty] = useState('')
+  const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
-    useState(false)
+  const [
+    selectDifficultyErrorDialogOpen,
+    setSelectDifficultyErrorDialogOpen,
+  ] = useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -38,31 +42,6 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
-
-  useEffect(() => {
-    matchingSocket.on('found-connection', (username, difficulty) => {
-      try {
-        const room = {
-          room_id: username,
-          id1: username,
-          id2: user.username,
-          id1_present: true,
-          id2_present: true,
-          difficulty: difficulty.toLowerCase(),
-          datetime: new Date(),
-        }
-        createRoomService(room)
-      } catch (err) {
-        console.log(err)
-      }
-      navigate(collabUrl, {
-        state: {
-          room: username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
-    })
-  }, [navigate, user.username])
 
   const handleFindMatch = (difficulty) => {
     if (
@@ -77,23 +56,47 @@ const FindMatch = () => {
     }
   }
 
+  useEffect(() => {
+    const clearMatch = async () => {
+      if (user._id && matchingSocket.id && difficulty !== '') {
+        await deleteMatch(user._id, matchingSocket.id, difficulty)
+        window.removeEventListener('beforeunload', clearMatch)
+      }
+    }
+    window.addEventListener('beforeunload', clearMatch)
+  }, [difficulty, user._id])
+
   const startMatchingService = async () => {
     console.log('==> Start Matching Service')
     console.log('Difficulty: ' + difficulty)
-
+    // console.log('========================================')
+    // console.log('Matching Socket: ' + matchingSocket.id)
     const res = await findMatch(user._id, matchingSocket.id, difficulty)
+    // console.log(res)
+    // console.log('========================================')
 
     // Gets a response
     if (res) {
       const data = res.data
       const room = data.socketID
-      matchingSocket.emit('notify-partner', room, user.username, difficulty)
-      navigate(collabUrl, {
-        state: {
-          room: user.username,
-          difficulty: difficulty.toLowerCase(),
-        },
-      })
+      const questionRes = await _findByDifficulty(difficulty.toLowerCase(), undefined)
+      if (questionRes) {
+        matchingSocket.emit(
+          'notify-partner',
+          room,
+          user.username,
+          difficulty,
+          questionRes.data.qnsid
+        )
+        extendJWTExpiration(20)
+        navigate(collabUrl, {
+          state: {
+            room: user.username,
+            difficulty: difficulty.toLowerCase(),
+            qnsid: questionRes.data.qnsid,
+          },
+        })
+      }
     }
   }
 
@@ -103,10 +106,6 @@ const FindMatch = () => {
   }
 
   const renderUnableToFindMatchAlertDialog = () => {
-    if (!selectDifficultyErrorDialogOpen) {
-      return null
-    }
-
     return (
       <AlertDialog
         dialogOpen={selectDifficultyErrorDialogOpen}
@@ -119,24 +118,64 @@ const FindMatch = () => {
   }
 
   const renderFindingMatchDialog = () => {
-    if (!findingMatchDialogOpen) {
-      return null
-    }
+    // Return null when findingMatchDialogOpen = false
+    // This closes the dialog and unmounts the component.
 
-    return (
+    // Return FindingMatchDialog component when findingMatchDialogOpen = true
+    // This mounts the component and opens the dialog.
+    // This ensures that timer is restarted on every component mount.
+    return !findingMatchDialogOpen ? null : (
       <FindingMatchDialog
         dialogOpen={findingMatchDialogOpen}
         handleCloseDialog={handleFindingMatchCloseDialog}
-        findingMatchTimeOutSeconds={findingMatchTimeOutSeconds}
+        findingMatchTimeOutSeconds={FINDING_MATCH_TIMEOUT_SEC}
         startMatchingService={startMatchingService}
         stopMatchingService={stopMatchingService}
       />
     )
   }
 
+  matchingSocket.on('found-connection', (username, difficulty, qnsid) => {
+    // console.log('========================================')
+    // console.log('found-connection')
+    const room = {
+      room_id: username,
+      id1: username,
+      id2: user.username,
+      qnsid: qnsid,
+      difficulty: difficulty.toLowerCase(),
+      datetime: new Date(),
+    }
+    // console.log(room)
+    // console.log('========================================')
+    setRoom(room)
+  })
+
+  useEffect(() => {
+    const createRoom = async () => {
+      try {
+        await createRoomService(room)
+        extendJWTExpiration(20)
+        navigate(collabUrl, {
+          state: {
+            room: room.room_id,
+            difficulty: room.difficulty,
+            qnsid: room.qnsid,
+          },
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    if (room) {
+      createRoom()
+    }
+  }, [room, navigate])
+
   return (
-    <Box sx={{ my: 3 }}>
-      <FormControl fullWidth sx={{ mb: 3 }}>
+    <Box className="pt-6">
+      <FormControl fullWidth sx={{ mt: 1, mb: 3 }}>
         <InputLabel>Select Difficulty</InputLabel>
         <Select
           value={difficulty}
@@ -148,21 +187,12 @@ const FindMatch = () => {
           <MenuItem value="Hard">Hard</MenuItem>
         </Select>
       </FormControl>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+      <Button
+        className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-medium rounded-md px-6"
+        onClick={() => handleFindMatch(difficulty)}
       >
-        <Button
-          sx={{ px: 2 }}
-          className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-xl"
-          onClick={() => handleFindMatch(difficulty)}
-        >
-          Find Match
-        </Button>
-      </Box>
+        Find Match
+      </Button>
       {renderUnableToFindMatchAlertDialog()}
       {renderFindingMatchDialog()}
     </Box>

@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useContext, useState } from 'react'
 import {
   Button,
   Dialog,
@@ -8,16 +8,16 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material'
-import { UserContext } from '../contexts/UserContext'
 import { changeUserPassword } from '../api/userService'
+import { UserContext } from '../contexts/UserContext'
 import SnackbarAlert from './SnackbarAlert'
 
 const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
+  const user = useContext(UserContext)
+
   const [newPassword, setNewPassword] = useState('')
   const [newPasswordTextFieldChanged, setNewPasswordTextFieldChanged] =
     useState(false)
-
-  const user = useContext(UserContext)
 
   // Change Password Success Alert
   const [changePasswordSuccessAlertOpen, setChangePasswordSuccessAlertOpen] =
@@ -25,25 +25,15 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
   const handleChangePasswordSuccessOpenAlert = () =>
     setChangePasswordSuccessAlertOpen(true)
 
-  const handleCancel = () => {
-    setNewPassword('')
-    setNewPasswordTextFieldChanged(false)
-    handleCloseDialog()
-  }
-
   const handleChangePassword = async () => {
     if (!newPassword) {
       console.log('Password cannot be empty!')
-      setNewPassword('')
-      setNewPasswordTextFieldChanged(true)
       return
     }
 
     try {
       const res = await changeUserPassword(user._id, newPassword)
       console.log('success ', res)
-      setNewPassword('')
-      setNewPasswordTextFieldChanged(false)
       handleCloseDialog()
       handleChangePasswordSuccessOpenAlert()
     } catch (err) {
@@ -52,10 +42,6 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
   }
 
   const renderChangePasswordSuccessAlert = () => {
-    if (!changePasswordSuccessAlertOpen) {
-      return null
-    }
-
     return (
       <SnackbarAlert
         alertOpen={changePasswordSuccessAlertOpen}
@@ -66,8 +52,8 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
     )
   }
 
-  return (
-    <>
+  const renderChangePasswordDialog = () => {
+    return (
       <Dialog fullWidth={true} maxWidth="sm" open={dialogOpen}>
         <DialogTitle>Change Password</DialogTitle>
         <DialogContent dividers>
@@ -86,6 +72,7 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
                 : ''
             }
             variant="standard"
+            type="password"
             value={newPassword}
             onChange={(e) => {
               !newPassword &&
@@ -96,10 +83,16 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={handleChangePassword}>Submit</Button>
         </DialogActions>
       </Dialog>
+    )
+  }
+
+  return (
+    <>
+      {renderChangePasswordDialog()}
       {renderChangePasswordSuccessAlert()}
     </>
   )

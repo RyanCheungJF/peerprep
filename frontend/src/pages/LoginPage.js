@@ -16,6 +16,7 @@ const LoginPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const LoginPage = () => {
     try {
       const res = await loginUser(username, password)
       if (res && res.status === STATUS_CODE_SUCCESS) {
-        setSuccessDialog()
+        setSuccessDialog(username)
         setIsLoginSuccess(true)
       }
     } catch (err) {
@@ -46,10 +47,10 @@ const LoginPage = () => {
 
   const closeDialog = () => setIsDialogOpen(false)
 
-  const setSuccessDialog = () => {
+  const setSuccessDialog = (username) => {
     setIsDialogOpen(true)
     setDialogTitle('Logged In Successfully')
-    setDialogMsg('You will now be redirected to the Home page.')
+    setDialogMsg(`Hi, ${username}!👋 Welcome back to PeerPrep!`)
   }
 
   const setErrorDialog = (msg) => {
@@ -63,12 +64,7 @@ const LoginPage = () => {
     // reset the redirect url since it's only used this one time
     window.localStorage.removeItem(AUTH_REDIRECT)
     return (
-      <Button
-        className="font-inter"
-        component={Link}
-        to={redirectUrl}
-        replace={true}
-      >
+      <Button component={Link} to={redirectUrl} replace={true}>
         OK
       </Button>
     )

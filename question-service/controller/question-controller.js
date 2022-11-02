@@ -1,7 +1,15 @@
-import { ormFindByDifficulty as _findByDifficulty } from '../model/question-orm.js'
+import {
+  ormFindByDifficulty as _findByDifficulty,
+  ormFindById as _findById,
+} from '../model/question-orm.js'
 
-const selectRandomQuestion = (questions) => {
-  return questions[Math.floor(Math.random() * questions.length)]
+const selectRandomQuestion = (questions, excludeId) => {
+
+  var qnsId = Math.floor(Math.random() * questions.length)
+  while (questions[qnsId].qnsid.toString() === excludeId) { // if excludeId is undefined, this will always be false
+    qnsId = Math.floor(Math.random() * questions.length)
+  }
+  return questions[qnsId]
 }
 
 const checkParameters = (param, keywords) => {
@@ -18,9 +26,21 @@ export const getQuestion = async (req, res) => {
   }
 
   const questions = await _findByDifficulty(difficulty)
-  if (!questions || questions.length == 0) {
+  if (!questions || questions.length === 0) {
     return res.status(500).json({ message: 'Error retrieving question.' })
   }
-  const question = selectRandomQuestion(questions)
+
+  const question = selectRandomQuestion(
+    questions,
+    req.query.qnsid ? req.query.qnsid : undefined
+  )
+  return res.status(200).json(question)
+}
+
+export const findQuestionById = async (req, res) => {
+  const question = await _findById(req.params.qnsid)
+  if (!question || question.length == 0) {
+    return res.status(500).json({ message: 'Error retrieving question.' })
+  }
   return res.status(200).json(question)
 }

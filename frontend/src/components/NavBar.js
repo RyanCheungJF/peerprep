@@ -1,16 +1,18 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import AccountCircle from '@mui/icons-material/AccountCircle'
-import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
-import { logoutUser, isUserLoggedIn } from '../api/userService'
-import { loginUrl, profileUrl } from '../utils/routeConstants'
+import MenuItem from '@mui/material/MenuItem'
+import { isUserLoggedIn, logoutUser } from '../api/userService'
+import { loginUrl, profileUrl, publicRoutes } from '../utils/routeConstants'
 
 const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null)
+
+  const location = useLocation()
   const navigate = useNavigate()
 
   const handleMenu = (event) => {
@@ -37,7 +39,7 @@ const NavBar = () => {
   }
 
   const _renderAccountIcon = () => {
-    if (!isUserLoggedIn()) {
+    if (!isUserLoggedIn() && publicRoutes.includes(location.pathname)) {
       return null
     }
 
@@ -69,9 +71,9 @@ const NavBar = () => {
   }
 
   return (
-    <AppBar sx={{ bgcolor: 'white' }} position="static" elevation={0}>
+    <AppBar className="bg-neutral-100" position="static" elevation={0}>
       <Toolbar>
-        <p className="navbar">PeerPrep 📖</p>
+        <p className="navbar-title">PeerPrep 📖</p>
         {_renderAccountIcon()}
       </Toolbar>
     </AppBar>

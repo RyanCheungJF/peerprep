@@ -61,48 +61,50 @@ const LandingPage = () => {
   return (
     <>
       <Box
+        className="landing-page-container"
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '70%',
-          position: 'absolute',
-          left: '60%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
+          // content height = 100vh - nav bar height
+          height: 'calc(100vh - 64px)',
         }}
       >
-        <Box className="landingpage-text-container">
-          <p className="landingpage-title">{'PeerPrep'}</p>
-          <p className="landingpage-question">
-            {'Studying for interviews has never been easier.'}
-          </p>
-          <p className="landingpage-description">
-            {
-              'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
-            }
-          </p>
-          <p className="landingpage-description">
-            {
-              'It simulates technical interviews and lets you and your partner simulate the different roles!'
-            }
-          </p>
-        </Box>
-        <Box className="landingpage-button-container">
-          <Box className="landingpage-button-wrapper">
-            <Button
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/4"
-              onClick={() => navigate('/login')}
-            >
-              {'Log In'}
-            </Button>
+        <Box className="landing-page-container-wrapper">
+          <Box className="landing-page-title-container">
+            <p className="landing-page-title">{'PeerPrep'}</p>
           </Box>
-          <Box className="landingpage-button-wrapper">
-            <Button
-              className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-bold rounded-2xl w-1/4"
-              onClick={() => navigate('/signup')}
-            >
-              {'Sign Up'}
-            </Button>
+          <Box className="landing-page-text-and-button-container">
+            <Box className="landing-page-text-container">
+              <p className="landing-page-subtitle">
+                {'Studying for interviews has never been easier.'}
+              </p>
+              <p className="landing-page-description">
+                {
+                  'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
+                }
+              </p>
+              <p className="landing-page-description">
+                {
+                  'It simulates technical interviews and lets you and your partner simulate the different roles!'
+                }
+              </p>
+            </Box>
+            <Box className="landing-page-button-container">
+              <Box className="landing-page-button-wrapper">
+                <Button
+                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                  onClick={() => navigate('/login')}
+                >
+                  {'Log In'}
+                </Button>
+              </Box>
+              <Box className="landing-page-button-wrapper">
+                <Button
+                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                  onClick={() => navigate('/signup')}
+                >
+                  {'Sign Up'}
+                </Button>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -15,6 +15,7 @@ const SignupPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isSignupSuccess, setIsSignupSuccess] = useState(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const SignupPage = () => {
   }
 
   const redirectButton = () => (
-    <Button className="font-inter" component={Link} to="/login">
+    <Button component={Link} to="/login">
       OK
     </Button>
   )
