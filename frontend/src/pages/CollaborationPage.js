@@ -68,6 +68,9 @@ const CollaborationPage = () => {
       // Check if user is the only one in the room or if there are more ppl
       setIsPartnerOnline(roomClients.length > 1)
     })
+    matchingSocket.on('get-partner-uuid', () => {
+      matchingSocket.emit('send-uuid', location.state.room, user._id)
+    })
     matchingSocket.on('partner-uuid', (uuid) => {
       setPartneruuid(uuid)
     })
@@ -216,7 +219,7 @@ const CollaborationPage = () => {
 
     collabSocket.emit('join-room', getCollabRoomId(location.state.room))
     matchingSocket.emit('join-room', location.state.room)
-    matchingSocket.emit('get-partner-uuid', location.state.room, user._id)
+    matchingSocket.emit('request-partner-uuid', location.state.room)
   }, [location.state, navigate, checkExpiry, user._id])
 
   useEffect(() => {}, [partneruuid])

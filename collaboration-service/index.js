@@ -31,7 +31,7 @@ app.use('/api/collaboration', router).all((_, res) => {
 })
 
 const server = app.listen(PORT, () =>
-  console.log(`matching-service listening on port ${PORT}`)
+  console.log(`collaboration-service listening on port ${PORT}`)
 )
 const io = new Server(server, { cors: { origin: '*' } })
 io.on('connection', (socket) => {

@@ -6,6 +6,7 @@ let ReviewModelSchema = new Schema({
   revieweeid: {
     type: ObjectId,
     required: true,
+    index: true,
   },
   reviewerid: {
     type: ObjectId,
