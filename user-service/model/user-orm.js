@@ -8,6 +8,8 @@ import {
 import {
   addJWT as addJWTToRedis,
   checkJWTExists as checkJWTExistsRedis,
+  getCurrUserJWT as getCurrUserJWTRedis,
+  setCurrUserJWT as setCurrUserJWTRedis,
 } from './redis-repository.js'
 
 // need to separate orm functions from repository to decouple business logic from persistence
@@ -68,6 +70,7 @@ export const ormUpdateUserPassword = async (username, newPassword) => {
   }
 }
 
+// ---------------- Redis ORM methods ----------------- //
 export const ormInvalidateJWT = async (token) => {
   try {
     return addJWTToRedis(token)
@@ -82,6 +85,24 @@ export const ormIsJWTValid = async (token) => {
     return !checkJWTExistsRedis(token)
   } catch (err) {
     console.log('ERROR: Could not query redis JWT blacklist')
+    return { err }
+  }
+}
+
+/**
+ * Ensures that a user only has one valid JWT at any given time (which is the given token).
+ * This prevents a user from using the app on multiple devices at the same time.
+ */
+export const ormRestrictJWT = async (userId, token) => {
+  try {
+    const currJWT = await getCurrUserJWTRedis(userId)
+    if (currJWT) {
+      await ormInvalidateJWT(currJWT)
+    }
+
+    return setCurrUserJWTRedis(userId, token)
+  } catch (err) {
+    console.log('ERROR: Could not restrict JWT in Redis:', err)
     return { err }
   }
 }

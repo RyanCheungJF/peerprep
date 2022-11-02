@@ -5,6 +5,7 @@ import {
   ormCheckIfUserExists as _checkIfUserExists,
   ormUpdateUserPassword as _updateUserPassword,
   ormInvalidateJWT as _invalidateJWT,
+  ormRestrictJWT as _restrictJWT,
   ormFindUserById as _findUserById,
 } from '../model/user-orm.js'
 import { deleteMatchRoom } from '../services/matching-service.js'
@@ -109,14 +110,18 @@ export const loginUser = async (req, res) => {
   if (user?.err) {
     return res.status(500).json({ message: 'ERROR: Could not log user in' })
   }
+
   if (user && (await bcrypt.compare(password, user.password))) {
-    const token = jwt.sign(
-      { userId: user._id.toString(), password },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: JWT_EXPIRY,
-      }
-    )
+    const userId = user._id.toString()
+    const token = jwt.sign({ userId, password }, process.env.TOKEN_SECRET, {
+      expiresIn: JWT_EXPIRY,
+    })
+
+    const restrictionResult = await _restrictJWT(userId, token)
+    if (restrictionResult?.err) {
+      return res.status(500).json({ message: 'ERROR: Could not log user in' })
+    }
+
     return res.status(200).json({ userId: user._id, token })
   }
   return res.status(401).send('Invalid login credentials')
