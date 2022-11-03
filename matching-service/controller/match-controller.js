@@ -1,6 +1,7 @@
 import {
   findMatchInCache,
   deleteMatchInCache,
+  isUserInCache,
 } from '../model/redis-repository.js'
 
 import {
@@ -19,6 +20,12 @@ export const findMatch = async (req, res) => {
       return res
         .status(400)
         .json({ message: 'One or more fields are missing!' })
+    }
+
+    if (await isUserInCache(uuid)) {
+      return res
+        .status(409)
+        .json({ message: 'User is already in a matching queue.' })
     }
 
     const cacheUser = await findMatchInCache(difficulty, uuid, socketID)
@@ -106,7 +113,9 @@ export const updateRoom = async (req, res) => {
   console.log('PATCH /api/room ' + JSON.stringify(req.body))
   try {
     const room = await _updateRoom(req.params.room_id, req.body)
-    return res.status(200).json({ message: 'Room updated successfully!', data: room })
+    return res
+      .status(200)
+      .json({ message: 'Room updated successfully!', data: room })
   } catch (err) {
     return res.status(400).json({ message: 'Error with updating room!' })
   }

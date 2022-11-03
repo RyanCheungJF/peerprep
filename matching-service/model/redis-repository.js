@@ -48,3 +48,20 @@ export const deleteMatchInCache = async (difficulty, uuid, socketID) => {
     return false
   }
 }
+
+export const isUserInCache = async (uuid) => {
+  try {
+    // given a single match queue, checks if the user is already in the queue
+    const isUserInQueue = (queue) => queue.some((match) => match.uuid === uuid)
+
+    const difficulties = ['Easy', 'Medium', 'Hard']
+    const cachedQueues = await Promise.all(
+      difficulties.map((d) => client.get(d))
+    )
+    // check every queue to see if the user is one any of them
+    return cachedQueues.map(JSON.parse).some(isUserInQueue)
+  } catch (err) {
+    console.error('Error searching cache for user.', err)
+    throw err // re-throw to let caller handle
+  }
+}
