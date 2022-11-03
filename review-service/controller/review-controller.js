@@ -88,9 +88,7 @@ export const getUserScores = async (req, res) => {
 
 export const createScores = async (req, res) => {
   try {
-    console.log(req.body)
     const { revieweeid, reviewerid, scores } = req.body
-    console.log(revieweeid, reviewerid, scores)
     if (!(revieweeid && reviewerid && scores.length === FIELDS.length)) {
       return res
         .status(400)

@@ -1,0 +1,9 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+graph TD
+    A(User views Profile Page) --> B{ }
+    B -->|No data in cache, first time login| C(Reads from Database)
+    B -->|Data in cache| D(Reads from cache)
+    C --> E(Saves data to cache)
+    E --> F{ }
+    D --> F{ }
+    F --> G(User views reviews)
