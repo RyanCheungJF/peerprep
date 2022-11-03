@@ -1,0 +1,10 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>Service: leave-room(roomId) event
+
+    Service->>Redis: deleteRoom(roomId)
+    Service->>Database: deleteRoom(roomId)
+
+
+

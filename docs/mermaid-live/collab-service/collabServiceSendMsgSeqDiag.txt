@@ -1,0 +1,8 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>Service: send-message(message, roomId, fromUserId) event
+    Service-->>Client Sockets: receive-message(message) event
+
+    Service->>Redis: saveChatMsg(messageWithUserId, roomId)
+

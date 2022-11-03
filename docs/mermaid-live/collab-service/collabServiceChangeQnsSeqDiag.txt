@@ -1,0 +1,8 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>Service: change-question(qnsId) event
+    Service->>Client Sockets: change-question(qnsId) event
+
+
+
