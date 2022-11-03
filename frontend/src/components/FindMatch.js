@@ -13,6 +13,7 @@ import { createRoomService } from '../api/roomservice'
 import { findMatch, deleteMatch } from '../api/matchingService'
 import { UserContext } from '../contexts/UserContext'
 import { collabUrl } from '../utils/routeConstants'
+import { STATUS_CODE_CONFLICT } from '../utils/constants'
 import { matchingSocket } from '../utils/socket'
 import AlertDialog from './AlertDialog'
 import FindingMatchDialog from './FindingMatchDialog'
@@ -29,10 +30,8 @@ const FindMatch = () => {
   const [room, setRoom] = useState()
 
   // Select Difficulty Error Dialog
-  const [
-    selectDifficultyErrorDialogOpen,
-    setSelectDifficultyErrorDialogOpen,
-  ] = useState(false)
+  const [selectDifficultyErrorDialogOpen, setSelectDifficultyErrorDialogOpen] =
+    useState(false)
   const handleSelectDifficultyErrorCloseDialog = () =>
     setSelectDifficultyErrorDialogOpen(false)
   const handleSelectDifficultyErrorOpenDialog = () =>
@@ -42,6 +41,10 @@ const FindMatch = () => {
   const [findingMatchDialogOpen, setFindingMatchDialogOpen] = useState(false)
   const handleFindingMatchCloseDialog = () => setFindingMatchDialogOpen(false)
   const handleFindingMatchOpenDialog = () => setFindingMatchDialogOpen(true)
+
+  // Duplicate Match Dialog
+  const [duplicateMatchDialogOpen, setDuplicateMatchDialogOpen] =
+    useState(false)
 
   const handleFindMatch = (difficulty) => {
     if (
@@ -71,31 +74,41 @@ const FindMatch = () => {
     console.log('Difficulty: ' + difficulty)
     // console.log('========================================')
     // console.log('Matching Socket: ' + matchingSocket.id)
-    const res = await findMatch(user._id, matchingSocket.id, difficulty)
-    // console.log(res)
-    // console.log('========================================')
+    try {
+      const res = await findMatch(user._id, matchingSocket.id, difficulty)
+      // console.log(res)
+      // console.log('========================================')
 
-    // Gets a response
-    if (res) {
-      const data = res.data
-      const room = data.socketID
-      const questionRes = await _findByDifficulty(difficulty.toLowerCase(), undefined)
-      if (questionRes) {
-        matchingSocket.emit(
-          'notify-partner',
-          room,
-          user.username,
-          difficulty,
-          questionRes.data.qnsid
+      // Gets a response
+      if (res) {
+        const data = res.data
+        const room = data.socketID
+        const questionRes = await _findByDifficulty(
+          difficulty.toLowerCase(),
+          undefined
         )
-        extendJWTExpiration(20)
-        navigate(collabUrl, {
-          state: {
-            room: user.username,
-            difficulty: difficulty.toLowerCase(),
-            qnsid: questionRes.data.qnsid,
-          },
-        })
+        if (questionRes) {
+          matchingSocket.emit(
+            'notify-partner',
+            room,
+            user.username,
+            difficulty,
+            questionRes.data.qnsid
+          )
+          extendJWTExpiration(20)
+          navigate(collabUrl, {
+            state: {
+              room: user.username,
+              difficulty: difficulty.toLowerCase(),
+              qnsid: questionRes.data.qnsid,
+            },
+          })
+        }
+      }
+    } catch (error) {
+      if (error?.response?.status === STATUS_CODE_CONFLICT) {
+        handleFindingMatchCloseDialog()
+        setDuplicateMatchDialogOpen(true)
       }
     }
   }
@@ -116,6 +129,16 @@ const FindMatch = () => {
       />
     )
   }
+
+  const renderDuplicateMatchAlertDialog = () => (
+    <AlertDialog
+      dialogOpen={duplicateMatchDialogOpen}
+      handleCloseDialog={() => setDuplicateMatchDialogOpen(false)}
+      dialogTitle="Unable to Find Match"
+      dialogMsg="You are already looking for a match."
+      dialogButtonText="OK"
+    />
+  )
 
   const renderFindingMatchDialog = () => {
     // Return null when findingMatchDialogOpen = false
@@ -194,6 +217,7 @@ const FindMatch = () => {
         Find Match
       </Button>
       {renderUnableToFindMatchAlertDialog()}
+      {renderDuplicateMatchAlertDialog()}
       {renderFindingMatchDialog()}
     </Box>
   )
