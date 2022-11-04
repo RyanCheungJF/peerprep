@@ -1,0 +1,58 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+classDiagram
+    indexjs -- expressController
+    indexjs -- sharedCodeController
+    indexjs -- roomController
+    indexjs -- questionController
+    indexjs -- chatController
+
+    chatController ..> redisRepository
+
+    sharedCodeController ..> redisRepository
+
+    expressController ..> redisRepository
+    expressController ..> collaborationRoomORM
+
+    roomController ..> redisRepository
+    roomController ..> collaborationRoomORM
+
+    collaborationRoomORM ..> repository
+    repository ..> collaborationRoomModel
+
+    %% Method definitions
+    chatController : +messageHandler(socket, message, roomId, fromUserId)
+    sharedCodeController : +sharedCodeHandler(socket, code, roomId)
+    expressController : +deleteRoom(req, res)
+    questionController : +changeQuestion(socket, qndId, roomId)
+
+    class roomController {
+        +saveRoom(socket)
+        +getRoom(socket, roomId)
+        +deleteRoom(roomId)
+        +broadcastConnection(io, socket, roomId)
+        + broadcastDisconnection(socket)
+        -getRoomId(rooms)
+    }
+
+    class redisRepository {
+        +saveChatMsg(msg, roomId)
+        +saveSharedCode(code, roomId)
+        +getRoom(roomId)
+        +deleteRoom(roomId)
+        -getChatMsgs(roomId)
+        -getSharedCode(roomId)
+        -deleteChatMsgs(roomId)
+        -deleteSharedCode(roomId)
+    }
+
+    class collaborationRoomORM {
+        +ormSaveRoom(room)
+        +ormGetRoom(roomId)
+        +ormDeleteRoom(roomId)
+    }
+
+    class repository {
+        +saveRoom(room)
+        +getRoom(roomId)
+        +deleteRoom(roomId)
+    }
