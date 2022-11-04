@@ -194,4 +194,7 @@
   .navbar-title {
     @apply font-inter grow font-bold text-3xl text-gray-900;
   }
+  .navbar-color {
+    @apply bg-neutral-100;
+  }
 }
