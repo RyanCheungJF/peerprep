@@ -13,7 +13,7 @@ import {
   AUTH_REDIRECT,
 } from '../utils/constants'
 import { getJWTExpiry } from '../utils/main'
-import { loginUrl } from '../utils/routeConstants'
+import { loginUrl, param_forcedLogout } from '../utils/routeConstants'
 
 // custom axios instance with request and response interceptors to handle auth
 const axiosWithAuth = axios.create()
@@ -42,7 +42,9 @@ axiosWithAuth.interceptors.response.use(
     ) {
       window.localStorage.setItem(AUTH_REDIRECT, window.location.pathname)
       Cookies.remove(COOKIES_AUTH_TOKEN)
-      window.location.replace(`${window.location.origin}${loginUrl}`)
+      window.location.replace(
+        `${window.location.origin}${loginUrl}?${param_forcedLogout}=true`
+      )
     }
 
     // still return the original rejected promise - don't swallow it up and let the request silently fail...
@@ -65,7 +67,11 @@ export const loginUser = async (username, password) => {
 export const extendJWTExpiration = async (additionalMinutes) => {
   const token = getJWT()
   if (token) {
-    Cookies.set(COOKIES_AUTH_TOKEN, token, { expires: new Date(getJWTExpiry().getTime() + (additionalMinutes * ONE_MINUTE_IN_MS)) }) // Add additional 20 mins to the current JWT time, total 35 mins
+    Cookies.set(COOKIES_AUTH_TOKEN, token, {
+      expires: new Date(
+        getJWTExpiry().getTime() + additionalMinutes * ONE_MINUTE_IN_MS
+      ),
+    }) // Add additional 20 mins to the current JWT time, total 35 mins
   }
 }
 
