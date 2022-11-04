@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '@mui/material'
 import UserAuth from '../components/UserAuth'
+import SnackbarAlert from '../components/SnackbarAlert'
 import {
   AUTH_REDIRECT,
   STATUS_CODE_SUCCESS,
   STATUS_CODE_BAD_REQUEST,
   STATUS_CODE_UNAUTHORIZED,
 } from '../utils/constants'
-import { homeUrl } from '../utils/routeConstants'
+import { homeUrl, param_forcedLogout } from '../utils/routeConstants'
 import { loginUser, isUserLoggedIn } from '../api/userService'
 
 const LoginPage = () => {
@@ -16,8 +17,20 @@ const LoginPage = () => {
   const [dialogTitle, setDialogTitle] = useState('')
   const [dialogMsg, setDialogMsg] = useState('')
   const [isLoginSuccess, setIsLoginSuccess] = useState(false)
+  const [forcedLogoutAlertOpen, setForcedLogoutAlertOpen] = useState(false)
 
   const navigate = useNavigate()
+  const { search } = useLocation()
+
+  useEffect(() => {
+    // reset the state of the toast each time the search params change
+    setForcedLogoutAlertOpen(false)
+
+    const params = new URLSearchParams(search)
+    if (params.get(param_forcedLogout)) {
+      setForcedLogoutAlertOpen(true)
+    }
+  }, [search])
 
   useEffect(() => {
     if (isUserLoggedIn()) {
@@ -70,20 +83,34 @@ const LoginPage = () => {
     )
   }
 
-  return (
-    <UserAuth
-      pageTitle="Log in"
-      ctaText="Log in"
-      toggleText="Create an account"
-      toggleDestination="/signup"
-      handleAuth={handleLogin}
-      isDialogOpen={isDialogOpen}
-      closeDialog={closeDialog}
-      dialogTitle={dialogTitle}
-      dialogMsg={dialogMsg}
-      isAuthSuccess={isLoginSuccess}
-      redirectButton={redirectButton}
+  const renderForcedLoggedOutAlert = () => (
+    <SnackbarAlert
+      alertOpen={forcedLogoutAlertOpen}
+      setAlertOpen={setForcedLogoutAlertOpen}
+      autoHideDuration={8000}
+      severity="error"
+      alertMsg={`You have been logged out of your session.
+          You may be logged in on another device or your session may have expired.`}
     />
+  )
+
+  return (
+    <>
+      <UserAuth
+        pageTitle="Log in"
+        ctaText="Log in"
+        toggleText="Create an account"
+        toggleDestination="/signup"
+        handleAuth={handleLogin}
+        isDialogOpen={isDialogOpen}
+        closeDialog={closeDialog}
+        dialogTitle={dialogTitle}
+        dialogMsg={dialogMsg}
+        isAuthSuccess={isLoginSuccess}
+        redirectButton={redirectButton}
+      />
+      {renderForcedLoggedOutAlert()}
+    </>
   )
 }
 
