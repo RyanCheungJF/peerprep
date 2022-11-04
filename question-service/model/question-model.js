@@ -11,6 +11,7 @@ let QuestionModelSchema = new Schema({
     type: Number,
     required: true,
     unique: true,
+    index: true,
   },
   difficulty: {
     type: String,

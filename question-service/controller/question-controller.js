@@ -4,9 +4,9 @@ import {
 } from '../model/question-orm.js'
 
 const selectRandomQuestion = (questions, excludeId) => {
-
   var qnsId = Math.floor(Math.random() * questions.length)
-  while (questions[qnsId].qnsid.toString() === excludeId) { // if excludeId is undefined, this will always be false
+  while (questions[qnsId].qnsid.toString() === excludeId) {
+    // if excludeId is undefined, this will always be false
     qnsId = Math.floor(Math.random() * questions.length)
   }
   return questions[qnsId]
@@ -38,7 +38,13 @@ export const getQuestion = async (req, res) => {
 }
 
 export const findQuestionById = async (req, res) => {
-  const question = await _findById(req.params.qnsid)
+  const qnsid = req.params.qns.id
+
+  if (!qnsid) {
+    return res.status(400).json({ message: 'Missing question id' })
+  }
+
+  const question = await _findById(qnsid)
   if (!question || question.length == 0) {
     return res.status(500).json({ message: 'Error retrieving question.' })
   }

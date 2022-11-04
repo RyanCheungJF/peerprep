@@ -1,6 +1,9 @@
 import express from 'express'
 import cors from 'cors'
-import { getQuestion, findQuestionById } from './controller/question-controller.js'
+import {
+  getQuestion,
+  findQuestionById,
+} from './controller/question-controller.js'
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
@@ -19,3 +22,5 @@ app.use('/api/question', router).all((_, res) => {
 })
 
 app.listen(8100, () => console.log('question-service listening on port 8100'))
+
+export default app

@@ -22,7 +22,7 @@ const INCOMPLETE_BODY = {
   scores: [1, 2, 3, 4],
 }
 
-describe('API tests ', () => {
+describe('API tests', () => {
   describe('Test GET with valid id', () => {
     it('Expects to return a score', (done) => {
       chai

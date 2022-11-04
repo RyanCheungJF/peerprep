@@ -1,5 +1,5 @@
 import app from '../index.js'
-import chai, { expect } from 'chai'
+import chai from 'chai'
 import chaiHttp from 'chai-http'
 
 chai.should()
@@ -10,10 +10,6 @@ const LOGIN_DETAILS = {
   username: 'passwordis123',
   password: '123',
 }
-const UPDATE_LOGIN_DETAILS = {
-  username: 'testsuite',
-  password: '1234567890qwertyuioplkjhgfdsazxcvbnm',
-}
 const MISSING_LOGIN_DETAILS = {
   username: 'passwordis123',
 }
@@ -22,7 +18,7 @@ const INVALID_LOGIN_DETAILS = {
   password: '122',
 }
 
-describe('API tests ', () => {
+describe('API tests', () => {
   describe('Test valid login', () => {
     it('Expects to return a token', (done) => {
       chai
@@ -31,7 +27,7 @@ describe('API tests ', () => {
         .send(LOGIN_DETAILS)
         .end((err, res) => {
           res.should.have.status(200)
-          expect(res.body).have.property('token')
+          chai.expect(res.body).have.property('token')
           done()
         })
     })
