@@ -24,7 +24,7 @@ const INCOMPLETE_BODY = {
 
 describe('API tests ', () => {
   describe('Test GET with valid id', () => {
-    it('Expects to return an error', (done) => {
+    it('Expects to return a score', (done) => {
       chai
         .request(app)
         .get(`/api/review?userId=${UUID}`)
