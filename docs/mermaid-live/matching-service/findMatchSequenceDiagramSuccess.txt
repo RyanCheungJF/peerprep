@@ -1,0 +1,56 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client1
+    actor Client2
+    
+    activate MatchingSocket
+    par finding a match, join empty queue
+        activate Client1
+        Client1 ->> Client1: setDifficulty(easy)
+        Client1 ->> Server: findMatch(uuid, socketID, difficulty)
+        activate Server
+        Server ->> Server: getUser()
+        Server -->> Server: authorized
+        Server ->> Server: findMatch(req, res)
+        Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
+        Server ->> Redis: set(difficulty, [uuid, socketID])
+        activate Redis
+        Redis -->> Server: 
+        deactivate Redis
+        Server -->> Client1: 
+        deactivate Server
+    end
+    par finding a match, match found
+        activate Client2
+        Client2 ->> Client2: setDifficulty(easy)
+        Client2 ->> Server: findMatch(uuid, socketID, difficulty)
+        activate Server
+        Server ->> Server: getUser()
+        Server -->> Server: authorized
+        Server ->> Server: findMatch(req, res)
+        Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
+        Server ->> Redis: set(difficulty, [])
+        activate Redis
+        Redis -->> Server: match
+        deactivate Redis
+        Server -->> Client2: [uuid, socketID]
+        Client2 ->> Server: _findByDiffculty(difficulty, undefined)
+        Server -->> Client2: questionData
+        Client2 ->> MatchingSocket: emit('notify-partner', room, username, difficulty, qnsid)
+        MatchingSocket ->> Client1: emit('found-connection', username, difficulty, qnsid)
+        Client2 ->> Server: extendJWTExpiration(20)
+        Client2 ->> Client2: navigate(collabURL, state)
+    end
+
+    Client1 ->> Client1: setRoom(room)
+    Client1 ->> Server: CreateRoomService(room)
+    Server ->> Database: createRoom(params)
+    activate Database 
+    Database -->> Server: success
+    deactivate Database
+    Client1 ->> Server: extendJWTExpiration(20)
+    Client1 ->> Client1: navigate(collabURL, state)
+    deactivate Server
+    deactivate MatchingSocket
+    deactivate Client1
+    deactivate Client2
