@@ -4,11 +4,11 @@ sequenceDiagram
     actor Client2
     
     activate MatchingSocket
+    activate Server
     par finding a match, join empty queue
         activate Client1
         Client1 ->> Client1: setDifficulty(easy)
         Client1 ->> Server: findMatch(uuid, socketID, difficulty)
-        activate Server
         Server ->> Server: getUser()
         Server -->> Server: authorized
         Server ->> Server: findMatch(req, res)
