@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { isUserLoggedIn } from '../api/userService'
 import { baseUrl, homeUrl } from '../utils/routeConstants'
 import SnackbarAlert from '../components/SnackbarAlert'
+import importantImage from '../imgs/tweet.png'
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -67,45 +68,40 @@ const LandingPage = () => {
           height: 'calc(100vh - 64px)',
         }}
       >
-        <Box className="landing-page-container-wrapper">
-          <Box className="landing-page-title-container">
+        <Box className="landing-page-text-and-button-container">
+          <Box className="landing-page-text-container">
             <p className="landing-page-title">{'PeerPrep'}</p>
-          </Box>
-          <Box className="landing-page-text-and-button-container">
-            <Box className="landing-page-text-container">
-              <p className="landing-page-subtitle">
-                {'Studying for interviews has never been easier.'}
-              </p>
-              <p className="landing-page-description">
-                {
-                  'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
-                }
-              </p>
-              <p className="landing-page-description">
-                {
-                  'It simulates technical interviews and lets you and your partner simulate the different roles!'
-                }
-              </p>
-            </Box>
+            <p className="landing-page-subtitle">
+              {'Studying for interviews has never been easier.'}
+            </p>
+            <p className="landing-page-description">
+              {
+                'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
+              }
+            </p>
+            <p className="landing-page-description">
+              {
+                'It simulates technical interviews and lets you and your partner simulate the different roles!'
+              }
+            </p>
             <Box className="landing-page-button-container">
-              <Box className="landing-page-button-wrapper">
-                <Button
-                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
-                  onClick={() => navigate('/login')}
-                >
-                  {'Log In'}
-                </Button>
-              </Box>
-              <Box className="landing-page-button-wrapper">
-                <Button
-                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
-                  onClick={() => navigate('/signup')}
-                >
-                  {'Sign Up'}
-                </Button>
-              </Box>
+              <Button
+                className="mb-10 font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                onClick={() => navigate('/login')}
+              >
+                {'Log In'}
+              </Button>
+              <Button
+                className="ml-8 mb-10 font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                onClick={() => navigate('/signup')}
+              >
+                {'Sign Up'}
+              </Button>
             </Box>
           </Box>
+          <div>
+            <img src={importantImage} className="landing-image" />
+          </div>
         </Box>
       </Box>
       {renderDeleteAccountSuccessAlert()}
