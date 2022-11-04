@@ -46,10 +46,4 @@ classDiagram
     }
 
     class socketRoomModel {
-        -string room_id
-        -int qnsid
-        -string difficulty
-        -string id1
-        -string id2
-        -dateTime dateTime
     }
