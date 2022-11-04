@@ -1,0 +1,55 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+classDiagram
+    indexjs -- matchController
+
+    matchController ..> redisRepository
+    matchController ..> socketRoomORM
+
+    socketRoomORM ..> repository
+    repository ..> socketRoomModel
+
+    %% Method definitions
+    class matchController {
+        +findMatch(req, res)
+        +deleteMatch(req, res)
+        +findAllRooms(req, res)
+        +fineOneRoom(req, res)
+        +createRoom(req, res)
+        +updateRoom(req, res)
+        +deleteRoom(req, res)
+        +deleteRoomByUsername(io)
+    }
+
+    class redisRepository {
+        +string[] queue
+        +findMatchInCache(difficulty, uuid, socketID)
+        +deleteMatchInCache(difficulty, uuid, socketID)
+        +isUserInCache(uuid)
+    }
+
+    class socketRoomORM {
+        +ormFindAllRooms(filter)
+        +ormFindOneRoom(filter)
+        +ormCreateRoom(room)
+        +ormUpdateRoom(room_id, body)
+        +ormDeleteRoom(room_id)
+        +ormDeleteRoomByUsername(username)
+    }
+
+    class repository {
+        +findAllRooms(filter)
+        +findOneRoom(filter)
+        +createRoom(params)
+        +deleteRoom(filter)
+        +deleteandReturnRoom(filter)
+        +updateRoom(room_id, body)
+    }
+
+    class socketRoomModel {
+        -string room_id
+        -int qnsid
+        -string difficulty
+        -string id1
+        -string id2
+        -dateTime dateTime
+    }
