@@ -1,0 +1,10 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+graph TD
+    A(User ends collab session) --> B
+    B(User prompted to leave a review or skip) --> C{ }
+    C -->|User leaves a review| D(User rates partner)
+    D -->E(Review written to database)
+    E -->F(Review updates cache under partner's uuid)
+    F -->G{ }
+    C -->|User skips| G{ }
+    G -->H(User returns to main menu)
