@@ -57,9 +57,12 @@ const generateTotalScoresForUser = (reviews, userId) => {
 export const getUserScores = async (req, res) => {
   const userId = req.query.userId
 
+  if (!userId) {
+    return res.status(400).send({ message: 'Missing user id' })
+  }
+
   const cacheScores = await getScoresFromCache(userId)
   if (cacheScores) {
-    console.log('cache scores', cacheScores)
     return res.status(200).json(generateAverageScoresForUser(cacheScores))
   }
 

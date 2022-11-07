@@ -26,3 +26,5 @@ app.use('/api/review', router).all((_, res) => {
 })
 
 app.listen(8500, () => console.log('review-service listening on port 8500'))
+
+export default app

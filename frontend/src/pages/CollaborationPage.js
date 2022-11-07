@@ -74,7 +74,7 @@ const CollaborationPage = () => {
     matchingSocket.on('partner-uuid', (uuid) => {
       setPartneruuid(uuid)
     })
-  }, [])
+  }, [location.state, user._id])
 
   useEffect(() => {
     matchingSocket.on('partner-left', (data) => {
@@ -135,7 +135,7 @@ const CollaborationPage = () => {
         setQuestion(res.data)
         const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
         if (patchRoomRes.status === 200) {
-          setRoom(patchRoomRes.data)
+          room.qnsid = res.data.qnsid
         }
         collabSocket.emit('change-question', res.data.qnsid, getCollabRoomId(room.room_id))
       }
