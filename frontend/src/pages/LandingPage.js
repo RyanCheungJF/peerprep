@@ -100,7 +100,7 @@ const LandingPage = () => {
             </Box>
           </Box>
           <div>
-            <img src={importantImage} className="landing-image" />
+            <img src={importantImage} className="landing-image" alt="tweet" />
           </div>
         </Box>
       </Box>
