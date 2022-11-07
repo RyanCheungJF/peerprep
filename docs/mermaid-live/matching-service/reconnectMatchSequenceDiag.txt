@@ -3,8 +3,7 @@ sequenceDiagram
     actor Client1
     
     par check if there is existing room
-        activate Client1
-        activate Server
+        
         Client1 ->> Client1: navigate to homepage
         Client1 ->> Server: findRoomService(id1: Client1 || id2: Client1)
         Server -->> Client1: response
@@ -17,6 +16,3 @@ sequenceDiagram
             end 
         end
     end
-
-    deactivate Server
-    deactivate Client1
