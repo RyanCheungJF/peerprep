@@ -27,7 +27,6 @@ const Question = ({ question, onClick }) => {
             <p
               dangerouslySetInnerHTML={{ __html: question['description'] }}
             ></p>
-            <br />
             <p className="question-details-example-title">Examples:</p>
             <p
               dangerouslySetInnerHTML={{
@@ -42,7 +41,7 @@ const Question = ({ question, onClick }) => {
             <p
               dangerouslySetInnerHTML={{ __html: question['ex_1_explanation'] }}
             ></p>
-            <br />
+            <div className="question-space" />
             <p
               dangerouslySetInnerHTML={{
                 __html: 'Input: ' + question['ex_2_input'],
@@ -56,7 +55,7 @@ const Question = ({ question, onClick }) => {
             <p
               dangerouslySetInnerHTML={{ __html: question['ex_2_explanation'] }}
             ></p>
-            <br />
+            <div className="question-space" />
             {question['ex_3_input'] && (
               <p
                 dangerouslySetInnerHTML={{
