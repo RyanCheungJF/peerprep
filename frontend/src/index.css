@@ -17,7 +17,7 @@
     @apply flex md:flex-row flex-col;
   }
   .landing-page-text-container {
-    @apply flex grow flex-col justify-center mr-10;
+    @apply flex grow flex-col justify-center mr-10 mt-8;
   }
   .landing-page-subtitle {
     @apply pb-4 font-inter font-semibold text-gray-700;
@@ -30,6 +30,12 @@
   }
   .landing-image {
     @apply rounded-3xl shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] h-auto w-auto max-h-[1080px] max-w-[360px];
+  }
+  .landing-page-icon-title {
+    @apply font-semibold text-gray-700 pt-10;
+  }
+  .landing-page-icon-container {
+    @apply flex flex-row space-x-3;
   }
 
   /* UserAuth Component (For Login & Signup Pages) */
