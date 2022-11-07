@@ -1,0 +1,15 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>Service: disconnecting() event
+
+    par notify all room clients
+        Service->>+Service: broadcastDisconnection()
+        Service-->>-Client Sockets: partner-disconnected() event
+    and persist cached room data
+        Service->>Redis: getChatMsgs(roomId)
+        Service->>Redis: getSharedCode(roomId)
+        Service->>Database: saveRoom(room)
+    end
+
+

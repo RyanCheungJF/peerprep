@@ -1,0 +1,8 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>Service: push-code(code, roomId) event
+    Service-->>Client Sockets: pull-code(code) event
+
+    Service->>Redis: saveSharedCode(code, roomId)
+

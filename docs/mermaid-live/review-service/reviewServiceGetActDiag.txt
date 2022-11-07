@@ -1,0 +1,11 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    Client->>+Backend: getReviewStats(uuid)
+    Backend->>+Backend: getUserScores()
+    alt is cached
+    Backend->>+Redis: getScoresFromCache()
+    else else
+    Backend->>+Database: getUserScores(userId)
+    Backend->>+Redis: writeScoresToCache(totalScores)
+    end
+    Backend->>+Backend: generateAverageScoresForUser(toatalScores)

@@ -1,0 +1,16 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client Sockets
+    Client Sockets->>+Service: join-room(socket, roomId) event
+    par assign socket to room
+        Service->>Service: socket.join(roomId)
+
+    and notify all room clients
+        Service->>+Service: broadcastConnection(roomId)
+        Service-->>-Client Sockets: partner-connected(all room sockets) event
+    and retrieve saved room data
+        Service->>+Database: getRoom(roomId)
+        Database-->>-Service: savedRoomData
+        Service-->>Client Sockets: restore-chat(savedChat) event
+        Service-->>-Client Sockets: restore-code(savedCode) event
+    end
