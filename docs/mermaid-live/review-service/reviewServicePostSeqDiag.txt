@@ -1,7 +1,7 @@
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
 sequenceDiagram
     actor Client
-    Client->>+Backend: createReviewStats(revieweeid, reviewerid, scores)
-    Backend->>+Backend: createScores()
-    Backend->>+Redis: writeScoresToCache(scoresObject)
-    Backend->>+Database: createScores(params)
+    Client->>+Service: createReviewStats(revieweeid, reviewerid, scores)
+    Service->>+Service: createScores()
+    Service->>+Redis: writeScoresToCache(scoresObject)
+    Service->>+Database: createScores(params)
