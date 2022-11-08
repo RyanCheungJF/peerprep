@@ -71,9 +71,11 @@ const NavBar = () => {
   }
 
   return (
-    <AppBar className="navbar-color" position="static" elevation={0}>
+    <AppBar className="bg-neutral-100" position="static" elevation={0}>
       <Toolbar>
-        <p className="navbar-title">PeerPrep 📖</p>
+        <p className="navbar-title" onClick={() => navigate('/')}>
+          PeerPrep 📖
+        </p>
         {_renderAccountIcon()}
       </Toolbar>
     </AppBar>
