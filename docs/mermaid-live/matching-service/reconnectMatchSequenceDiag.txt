@@ -1,0 +1,18 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client1
+    
+    par check if there is existing room
+        
+        Client1 ->> Client1: navigate to homepage
+        Client1 ->> Server: findRoomService(id1: Client1 || id2: Client1)
+        Server -->> Client1: response
+        opt response not empty
+            alt Room Expired
+                Client1 ->> Server: deleteRoomService(room_id)
+                Server -->> Client1: success
+            else Room have not Expired
+                Client1 ->> Client1: navigate(collabURL)
+            end 
+        end
+    end

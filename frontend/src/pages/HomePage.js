@@ -53,7 +53,7 @@ const HomePage = () => {
     >
       <Box className="home-page-container-wrapper">
         <Box className="p-6">
-          <p className="home-page-header">Welcome back, {user.username}!</p>
+          <p className="home-page-header">Welcome back, {user.username}! 🤠</p>
         </Box>
         <Box className="p-6">
           <Divider>

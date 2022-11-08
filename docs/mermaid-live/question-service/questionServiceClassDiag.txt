@@ -1,0 +1,27 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+classDiagram
+    indexjs -- questionController
+
+    questionController ..> socketRoomORM
+
+    socketRoomORM ..> repository
+    repository ..> socketRoomModel
+
+    %% Method definitions
+    class questionController {
+        +getQuestion(req, res)
+        +findQuestionById(req, res)
+    }
+
+    class socketRoomORM {
+        +ormFindByDifficulty(difficulty)
+        +ormFindById(id)
+    }
+
+    class repository {
+        +findQuestionbyFiler(query)
+        +findOneQuestionByFilter(query)
+    }
+
+    class socketRoomModel {
+    }

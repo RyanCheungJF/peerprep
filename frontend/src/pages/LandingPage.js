@@ -5,6 +5,15 @@ import { isUserLoggedIn } from '../api/userService'
 import { baseUrl, homeUrl } from '../utils/routeConstants'
 import SnackbarAlert from '../components/SnackbarAlert'
 import importantImage from '../imgs/tweet.png'
+import ReactIcon from '../components/icons/ReactIcon'
+import MaterialIcon from '../components/icons/MaterialIcon'
+import TailwindIcon from '../components/icons/TailwindIcon'
+import NodeIcon from '../components/icons/NodeIcon'
+import MongoIcon from '../components/icons/MongoIcon'
+import RedisIcon from '../components/icons/RedisIcon'
+import SocketIcon from '../components/icons/SocketIcon'
+import DockerIcon from '../components/icons/DockerIcon'
+import DigitalOceanIcon from '../components/icons/DigitalOceanIcon'
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -98,9 +107,21 @@ const LandingPage = () => {
                 {'Sign Up'}
               </Button>
             </Box>
+            <p className="landing-page-icon-title">Built with ❤️ in:</p>
+            <div className="landing-page-icon-container">
+              <ReactIcon />
+              <MaterialIcon />
+              <TailwindIcon />
+              <NodeIcon />
+              <MongoIcon />
+              <RedisIcon />
+              <SocketIcon />
+              <DockerIcon />
+              <DigitalOceanIcon />
+            </div>
           </Box>
           <div>
-            <img src={importantImage} className="landing-image" />
+            <img src={importantImage} className="landing-image" alt="tweet" />
           </div>
         </Box>
       </Box>

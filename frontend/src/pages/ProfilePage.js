@@ -146,7 +146,7 @@ const ProfilePage = () => {
     >
       <Box className="profile-page-container-wrapper">
         <Box className="p-6">
-          <p className="profile-page-header">My Profile</p>
+          <p className="profile-page-header">My Profile 🙌🏻</p>
         </Box>
         <Box className="p-6">
           <Divider>
