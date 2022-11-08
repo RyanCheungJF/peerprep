@@ -17,7 +17,6 @@ const HOUR = MINUTE * 60
 // for new writes and updates
 export const writeScoresToCache = async (newScores) => {
   const cacheResults = await client.get(newScores.userId)
-  console.log('newSCoreS', newScores)
   const cacheData = JSON.parse(cacheResults)
   const data = {
     userId: newScores.userId,
@@ -34,16 +33,16 @@ export const writeScoresToCache = async (newScores) => {
 }
 
 // get scores or undefined
-export const getScoresFromCache = async (username) => {
-  const cacheResults = await client.get(username)
+export const getScoresFromCache = async (userId) => {
+  const cacheResults = await client.get(userId)
   const cacheData = JSON.parse(cacheResults)
   return cacheData
 }
 
 // upon logout/ user deletes account, we want a fresh pull upon next login
-export const deleteScoresFromCache = async (username) => {
+export const deleteScoresFromCache = async (userId) => {
   try {
-    await client.del(username)
+    await client.del(userId)
     return true
   } catch (err) {
     return false

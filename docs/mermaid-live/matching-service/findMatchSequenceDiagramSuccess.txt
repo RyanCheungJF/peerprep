@@ -3,28 +3,23 @@ sequenceDiagram
     actor Client1
     actor Client2
     
-    par finding a match, join empty queue
-        Client1 ->> Server: findMatch(uuid, socketID, difficulty)
-        Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
-        Server ->> Redis: set(difficulty, [uuid, socketID])
-    end
-    par finding a match, match found
-        Client2 ->> Server: findMatch(uuid, socketID, difficulty)
-        Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
-        Server ->> Redis: set(difficulty, [])
-        Redis -->> Server: match
-        Server -->> Client2: [uuid, socketID]
-        Client2 ->> Server: _findByDiffculty(difficulty, undefined)
-        Server -->> Client2: questionData
-        Client2 ->> MatchingSocket: emit('notify-partner', room, username, difficulty, qnsid)
-        MatchingSocket ->> Client1: emit('found-connection', username, difficulty, qnsid)
-        Client2 ->> Client2: extendJWTExpiration(20)
-        Client2 ->> Client2: navigate(collabURL, state)
-    end
+    Client1 ->> Server: findMatch(uuid, socketID, difficulty)
+    Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
+    Server ->> Redis: set(difficulty, [uuid, socketID])
+
+
+    Client2 ->> Server: findMatch(uuid, socketID, difficulty)
+    Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
+    Server ->> Redis: set(difficulty, [])
+    Redis -->> Server: match
+    Server -->> Client2: [uuid, socketID]
+    Client2 ->> Server: _findByDiffculty(difficulty, undefined)
+    Client2 ->> MatchingSocket: emit('notify-partner', room, username, difficulty, qnsid)
+    MatchingSocket ->> Client1: emit('found-connection', username, difficulty, qnsid)
+    Client2 ->> Client2: navigate(collabURL, state)
 
     Client1 ->> Client1: setRoom(room)
     Client1 ->> Server: CreateRoomService(room)
     Server ->> Database: createRoom(params)
-    Client1 ->> Client1: extendJWTExpiration(20)
     Client1 ->> Client1: navigate(collabURL, state)
 

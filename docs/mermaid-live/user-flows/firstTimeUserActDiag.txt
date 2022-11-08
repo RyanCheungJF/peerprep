@@ -1,0 +1,26 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+stateDiagram-v2
+    a: User visits landing page
+    b: Creates account
+    state c <<choice>>
+    d: Logs into account
+    state e <<choice>>
+    f: User logs out
+    g: User deletes account
+    h: User changes password
+    state i <<choice>>
+    j: User ends session
+
+    [*] --> a
+    a --> b
+    b --> c
+    c --> d
+    d --> e
+    e --> f
+    e --> g
+    e --> h
+    h --> c
+    f --> i
+    g --> i
+    i --> j
+    j --> [*]

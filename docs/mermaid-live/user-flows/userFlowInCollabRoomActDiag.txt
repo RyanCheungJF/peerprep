@@ -1,0 +1,40 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+stateDiagram-v2
+    a: Collaboration Page
+    state b <<choice>>
+    c: User refreshes
+    d: User closes tab
+    e: Timer runs out
+    f: Peer receives dialog that user left
+    state g <<choice>>
+    h: Closes room
+    i: Peer waits
+    state j <<choice>>
+    k: User reconnects    
+    l: User prompted to leave review
+    m: User tries to redirect to landing
+    n: User brought back to room
+
+    [*] --> a
+    a --> b
+    
+    b --> c
+    b --> d
+    b --> e
+    b --> m
+    m --> n
+    n --> b
+    
+    c --> f
+    d --> f
+    f --> g
+    
+    g --> i
+    g --> h
+    i --> k 
+    k --> b
+
+    e --> j
+    h --> j
+    j --> l
+    l --> [*]
