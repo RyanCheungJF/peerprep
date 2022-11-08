@@ -38,7 +38,7 @@ export const getQuestion = async (req, res) => {
 }
 
 export const findQuestionById = async (req, res) => {
-  const qnsid = req.params.qns.id
+  const qnsid = req.params.qnsid
 
   if (!qnsid) {
     return res.status(400).json({ message: 'Missing question id' })
