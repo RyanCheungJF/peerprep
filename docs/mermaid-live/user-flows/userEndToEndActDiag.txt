@@ -1,0 +1,54 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+stateDiagram-v2
+    login: Login
+    state a <<choice>>
+    [*] --> login
+    choose_difficulty: Choose difficulty
+    find_match: Find match
+    home_page: Home page
+    collaboration_page: Collaboration page
+    change_question: Change Question
+    leave_room: Leave room
+    review_dialog: Review Dialog
+    profile_page: Profile page
+    view_review: View review
+    login --> a
+    a --> home_page
+    state c <<choice>>
+    home_page --> c
+    c --> choose_difficulty
+    choose_difficulty --> find_match
+    find_match --> collaboration_page
+
+    state collabFork <<fork>>
+    collaboration_page --> collabFork
+    chat: Chat
+    code: Code
+    collabFork --> chat
+    collabFork --> code
+    collabFork --> change_question
+
+    state collabJoin <<join>>
+    chat --> collabJoin
+    code --> collabJoin
+    change_question --> collabJoin
+
+    collabJoin --> leave_room
+    state toReview <<choice>>
+    leave_room --> review_dialog
+    review_dialog --> toReview
+    leave_review: Leave Review
+    skip_review: Skip Review
+    toReview --> leave_review
+    toReview --> skip_review
+    state b <<choice>>
+    leave_review --> b
+    skip_review --> b
+    b --> a
+
+    c --> profile_page
+    profile_page --> view_review
+    c --> [*]
+    view_review --> a
+
+

@@ -1,0 +1,36 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+classDiagram
+    indexjs -- reviewController
+
+    reviewController ..> redisRepository
+    reviewController ..> reviewORM
+
+    reviewORM ..> repository
+    repository ..> reviewModel
+
+    class reviewController {
+        +getUserScores(req, res)
+        +createScores(req, res)
+        +deleteScoresFromCache(req, res)
+        -generateZeroArray(len)
+        -generateAverageScoresForUser(scores)
+        -generateTotalScoresForUser(reviews, userId)
+    }
+
+    class redisRepository {
+        +writeScoresToCache(newScores)
+        +getScoresFromCache(userId)
+        +deleteScoresFromCache(userId)
+    }
+
+    class reviewORM {
+        +ormGetAllScoresForUser(userId)
+        +ormCreateScores(params)
+        +ormDeleteAllScoresForUser(userId)
+    }
+
+    class repository {
+        +getAllScoresForUser(query)
+        +createScores(params)
+        +deleteAllScoresForUser(query)
+    }
