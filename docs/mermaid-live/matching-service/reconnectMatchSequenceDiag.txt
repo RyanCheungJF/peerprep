@@ -3,12 +3,12 @@ sequenceDiagram
     actor Client1
     
     Client1 ->> Client1: navigate to homepage
-    Client1 ->> Server: findRoomService(id1: Client1 || id2: Client1)
-    Server -->> Client1: response
+    Client1 ->> Service: findRoomService(id1: Client1 || id2: Client1)
+    Service -->> Client1: response
     opt response not empty
         alt Room Expired
-            Client1 ->> Server: deleteRoomService(room_id)
-            Server -->> Client1: success
+            Client1 ->> Service: deleteRoomService(room_id)
+            Service -->> Client1: success
         else Room have not Expired
             Client1 ->> Client1: navigate(collabURL)
         end 
