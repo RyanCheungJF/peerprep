@@ -1,0 +1,13 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+graph TD
+    main[Front end Application] --> user[User Service]
+    main --> match[Matching Service]
+    main --> collab[Collaboration Service]
+    main --> question[Question Service]
+    main --> review[Review Service]
+    main --> new[Voice Service]
+
+
+    classDef green fill:#9f6,stroke:#333,stroke-width:1px;
+    classDef orange fill:#f96,stroke:#333,stroke-width:4px;
+    class new, green
