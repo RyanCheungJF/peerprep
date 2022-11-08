@@ -3,22 +3,16 @@ sequenceDiagram
     actor Client1
     actor Client2
     
-    par change question
-        Client1 ->> Client1: getNewQuestion()
-        Client1 ->> Server: extendJWTExpiration(20)
-        Client1 ->> Server: findQuestionByDifficulty(difficulty, qnsid)
-        Server -->> Client1: questionData
-        Client1 ->> Client1: setQuestion(questionData)
-        Client1 ->> Server: updateRoomService(room_id, [qnsid])
-        Server ->> Server: ormUpdateRoom(room_id, body)
-        Server ->> Database: updateRoom(room_id, body)
+    Client1 ->> Client1: getNewQuestion()
+    Client1 ->> Server: findQuestionByDifficulty(difficulty, qnsid)
+    Client1 ->> Client1: setQuestion(questionData)
+    Client1 ->> Server: updateRoomService(room_id, [qnsid])
+    Server ->> Server: ormUpdateRoom(room_id, body)
+    Server ->> Database: updateRoom(room_id, body)
+    Database -->> Server: success
 
-        Database -->> Server: success
-
-        Server -->> Client1: success
-        Client1 ->> MatchingSocket: emit('change-question', qnsid, room_id)
-        MatchingSocket -->> Client2: emit('change-question', qnsid)
-        Client2 ->> Server: findQuestionById(qnsid)
-        Server -->> Client2: questionData
-        Client2 -->> Client2: setQuestion(questionData)
-    end
+    Server -->> Client1: success
+    Client1 ->> MatchingSocket: emit('change-question', qnsid, room_id)
+    MatchingSocket -->> Client2: emit('change-question', qnsid)
+    Client2 ->> Server: findQuestionById(qnsid)
+    Client2 -->> Client2: setQuestion(questionData)
