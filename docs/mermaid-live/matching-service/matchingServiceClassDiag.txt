@@ -17,7 +17,7 @@ classDiagram
         +createRoom(req, res)
         +updateRoom(req, res)
         +deleteRoom(req, res)
-        +deleteRoomByUsername(io)
+        +deleteRoomByUsername(io, req, res)
     }
 
     class redisRepository {
