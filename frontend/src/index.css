@@ -201,7 +201,7 @@
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
   }
   .navbar-title {
-    @apply font-inter grow font-bold text-3xl text-gray-900;
+    @apply font-inter font-bold text-3xl text-gray-900 cursor-pointer;
   }
   .navbar-color {
     @apply bg-neutral-100;

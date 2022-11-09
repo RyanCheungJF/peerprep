@@ -71,7 +71,16 @@ const NavBar = () => {
   }
 
   return (
-    <AppBar className="bg-neutral-100" position="static" elevation={0}>
+    <AppBar
+      className="bg-neutral-100"
+      sx={{
+        '& .MuiToolbar-root': {
+          justifyContent: 'space-between',
+        },
+      }}
+      position="static"
+      elevation={0}
+    >
       <Toolbar>
         <p className="navbar-title" onClick={() => navigate('/')}>
           PeerPrep 📖
