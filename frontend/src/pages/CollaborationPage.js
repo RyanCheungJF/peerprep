@@ -1,24 +1,28 @@
 import { useContext, useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { UserContext } from '../contexts/UserContext'
 import { Box, Button } from '@mui/material'
 import {
   findQuestionById,
   findQuestionByDifficulty,
 } from '../api/questionService'
-import { findRoomService, deleteRoomService, updateRoomService } from '../api/roomservice'
+import {
+  findRoomService,
+  deleteRoomService,
+  updateRoomService,
+} from '../api/roomservice'
+import { extendJWTExpiration } from '../api/userService'
 import AlertDialog from '../components/AlertDialog'
 import Chat from '../components/Chat'
 import CodeEditor from '../components/CodeEditor'
 import ConfirmationDialog from '../components/ConfirmationDialog'
 import Question from '../components/Question'
 import ReviewPartnerDialog from '../components/ReviewPartnerDialog'
+import { UserContext } from '../contexts/UserContext'
 import { getCollabRoomId } from '../utils/main'
 import { expirationCheck } from '../utils/main'
 import { homeUrl } from '../utils/routeConstants'
 import { collabSocket, matchingSocket } from '../utils/socket'
 import moment from 'moment'
-import { extendJWTExpiration } from '../api/userService'
 
 const CollaborationPage = () => {
   const user = useContext(UserContext)
@@ -38,10 +42,8 @@ const CollaborationPage = () => {
   const [isPartnerLeft, setIsPartnerLeft] = useState(false)
 
   // Leave Room Confirmation Dialog
-  const [
-    leaveRoomConfirmationDialogOpen,
-    setLeaveRoomConfirmationDialogOpen,
-  ] = useState(false)
+  const [leaveRoomConfirmationDialogOpen, setLeaveRoomConfirmationDialogOpen] =
+    useState(false)
   const handleLeaveRoomConfirmationCloseDialog = () =>
     setLeaveRoomConfirmationDialogOpen(false)
   const handleLeaveRoomConfirmationOpenDialog = () =>
@@ -127,19 +129,25 @@ const CollaborationPage = () => {
     })
   }, [])
 
-  async function getNewQuestion()  {
+  async function getNewQuestion() {
     try {
       if (room) {
-        extendJWTExpiration(20)// extend by additional 20 minutes, total 35 minutes
+        extendJWTExpiration(20) // extend by additional 20 minutes, total 35 minutes
         const res = await findQuestionByDifficulty(room.difficulty, room.qnsid)
         setQuestion(res.data)
-        const patchRoomRes = await updateRoomService(room.room_id, { qnsid: res.data.qnsid})
+        const patchRoomRes = await updateRoomService(room.room_id, {
+          qnsid: res.data.qnsid,
+        })
         if (patchRoomRes.status === 200) {
           room.qnsid = res.data.qnsid
         }
-        collabSocket.emit('change-question', res.data.qnsid, getCollabRoomId(room.room_id))
+        collabSocket.emit(
+          'change-question',
+          res.data.qnsid,
+          getCollabRoomId(room.room_id)
+        )
       }
-    } catch(err) {
+    } catch (err) {
       console.log('ERROR: ', err)
     }
   }
@@ -236,7 +244,12 @@ const CollaborationPage = () => {
   const renderPartnerOfflineAlertDialog = () => {
     return (
       <AlertDialog
-        dialogOpen={!isOwnselfLeft && !isPartnerOnline && !isPartnerLeft}
+        dialogOpen={
+          !isOwnselfLeft &&
+          !isPartnerOnline &&
+          !isPartnerLeft &&
+          timeRemaining > 0
+        }
         handleCloseDialog={leaveRoom}
         dialogTitle="Partner Disconnected"
         dialogMsg="Your partner has disconnected. Waiting for him/her to reconnect..."
@@ -248,8 +261,13 @@ const CollaborationPage = () => {
   const renderPartnerLeftAlertDialog = () => {
     return (
       <AlertDialog
-        dialogOpen={!isOwnselfLeft && isPartnerLeft && !isPartnerOnline}
-        handleCloseDialog={handleReviewPartnerOpenDialog}
+        dialogOpen={
+          !isOwnselfLeft &&
+          isPartnerLeft &&
+          !isPartnerOnline &&
+          timeRemaining > 0
+        }
+        handleCloseDialog={leaveRoom}
         dialogTitle="Partner Left"
         dialogMsg="Your partner has left the room. You may now review your partner."
         dialogButtonText="OK"
@@ -267,6 +285,18 @@ const CollaborationPage = () => {
         dialogMsg="Are you sure you want to leave the room?"
         dialogDismissButtonText="No"
         dialogConfirmationButtonText="Yes"
+      />
+    )
+  }
+
+  const renderTimesUpAlertDialog = () => {
+    return (
+      <AlertDialog
+        dialogOpen={timeRemaining === 0}
+        handleCloseDialog={leaveRoom}
+        dialogTitle="Time's Up"
+        dialogMsg="The collaboration with your partner has ended. You may now review your partner."
+        dialogButtonText="OK"
       />
     )
   }
@@ -336,6 +366,7 @@ const CollaborationPage = () => {
         {renderPartnerOfflineAlertDialog()}
         {renderPartnerLeftAlertDialog()}
         {renderLeaveRoomConfirmationDialog()}
+        {renderTimesUpAlertDialog()}
         {renderReviewPartnerDialog()}
       </Box>
     </>
