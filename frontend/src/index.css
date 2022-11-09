@@ -5,37 +5,40 @@
 @layer components {
   /* Landing Page */
   .landing-page-container {
-    @apply flex items-center justify-center ml-14 mt-2;
+    @apply flex md:flex-row flex-col items-center justify-center;
   }
-  .landing-page-title-container {
-    @apply flex flex-col;
+  .landing-page-left-container {
+    @apply flex flex-row p-5;
   }
-  .landing-page-title {
-    @apply mb-12 font-inter font-bold text-5xl text-gray-700 underline underline-offset-4 decoration-2 decoration-sky-500;
+  .landing-page-right-container {
+    @apply flex flex-row p-5;
   }
   .landing-page-text-and-button-container {
-    @apply flex md:flex-row flex-col;
+    @apply flex flex-row;
   }
   .landing-page-text-container {
-    @apply flex grow flex-col justify-center mr-10 mt-8;
+    @apply flex grow flex-col justify-center;
+  }
+  .landing-page-title {
+    @apply pb-10 font-inter font-bold text-5xl text-gray-700 underline underline-offset-4 decoration-2 decoration-sky-500;
   }
   .landing-page-subtitle {
-    @apply pb-4 font-inter font-semibold text-gray-700;
+    @apply pb-5 font-inter font-semibold text-gray-700;
   }
   .landing-page-description {
     @apply font-inter font-light text-gray-700;
   }
   .landing-page-button-container {
-    @apply flex flex-row justify-start mt-10;
-  }
-  .landing-image {
-    @apply rounded-3xl shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] h-auto w-auto max-h-[1080px] max-w-[360px];
+    @apply flex flex-row justify-start gap-3 py-10;
   }
   .landing-page-icon-title {
-    @apply font-semibold text-gray-700 pt-10;
+    @apply font-semibold text-gray-700 pt-5;
   }
   .landing-page-icon-container {
     @apply flex flex-row space-x-3;
+  }
+  .landing-image {
+    @apply rounded-3xl shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] h-auto w-auto max-h-[1080px] max-w-[360px];
   }
 
   /* UserAuth Component (For Login & Signup Pages) */
@@ -49,7 +52,7 @@
     @apply pb-10 font-inter font-bold text-5xl text-gray-700;
   }
   .userauth-button-container {
-    @apply flex flex-row items-center justify-end gap-2;
+    @apply flex flex-row items-center justify-end gap-3;
   }
 
   /* Home Page */
@@ -198,7 +201,7 @@
     @apply font-inter bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-xl w-3/4;
   }
   .navbar-title {
-    @apply font-inter grow font-bold text-3xl text-gray-900;
+    @apply font-inter font-bold text-3xl text-gray-900 cursor-pointer;
   }
   .navbar-color {
     @apply bg-neutral-100;

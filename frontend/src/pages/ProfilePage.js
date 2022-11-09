@@ -11,6 +11,7 @@ import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver'
 import { getReviewStats } from '../api/reviewService'
 import ChangePasswordDialog from '../components/ChangePasswordDialog'
 import DeleteAccountDialog from '../components/DeleteAccountDialog'
+import SnackbarAlert from '../components/SnackbarAlert'
 import { UserContext } from '../contexts/UserContext'
 import { homeUrl } from '../utils/routeConstants'
 
@@ -24,6 +25,12 @@ const ProfilePage = () => {
   const handleChangePasswordCloseDialog = () =>
     setChangePasswordDialogOpen(false)
   const handleChangePasswordOpenDialog = () => setChangePasswordDialogOpen(true)
+
+  // Change Password Success Alert
+  const [changePasswordSuccessAlertOpen, setChangePasswordSuccessAlertOpen] =
+    useState(false)
+  const handleChangePasswordSuccessOpenAlert = () =>
+    setChangePasswordSuccessAlertOpen(true)
 
   // Delete Account Dialog
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] = useState(false)
@@ -123,6 +130,18 @@ const ProfilePage = () => {
       <ChangePasswordDialog
         dialogOpen={changePasswordDialogOpen}
         handleCloseDialog={handleChangePasswordCloseDialog}
+        handleSuccessOpenAlert={handleChangePasswordSuccessOpenAlert}
+      />
+    )
+  }
+
+  const renderChangePasswordSuccessAlert = () => {
+    return (
+      <SnackbarAlert
+        alertOpen={changePasswordSuccessAlertOpen}
+        setAlertOpen={setChangePasswordSuccessAlertOpen}
+        severity="success"
+        alertMsg="Your password has been changed successfully!"
       />
     )
   }
@@ -198,6 +217,7 @@ const ProfilePage = () => {
           </Box>
         </Box>
         {renderChangePasswordDialog()}
+        {renderChangePasswordSuccessAlert()}
         {renderDeleteAccountDialog()}
         <Box className="p-6">
           <Button

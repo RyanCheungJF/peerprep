@@ -77,53 +77,57 @@ const LandingPage = () => {
           height: 'calc(100vh - 64px)',
         }}
       >
-        <Box className="landing-page-text-and-button-container">
-          <Box className="landing-page-text-container">
-            <p className="landing-page-title">{'PeerPrep'}</p>
-            <p className="landing-page-subtitle">
-              {'Studying for interviews has never been easier.'}
-            </p>
-            <p className="landing-page-description">
-              {
-                'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
-              }
-            </p>
-            <p className="landing-page-description">
-              {
-                'It simulates technical interviews and lets you and your partner simulate the different roles!'
-              }
-            </p>
-            <Box className="landing-page-button-container">
-              <Button
-                className="mb-10 font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
-                onClick={() => navigate('/login')}
-              >
-                {'Log In'}
-              </Button>
-              <Button
-                className="ml-8 mb-10 font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
-                onClick={() => navigate('/signup')}
-              >
-                {'Sign Up'}
-              </Button>
-            </Box>
-            <p className="landing-page-icon-title">Built with ❤️ in:</p>
-            <div className="landing-page-icon-container">
-              <ReactIcon />
-              <MaterialIcon />
-              <TailwindIcon />
-              <NodeIcon />
-              <MongoIcon />
-              <RedisIcon />
-              <SocketIcon />
-              <DockerIcon />
-              <DigitalOceanIcon />
+        <div className="landing-page-left-container">
+          <div className="landing-page-text-and-button-container">
+            <div className="landing-page-text-container">
+              <p className="landing-page-title">{'PeerPrep'}</p>
+              <p className="landing-page-subtitle">
+                {'Studying for interviews has never been easier.'}
+              </p>
+              <p className="landing-page-description">
+                {
+                  'PeerPrep is an online collaborative tool to discuss algorithmic questions.'
+                }
+              </p>
+              <p className="landing-page-description">
+                {
+                  'It simulates technical interviews and lets you and your partner simulate the different roles!'
+                }
+              </p>
+              <div className="landing-page-button-container">
+                <Button
+                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                  onClick={() => navigate('/login')}
+                >
+                  {'Log In'}
+                </Button>
+                <Button
+                  className="font-inter bg-sky-500 hover:bg-sky-700 text-white font-semibold rounded-md w-40 px-6"
+                  onClick={() => navigate('/signup')}
+                >
+                  {'Sign Up'}
+                </Button>
+              </div>
+              <p className="landing-page-icon-title">Built with ❤️ in:</p>
+              <div className="landing-page-icon-container">
+                <ReactIcon />
+                <MaterialIcon />
+                <TailwindIcon />
+                <NodeIcon />
+                <MongoIcon />
+                <RedisIcon />
+                <SocketIcon />
+                <DockerIcon />
+                <DigitalOceanIcon />
+              </div>
             </div>
-          </Box>
+          </div>
+        </div>
+        <div className="landing-page-right-container">
           <div>
             <img src={importantImage} className="landing-image" alt="tweet" />
           </div>
-        </Box>
+        </div>
       </Box>
       {renderDeleteAccountSuccessAlert()}
     </>
