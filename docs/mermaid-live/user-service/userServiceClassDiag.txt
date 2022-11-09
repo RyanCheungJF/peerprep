@@ -1,0 +1,51 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+classDiagram
+    indexjs -- userController
+    indexjs -- auth
+
+    userController ..> redisRepository
+    userController ..> userORM
+
+    userORM ..> repository
+    repository ..> userModel
+
+    class userController {
+        +getUser(req, res)
+        +createUser(req, res)
+        +deleteUser(req, res)
+        +loginUser(req, res)
+        +updateUserPassword(req, res)
+        +logoutUser(req, res)
+    }
+
+    class auth {
+        -authenticateToken(req, res, next)
+    }
+
+    class redisRepository {
+        +addJWT(token)
+        +checkJWTExists(token)
+        +getCurrUserJWT(userId)
+        +setCurrUserJWT(userId, token)
+    }
+	
+    class userORM {
+        +ormCreateUser(username, password)
+        +ormDeleteUser(username)
+        +ormFindUserById(id, projection)
+        +ormFindUserByUsername(username)
+        +ormCheckIfUserExists(username)
+        +ormUpdateUserPassword(username, newPassword)
+
+        +ormInvalidateJWT(token)
+        +ormIsJWTValid(token)
+        +ormRestrictJWT(userId, token)
+    }
+
+    class repository {
+        +createUser(params)
+        +findUser(query, projection)
+        +checkIfUserExists(query)
+        +deleteUser(query)
+        +updateUserPassword(id, query)
+    }

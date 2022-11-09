@@ -1,12 +1,12 @@
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
 sequenceDiagram
     actor Client
-    Client->>+Backend: getReviewStats(uuid)
-    Backend->>+Backend: getUserScores()
+    Client->>+Service: getReviewStats(uuid)
+    Service->>+Service: getUserScores()
     alt is cached
-    Backend->>+Redis: getScoresFromCache()
+    Service->>+Redis: getScoresFromCache()
     else else
-    Backend->>+Database: getUserScores(userId)
-    Backend->>+Redis: writeScoresToCache(totalScores)
+    Service->>+Database: getUserScores(userId)
+    Service->>+Redis: writeScoresToCache(totalScores)
     end
-    Backend->>+Backend: generateAverageScoresForUser(toatalScores)
+    Service->>+Service: generateAverageScoresForUser(toatalScores)

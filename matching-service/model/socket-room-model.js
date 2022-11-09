@@ -28,9 +28,8 @@ let SocketRoomModelSchema = new Schema({
   datetime: {
     type: Date,
     required: true,
-    default: Date.now
-  }
-
+    default: Date.now,
+  },
 })
 
 export default mongoose.model('SocketRoomModel', SocketRoomModelSchema)
