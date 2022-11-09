@@ -9,7 +9,7 @@ sequenceDiagram
         alt Room Expired
             Client1 ->> Service: deleteRoomService(room_id)
             Service -->> Client1: success
-        else Room have not Expired
+        else Room has not expired
             Client1 ->> Client1: navigate(collabURL)
         end 
     end
