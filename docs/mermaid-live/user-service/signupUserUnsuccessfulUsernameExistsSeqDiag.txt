@@ -1,0 +1,7 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client
+
+    Client ->> Service: signupUser(username, password)
+    Service ->> Service: createUser(req, res)
+    Service ->> Database: _checkIfUserExists(username)

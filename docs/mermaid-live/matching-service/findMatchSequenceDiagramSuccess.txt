@@ -3,23 +3,23 @@ sequenceDiagram
     actor Client1
     actor Client2
     
-    Client1 ->> Server: findMatch(uuid, socketID, difficulty)
-    Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
-    Server ->> Redis: set(difficulty, [uuid, socketID])
+    Client1 ->> Service: findMatch(uuid, socketID, difficulty)
+    Service ->> Service: findMatchInCache(difficulty, uuid, socketID)
+    Service ->> Redis: set(difficulty, [uuid, socketID])
 
 
-    Client2 ->> Server: findMatch(uuid, socketID, difficulty)
-    Server ->> Server: findMatchInCache(difficulty, uuid, socketID)
-    Server ->> Redis: set(difficulty, [])
-    Redis -->> Server: match
-    Server -->> Client2: [uuid, socketID]
-    Client2 ->> Server: _findByDiffculty(difficulty, undefined)
+    Client2 ->> Service: findMatch(uuid, socketID, difficulty)
+    Service ->> Service: findMatchInCache(difficulty, uuid, socketID)
+    Service ->> Redis: set(difficulty, [])
+    Redis -->> Service: match
+    Service -->> Client2: [uuid, socketID]
+    Client2 ->> Service: _findByDiffculty(difficulty, undefined)
     Client2 ->> MatchingSocket: emit('notify-partner', room, username, difficulty, qnsid)
     MatchingSocket ->> Client1: emit('found-connection', username, difficulty, qnsid)
     Client2 ->> Client2: navigate(collabURL, state)
 
     Client1 ->> Client1: setRoom(room)
-    Client1 ->> Server: CreateRoomService(room)
-    Server ->> Database: createRoom(params)
+    Client1 ->> Service: CreateRoomService(room)
+    Service ->> Database: createRoom(params)
     Client1 ->> Client1: navigate(collabURL, state)
 
