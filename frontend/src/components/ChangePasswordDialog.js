@@ -27,7 +27,7 @@ const ChangePasswordDialog = ({ dialogOpen, handleCloseDialog }) => {
 
   const handleChangePassword = async () => {
     if (!newPassword) {
-      console.log('Password cannot be empty!')
+      setNewPasswordTextFieldChanged(true)
       return
     }
 
