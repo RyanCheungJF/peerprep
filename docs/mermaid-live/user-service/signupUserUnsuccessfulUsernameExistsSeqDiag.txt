@@ -5,4 +5,3 @@ sequenceDiagram
     Client ->> Service: signupUser(username, password)
     Service ->> Service: createUser(req, res)
     Service ->> Database: _checkIfUserExists(username)
-    Service -->> Client: res [error status code and response message]

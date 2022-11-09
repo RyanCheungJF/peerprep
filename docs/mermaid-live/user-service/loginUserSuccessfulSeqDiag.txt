@@ -8,5 +8,4 @@ sequenceDiagram
     Service ->> Service: bcrypt.compare(password, user.password)
     Service ->> Service: jwt.sign({userId, password}, process.env.TOKEN_SECRET, {expiresIn: JWT_EXPIRY})
     Service ->> Service: _restrictJWT
-    Service -->> Client: res [success status code, userId and token]
     Client ->> Client: navigate(homeUrl)

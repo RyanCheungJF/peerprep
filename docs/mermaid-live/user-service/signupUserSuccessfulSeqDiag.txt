@@ -7,5 +7,4 @@ sequenceDiagram
     Service ->> Database: _checkIfUserExists(username)
     Service ->> Service:  bcrypt.hash(password, 10)
     Service ->> Database: _createUser(username, hashedPassword)
-    Service -->> Client: res [success status code and response message]
     Client ->> Client: navigate(loginUrl)

@@ -1,0 +1,17 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffcccc', 'edgeLabelBackground':'#ffffee', 'tertiaryColor': '#fff0f0'}}}%%
+sequenceDiagram
+    actor Client
+
+    Client ->> Service: deleteUser(username)
+    Service ->> Service: deleteUser(req, res)
+    Service ->> Service: _invalidateJWT(req.token)
+    Service ->> Redis: addJWT(token)
+
+    par Delete user data
+    Service ->> Database: deleteUser(username)
+    and Delete user's matching and collaboration data
+    Service ->> Matching Service: deleteMatchingRoom(username)
+    Service ->> Collaboration Service: deleteCollaborationRoom(roomId)
+    end
+
+    Client ->> Client: navigate(homeUrl)

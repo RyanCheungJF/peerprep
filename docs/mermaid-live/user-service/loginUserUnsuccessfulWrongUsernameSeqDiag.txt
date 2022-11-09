@@ -5,4 +5,4 @@ sequenceDiagram
     Client ->> Service: loginUser(username, password)
     Service ->> Service: loginUser(req, res)
     Service ->> Database: _findUserByUsername(username)
-    Service -->> Client: res [error status code and message]
+]
