@@ -94,16 +94,7 @@ const CollaborationPage = () => {
   }, [])
 
   const getQuestion = async () => {
-    if (location.state && location.state.qnsid) {
-      try {
-        const res = await findQuestionById(location.state.qnsid)
-        setQuestion(res.data)
-      } catch (err) {
-        console.log('ERROR: ', err)
-      }
-    } else {
-      getQuestionFromMongoDB()
-    }
+    getQuestionFromMongoDB()
   }
 
   const getQuestionFromMongoDB = useCallback(async () => {
