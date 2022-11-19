@@ -79,4 +79,4 @@ Insert the `.env` file into the root of the folders `user-service`, `matching-se
     npm run dev
     ```
 ### Report
-Our project report can be found [here](/35-FinalReport.pdf).
+Our project report can be found [here](/docs/35-FinalReport.pdf).
