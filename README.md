@@ -16,6 +16,28 @@
    </span>
 </p>
 
+<br>
+
+![](/docs/peerprep.jpg)
+
+## What is PeerPrep?
+
+Technical interviews are hard.
+
+They're even harder when you do them alone.
+
+PeerPrep aims to solve this by allowing you to simulate interviews and collaborate real time with your peers!
+
+Take a sneak peek at our collaboration space down below:
+
+![](/docs/collab.jpg)
+
+## PeerPrep Architecture
+
+PeerPrep is a microservices web application built with the latest tech stack. 
+If you want to take a look at our architecture and other design considerations, 
+do check out our report below!
+
 ## Accessing our website
 Our website is hosted online with [DigitalOcean](https://www.digitalocean.com/) and can be accessed by clicking [here](http://www.peerprep.me).
 
