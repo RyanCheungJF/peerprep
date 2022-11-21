@@ -39,7 +39,8 @@ If you want to take a look at our architecture and other design considerations,
 do check out our report below!
 
 ## Accessing our website
-Our website is hosted online with [DigitalOcean](https://www.digitalocean.com/) and can be accessed by clicking [here](http://www.peerprep.me).
+Our website is hosted online with [DigitalOcean](https://www.digitalocean.com/) and can be accessed by clicking [here](http://www.peerprep.me). 
+*(Unfortunately, we are most likely going to stop hosting it soon!)*
 
 ## Running the repository locally
 
