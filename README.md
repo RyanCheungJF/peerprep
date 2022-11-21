@@ -80,3 +80,6 @@ Insert the `.env` file into the root of the folders `user-service`, `matching-se
     ```
 ### Report
 Our project report can be found [here](/docs/35-FinalReport.pdf).
+
+### Demo Slides
+If you would like to take a look at our slides for our demo, it can be found [here](/docs/PeerPrepDemoSlides.pdf)
